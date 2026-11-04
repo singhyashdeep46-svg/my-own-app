@@ -513,7 +513,7 @@ async function doAuth(){const u=$('auUi').value.trim();if(u){try{localStorage.se
  finally{$('auB').disabled=false;authMode(AUTHM)}}
 function signOut(){try{localStorage.removeItem('fin_session')}catch(e){}clearTimeout(pushT);USER=null;S=blank();SH={};dirty=false;dot('off');applyTheme();go('home');render();$('auth').hidden=false;authMode('in')}
 function setTheme(t){S.theme=t;applyTheme();save();renderSet()}
-function saveUrl(){const v=$('su').value.trim();try{localStorage.setItem('fin_url',v)}catch(e){}toast(v?'Sheet connected':'Sheet disconnected');if(v)pushNow();renderSet()}
+function saveUrl(){const v=$('su').value.trim();if(v&&!/^https:\/\/script\.google\.com\/macros\/s\/[^\/]+\/exec\/?$/.test(v)){toast(/\/library\//.test(v)?'That is the Library URL. Copy the Web app URL (ends with /exec)':'URL must look like https://script.google.com/macros/s/…/exec');return}try{localStorage.setItem('fin_url',v)}catch(e){}toast(v?'Sheet connected':'Sheet disconnected');if(v)pushNow();renderSet()}
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.download='fin-tasks.json';a.click()}
 let rst=0;function resetData(b){if(!rst){rst=1;b.textContent='Tap again to erase';setTimeout(()=>{rst=0;if(b.isConnected)b.textContent='Erase all data'},3000);return}rst=0;const k={name:S.name,theme:S.theme,areas:S.areas,aicons:S.aicons,del:S.del,su:S.su};S={...blank(),...k};save();render();renderSet();toast('All data erased')}
 function renderSet(){$('v-set').innerHTML=`<h2>Settings</h2><div class="sub">${USER?USER.email:''}</div>
