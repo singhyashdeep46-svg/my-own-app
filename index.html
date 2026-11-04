@@ -467,7 +467,9 @@ function ans(i){const o=S.tasks.filter(t=>!t.done),e=eod(),j=x=>x.map(t=>t.title
 // ===== auth, Google Sheets sync, settings =====
 const SHEET_URL='https://script.google.com/macros/s/AKfycbw4Fu0XrMzXLV_8485Y_JkIS36xIIWwHRfGfBS-7fy_lEpoebxJviP4cKxrHE0rNSqtTw/exec'; // optional: paste your Apps Script web app URL here before deploying so every visitor is pre-connected
 function getUrl(){let u='';try{u=localStorage.getItem('fin_url')||''}catch(e){}return u||SHEET_URL}
-async function api(a,b){const r=await fetch(getUrl(),{method:'POST',body:JSON.stringify({a,...b})});return r.json()}
+async function api(a,b){const ac=new AbortController(),to=setTimeout(()=>ac.abort(),30000);let t;
+ try{const r=await fetch(getUrl(),{method:'POST',body:JSON.stringify({a,...b}),signal:ac.signal});t=await r.text()}finally{clearTimeout(to)}
+ try{return JSON.parse(t)}catch(e){throw new Error("Backend sent a web page instead of data. In Apps Script deploy as Web app, Execute as: Me, Who has access: Anyone, then use the /exec URL.")}}
 async function sha(s){if(!(window.crypto&&crypto.subtle))return btoa(unescape(encodeURIComponent('fin:'+s)));const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('fin:'+s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
 const stx=()=>{const e=$('syncst');if(e)e.textContent=syncText();const b=$('syncbtn');if(b)b.classList.toggle('spin',busy)};
 function syncText(){return getUrl()?(SYNC||'Connected. Changes sync to all your devices automatically.'):'Not connected. Data stays on this device only.'}
@@ -480,12 +482,12 @@ async function syncNow(manual){
  try{
   commit();dirty=false;
   const r=await api('sync',{email:USER.email,h:USER.h,data:JSON.stringify(fmerge(S,{}))});
-  if(!r.ok)throw new Error(r.error=='Unknown action'?'Backend is outdated. Paste the new Code.gs and deploy a new version.':(r.error||'Sync failed'));
+  if(!r.ok||r.ver!==3)throw new Error((r.error=='Unknown action'||r.ok)?'Backend is outdated (old Code.gs). Paste the new Code.gs, then Deploy > Manage deployments > pencil > New version > Deploy.':(r.error||'Sync failed'));
   commit(); // stamp anything edited while the request was in flight
   const M=fmerge(S,JSON.parse(r.data||'{}'));
   if(JSON.stringify(M)!==JSON.stringify(fmerge(S,{}))){applyState(M);render();if(S.tab=='set')renderSet()}
-  ok=true;SYNC='Synced '+rel();dot('ok');if(manual===true)toast('Synced')
- }catch(e){SYNC=(e&&e.name=='TypeError')?'Offline. Will retry automatically.':((e&&e.message)||'Sync failed');dot('err');dirty=true;if(manual===true)toast(SYNC)}
+  ok=true;SYNC='Synced '+rel()+' · backend v'+r.ver;dot('ok');if(manual===true)toast('Synced')
+ }catch(e){SYNC=(e&&e.name=='TypeError')?'Cannot reach the backend (offline, or wrong URL). Will retry.':(e&&e.name=='AbortError')?'Backend timed out. Will retry.':((e&&e.message)||'Sync failed');dot('err');dirty=true;if(manual===true)toast(SYNC)}
  finally{busy=false;stx();if(ok&&(again||dirty)){again=false;setTimeout(syncNow,300)}else again=false}}
 function pushNow(){syncNow(true)}
 setInterval(()=>{if(USER&&getUrl()&&!document.hidden)syncNow()},SYNC_MS);
@@ -518,7 +520,7 @@ function renderSet(){$('v-set').innerHTML=`<h2>Settings</h2><div class="sub">${U
 <div class="set"><div class="sl si">${ico('User')}Name</div><input placeholder="Your name" value="${(S.name||'').replace(/"/g,'&quot;')}" onchange="S.name=this.value;save()"></div>
 <div class="set"><div class="sl si">${ico('Bell')}Reminders</div><div class="row2"><button class="pill" onclick="askNoti()">${notiOn()?'Notifications on':'Enable notifications'}</button><button class="pill g" onclick="beep();toast('⏰ Test reminder')">Test sound</button></div><p class="note2">Alerts ring while Fin is open, in a tab or the installed app.</p></div>
 <div class="set"><div class="sl si">${ico('Moon')}Appearance</div><div class="chips">${['system','light','dark'].map(t=>`<button class="chip ${(S.theme||'system')==t?'on':''}" onclick="setTheme('${t}')">${t[0].toUpperCase()+t.slice(1)}</button>`).join('')}</div></div>
-<div class="set"><div class="sl si">${ico('Cloud')}Sync across devices</div><input id="su" placeholder="Apps Script web app URL" value="${esc(getUrl())}"><div class="row2"><button class="pill si" style="justify-content:center" onclick="saveUrl()">${ico('Cloud')}Connect</button><button class="pill g si${busy?' spin':''}" id="syncbtn" style="justify-content:center" onclick="syncNow(true)">${ico('Refresh')}Sync now</button></div><p class="note2" id="syncst">${syncText()}</p><p class="note2">Sign in with the same email and password on any device. Tasks, money and invoices merge automatically, even when you edit on two devices.</p></div>
+<div class="set"><div class="sl si">${ico('Cloud')}Sync across devices</div><input id="su" placeholder="Apps Script web app URL" value="${esc(getUrl())}"><div class="row2"><button class="pill si" style="justify-content:center" onclick="saveUrl()">${ico('Cloud')}Connect</button><button class="pill g si${busy?' spin':''}" id="syncbtn" style="justify-content:center" onclick="syncNow(true)">${ico('Refresh')}Sync now</button></div><p class="note2" id="syncst">${syncText()}</p><p class="note2">App v6. Sign in with the same email and password on any device. Tasks, money and invoices merge automatically, even when you edit on two devices.</p></div>
 <div class="set"><div class="sl si">${ico('Db')}Data</div><div class="row2"><button class="pill g" onclick="exportData()">Export JSON</button><button class="pill g" onclick="resetData(this)">Erase all data</button></div></div>
 <div class="set"><button class="save" style="background:var(--ink);color:var(--bg)" onclick="signOut()">Sign out</button></div>`}
 async function boot(){let ses=null;try{ses=JSON.parse(localStorage.getItem('fin_session'))}catch(e){}
