@@ -465,8 +465,8 @@ function ans(i){const o=S.tasks.filter(t=>!t.done),e=eod(),j=x=>x.map(t=>t.title
  $('ar').textContent=r}
 
 // ===== auth, Google Sheets sync, settings =====
-const SHEET_URL='https://script.google.com/macros/s/AKfycbw4Fu0XrMzXLV_8485Y_JkIS36xIIWwHRfGfBS-7fy_lEpoebxJviP4cKxrHE0rNSqtTw/exec'; // optional: paste your Apps Script web app URL here before deploying so every visitor is pre-connected
-function getUrl(){let u='';try{u=localStorage.getItem('fin_url')||''}catch(e){}return u||SHEET_URL}
+const SHEET_URL='https://script.google.com/macros/s/AKfycbyNFVe3wbsKcXUAGQuABflhKY5A7jjwSnghL9rFmHrtLsVsjABws7A7L-RNJ1AF5UZczw/exec'; // optional: paste your Apps Script web app URL here before deploying so every visitor is pre-connected
+function getUrl(){let u='';try{u=localStorage.getItem('fin_url')||''}catch(e){}return /^https:\/\/script\.google\.com\/macros\/s\/[^\/]+\/exec\/?$/.test(u)?u:SHEET_URL}
 async function api(a,b){const ac=new AbortController(),to=setTimeout(()=>ac.abort(),30000);let t;
  try{const r=await fetch(getUrl(),{method:'POST',body:JSON.stringify({a,...b}),signal:ac.signal});t=await r.text()}finally{clearTimeout(to)}
  try{return JSON.parse(t)}catch(e){throw new Error("Backend sent a web page instead of data. In Apps Script deploy as Web app, Execute as: Me, Who has access: Anyone, then use the /exec URL.")}}
