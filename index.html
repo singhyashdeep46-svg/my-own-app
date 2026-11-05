@@ -291,9 +291,9 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .mcur{display:inline-block;font-size:12px;font-weight:600;padding:3px 8px;border-radius:10px;background:var(--line);color:var(--mute);margin-left:6px}
 
 /* ===== v7: wallet cards, add money ===== */
-.wal{grid-column:1/-1;padding:4px 20px 16px;perspective:900px}
+.wal{grid-column:1/-1;padding:4px 20px 16px}
 .wsum{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px;font-size:14px;color:var(--mute);font-weight:600}
-.wc{position:relative;height:188px;margin-top:-124px;border-radius:28px;padding:16px 18px;color:#fff;cursor:pointer;overflow:hidden;transform-origin:50% 100%;
+.wc{position:relative;z-index:var(--z,1);isolation:isolate;height:188px;margin-top:-124px;border-radius:28px;padding:16px 18px;color:#fff;cursor:pointer;overflow:hidden;transform-origin:50% 100%;
  background:var(--g);box-shadow:0 -8px 26px rgba(20,20,50,.22),inset 0 1px 0 rgba(255,255,255,.4);
  animation:wdrop 720ms var(--drawer) backwards;transition:transform 380ms var(--drawer),box-shadow 300ms var(--out)}
 .wc:first-child{margin-top:0}
@@ -310,8 +310,9 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .wc .w2{position:absolute;left:18px;right:18px;bottom:16px;display:flex;justify-content:space-between;align-items:flex-end;font-size:13px;opacity:.9;letter-spacing:.14em}
 .wc .chp{width:38px;height:28px;border-radius:8px;background:linear-gradient(135deg,#f6e3a1,#c9a54a);box-shadow:inset 0 0 0 1px rgba(0,0,0,.15);margin-bottom:34px;position:absolute;left:0;bottom:0}
 .wc .w2 .cn{margin-left:auto}
-@keyframes wdrop{from{opacity:0;transform:translateY(-70px) rotateX(-28deg) scale(.94)}}
-@media(hover:hover){.wc:hover{transform:translateY(-12px) rotateX(5deg);box-shadow:0 -14px 34px rgba(20,20,50,.3),inset 0 1px 0 rgba(255,255,255,.4)}}
+@keyframes wdrop{from{opacity:0;transform:translateY(-60px) scale(.95)}}
+.wal .wc:not(:last-child) .w2{display:none}
+@media(hover:hover){.wc:hover{transform:translateY(-10px);box-shadow:0 -14px 34px rgba(20,20,50,.3),inset 0 1px 0 rgba(255,255,255,.4)}}
 .wc:active{transform:scale(.97)}
 .wc.pv{margin:0 0 16px;animation:wdrop 600ms var(--drawer) backwards;cursor:default;transform:none!important;height:176px}
 .wc.pv .w2{bottom:16px}
@@ -322,6 +323,13 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .arow b{font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}.arow .pl{color:#1a9c4b}
 .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}.acts .pill{padding:13px 16px;text-align:center;font-size:15px}
 @media(prefers-reduced-motion:reduce){.wc{animation:none!important}}
+
+textarea{font:inherit;font-size:16px;padding:14px 16px;border-radius:16px;border:0;box-shadow:inset 0 0 0 1px var(--rim);background:color-mix(in srgb,var(--surf) 55%,transparent);color:var(--ink);width:100%;resize:vertical;min-height:84px}
+.tdesc{font-size:13px;opacity:.7;margin-top:4px;line-height:1.35;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;white-space:pre-wrap;overflow-wrap:anywhere}
+.card.open .tdesc{-webkit-line-clamp:unset}
+.who{display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:4px 10px;border-radius:12px;background:rgba(255,255,255,.5);font-size:12px;font-weight:600}.who .i{width:14px;height:14px}
+.chip .i{width:14px;height:14px;vertical-align:-2px;margin-right:4px}
+#wf{padding-top:0}
 </style></head><body>
 <div class="app" id="app">
  <div class="top"><div id="avs" style="display:flex"></div><button class="plus" onclick="openArea()" aria-label="Add area"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="cur" id="curBtn" onclick="go('home')">Today</button><button class="gear" onclick="go('set')" aria-label="Settings"><span class="sdot off" id="sdot"></span><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></button></div>
@@ -360,9 +368,9 @@ const AI={Work:'Work',Personal:'User',Health:'Health',Study:'Study',Home:'Home',
 const areaIcon=a=>(S.aicons&&S.aicons[a])||AI[a]||'Other';
 const AICONS=['Other','Work','User','Health','Study','Home','Errands','Star','Code','Music','Fitness','Car','Gift','Food','Travel','Savings','Fun','Chat'];
 let S,USER=null,SYNC='',undoFn=null,pushT=0;
-const blank=()=>({tab:'home',per:'today',area:'All',theme:'system',name:'',areas:['Work','Personal','Health','Study','Home','Errands'],aicons:{},tasks:[],log:[],accts:[],txs:[],invs:[],biz:{},base:'USD',mode:'tasks',del:{},su:0});S=blank();
+const blank=()=>({tab:'home',per:'today',area:'All',theme:'system',name:'',areas:['Work','Personal','Health','Study','Home','Errands'],aicons:{},tasks:[],log:[],accts:[],txs:[],invs:[],biz:{},base:'USD',people:[],who:'',mode:'tasks',del:{},su:0});S=blank();
 /* ===== sync engine: per-item merge so every device keeps its edits ===== */
-const UIK=['tab','per','area','mode','mper','theme'],COLS=['tasks','accts','txs','mbills','mmsgs','invs'],SETK=['name','areas','aicons','biz','base'];
+const UIK=['tab','per','area','mode','mper','theme','who','macc'],COLS=['tasks','accts','txs','mbills','mmsgs','invs'],SETK=['name','areas','aicons','biz','base','people'];
 let SH={},dirty=false,busy=false,again=false;
 const jx=x=>JSON.stringify(x,(k,v)=>k=='u'?undefined:v);
 function fmerge(a,b){a=a||{};b=b||{};const o={},del={};
@@ -384,7 +392,7 @@ function commit(){const now=Date.now();let ch=false;S.del=S.del||{};
  const ln=(S.log||[]).length;if(SH.log!==ln){SH.log=ln;ch=true}
  for(const id in S.del)if(now-S.del[id]>90*DAY)delete S.del[id];
  if(ch)dirty=true;return ch}
-function norm(){COLS.forEach(c=>S[c]=S[c]||[]);S.del=S.del||{};S.biz=S.biz||{};S.aicons=S.aicons||{};
+function norm(){COLS.forEach(c=>S[c]=S[c]||[]);S.people=S.people||[];S.del=S.del||{};S.biz=S.biz||{};S.aicons=S.aicons||{};
  if(!S.areas||!S.areas.length)S.areas=blank().areas;S.tasks.forEach(t=>{if(!S.areas.includes(t.area))t.area=S.areas[0]})}
 function applyState(M){const ui={};UIK.forEach(k=>{if(S[k]!==undefined)ui[k]=S[k]});S={...blank(),...M,...ui};mi();norm();baseline()}
 const save=()=>{if(!USER)return;const ch=commit();try{localStorage.setItem('fin_d_'+USER.email,JSON.stringify(S))}catch(e){}if(ch&&getUrl()){clearTimeout(pushT);pushT=setTimeout(syncNow,900)}};
@@ -398,7 +406,7 @@ const lt=ts=>new Date(ts-new Date().getTimezoneOffset()*MIN).toISOString().slice
 function fmtDue(ts){if(!ts)return'No date';const d=new Date(ts),a=new Date(d).setHours(0,0,0,0),b=new Date().setHours(0,0,0,0),dd=Math.round((a-b)/DAY),tm=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
  return(dd==0?'Today':dd==1?'Tomorrow':dd==-1?'Yesterday':d.toLocaleDateString('en',{weekday:'short',month:'short',day:'numeric'}))+' · '+tm}
 function vis(){const lim=S.per=='today'?eod():S.per=='week'?eod()+6*DAY:Infinity,n=Date.now();
- return S.tasks.filter(t=>(S.area=='All'||t.area==S.area)&&(t.done?(S.per=='all'||n-t.doneAt<DAY):(t.due?t.due<=lim:S.per!='week')))
+ return S.tasks.filter(t=>(S.area=='All'||t.area==S.area)&&(!S.who||t.who==S.who)&&(t.done?(S.per=='all'||n-t.doneAt<DAY):(t.due?t.due<=lim:S.per!='week')))
  .sort((a,b)=>a.done-b.done||(a.due||9e15)-(b.due||9e15)||b.pri-a.pri)}
 function grp(t){if(!t.due)return'No date';const e=eod();return t.due<Date.now()?'Overdue':t.due<=e?'Today':t.due<=e+DAY?'Tomorrow':t.due<=e+7*DAY?'This week':'Later'}
 const GO=['Overdue','Today','Tomorrow','This week','Later','No date'];
@@ -414,8 +422,8 @@ function render(){
  $('af').innerHTML=['All',...S.areas].map((a,i)=>`<button class="chip ${S.area==a?'on':''}" onclick="setA(${i-1})">${esc(a)}</button>`).join('');
  $('stack').innerHTML=list.length?list.map((t,i)=>{const ci=ai(t.area),last=i==list.length-1,late=!t.done&&t.due&&t.due<n;
   return`<div class="card${last?' last':''}${t.done?' dn':''}" data-sw="tx:${t.id}" style="background:${pal(ci)};z-index:${i+1};color:${dark(ci)};animation-delay:${Math.min(i,8)*50}ms" onclick="this.classList.toggle('open')">
- <div class="row1"><div class="logo">${ico(areaIcon(t.area))}</div><div class="ct"><div class="meta"><span>${esc(t.area)}${t.pri==2?' · High':''}${t.rep?' · Repeats':''}</span><span>${late?'Overdue · ':''}${t.due?fmtDue(t.due):'No date'}</span></div><div class="name"><span>${esc(t.title)}</span></div></div><button class="ck" aria-label="${t.done?'Reopen':'Complete'}" onclick="event.stopPropagation();toggle(${t.id})">${ico(t.done?'Check':'Circle')}</button></div>
- <div class="dw"><div class="det">${t.due&&!t.done?`<button onclick="event.stopPropagation();snooze(${t.id},60)">${ico('Clock')}+1 hour</button>`:''}<button class="dl" onclick="event.stopPropagation();swDel(${t.id})">${ico('Trash')}Delete</button></div></div></div>`}).join('')
+ <div class="row1"><div class="logo">${ico(areaIcon(t.area))}</div><div class="ct"><div class="meta"><span>${esc(t.area)}${t.pri==2?' · High':''}${t.rep?' · Repeats':''}</span><span>${late?'Overdue · ':''}${t.due?fmtDue(t.due):'No date'}</span></div><div class="name"><span>${esc(t.title)}</span></div>${t.desc?`<div class="tdesc">${esc(t.desc)}</div>`:''}${t.who?`<div class="who">${ico('User')}${esc(t.who)}</div>`:''}</div><button class="ck" aria-label="${t.done?'Reopen':'Complete'}" onclick="event.stopPropagation();toggle(${t.id})">${ico(t.done?'Check':'Circle')}</button></div>
+ <div class="dw"><div class="det">${t.due&&!t.done?`<button onclick="event.stopPropagation();snooze(${t.id},60)">${ico('Clock')}+1 hour</button>`:''}<button onclick="event.stopPropagation();openTask(${t.id})">${ico('Edit')}Edit</button>${t.who?`<button onclick="event.stopPropagation();sendTask(${t.id})">${ico('Chat')}Send</button>`:''}<button class="dl" onclick="event.stopPropagation();swDel(${t.id})">${ico('Trash')}Delete</button></div></div></div>`}).join('')
   :S.tasks.length?empty('Check','Nothing here.<br>Enjoy the clear space.',addBtn):empty('Check','Your list is empty.<br>Add your first task.',addBtn);
  $('avs').innerHTML=S.areas.slice(0,3).map((a,i)=>`<div class="av" style="background:${pal(i)};color:#15121c" onclick="go('acc')">${esc(a[0])}</div>`).join('');
  // areas
@@ -424,7 +432,7 @@ function render(){
   return`<div class="acc" ${i?`data-sw="ar:${i-1}" `:''}style="--c:${pal(ci)};color:${dark(ci)}" onclick="pickArea(${i-1})"><div style="display:flex;gap:12px;align-items:center;min-width:0"><div class="logo">${ico(a=='All'?'Chart':areaIcon(a))}</div><div><b>${esc(a)}</b><span>${ts.length-d} open · ${d} done</span></div></div><div style="display:flex;align-items:center;gap:4px"><div class="amt">${p}%<span>complete</span></div>${i?`<button class="ck" aria-label="Delete ${esc(a)}" onclick="event.stopPropagation();delArea(${i-1})">${ico('Trash')}</button>`:''}</div></div>`}).join('');
  // upcoming
  const g={};[...open].sort((a,b)=>(a.due||9e15)-(b.due||9e15)).forEach(t=>(g[grp(t)]=g[grp(t)]||[]).push(t));
- $('bills').innerHTML=GO.filter(k=>g[k]).map(k=>`<div class="gh">${k}</div>`+g[k].map(t=>{const ci=ai(t.area);return`<div class="acc" data-sw="tx:${t.id}" style="--c:${pal(ci)};color:${dark(ci)}"><div style="display:flex;gap:12px;align-items:center;min-width:0"><div class="logo">${ico(areaIcon(t.area))}</div><div style="min-width:0"><b>${esc(t.title)}</b><span>${t.due?fmtDue(t.due):esc(t.area)}${t.pri==2?' · High':''}</span></div></div><button class="ck" aria-label="Complete" onclick="toggle(${t.id})">${ico('Circle')}</button></div>`}).join('')).join('')||empty('Check','Nothing upcoming.');
+ $('bills').innerHTML=GO.filter(k=>g[k]).map(k=>`<div class="gh">${k}</div>`+g[k].map(t=>{const ci=ai(t.area);return`<div class="acc" data-sw="tx:${t.id}" style="--c:${pal(ci)};color:${dark(ci)}"><div style="display:flex;gap:12px;align-items:center;min-width:0"><div class="logo">${ico(areaIcon(t.area))}</div><div style="min-width:0"><b>${esc(t.title)}</b><span>${t.due?fmtDue(t.due):esc(t.area)}${t.pri==2?' · High':''}${t.who?' · '+esc(t.who):''}</span></div></div><button class="ck" aria-label="Complete" onclick="toggle(${t.id})">${ico('Circle')}</button></div>`}).join('')).join('')||empty('Check','Nothing upcoming.');
  // reminders
  const rs=open.filter(t=>t.due&&t.rem!=null).sort((a,b)=>(b.fired-a.fired)||(a.due-a.rem*MIN)-(b.due-b.rem*MIN));
  $('msgs').innerHTML=rs.length?rs.map(t=>`<div class="msg${t.fired?' now':''}" data-sw="msg:${t.id}"><div class="src"><span class="si">${ico('Bell')}${t.fired?'Due now':'Rings '+fmtDue(t.due-t.rem*MIN)}</span><span>${esc(t.area)}</span></div><p>${esc(t.title)}</p><button class="pill" onclick="toggle(${t.id})">Done</button><button class="pill g" onclick="snooze(${t.id},10)">10 min</button><button class="pill g" onclick="snooze(${t.id},60)">1 hour</button></div>`).join(''):empty('Bell','No reminders set.','<br>Add a task with a reminder or type one above.');
@@ -548,7 +556,7 @@ function signOut(){try{localStorage.removeItem('fin_session')}catch(e){}clearTim
 function setTheme(t){S.theme=t;applyTheme();save();renderSet()}
 function saveUrl(){const v=$('su').value.trim();if(v&&!/^https:\/\/script\.google\.com\/macros\/s\/[^\/]+\/exec\/?$/.test(v)){toast(/\/library\//.test(v)?'That is the Library URL. Copy the Web app URL (ends with /exec)':'URL must look like https://script.google.com/macros/s/…/exec');return}try{localStorage.setItem('fin_url',v)}catch(e){}toast(v?'Sheet connected':'Sheet disconnected');if(v)pushNow();renderSet()}
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.download='fin-tasks.json';a.click()}
-let rst=0;function resetData(b){if(!rst){rst=1;b.textContent='Tap again to erase';setTimeout(()=>{rst=0;if(b.isConnected)b.textContent='Erase all data'},3000);return}rst=0;const k={name:S.name,theme:S.theme,areas:S.areas,aicons:S.aicons,del:S.del,su:S.su};S={...blank(),...k};save();render();renderSet();toast('All data erased')}
+let rst=0;function resetData(b){if(!rst){rst=1;b.textContent='Tap again to erase';setTimeout(()=>{rst=0;if(b.isConnected)b.textContent='Erase all data'},3000);return}rst=0;const k={name:S.name,theme:S.theme,areas:S.areas,aicons:S.aicons,people:S.people,del:S.del,su:S.su};S={...blank(),...k};save();render();renderSet();toast('All data erased')}
 function renderSet(){$('v-set').innerHTML=`<h2>Settings</h2><div class="sub">${USER?USER.email:''}</div>
 <div class="set"><div class="sl si">${ico('User')}Name</div><input placeholder="Your name" value="${(S.name||'').replace(/"/g,'&quot;')}" onchange="S.name=this.value;save()"></div>
 <div class="set"><div class="sl si">${ico('Bell')}Reminders</div><div class="row2"><button class="pill" onclick="askNoti()">${notiOn()?'Notifications on':'Enable notifications'}</button><button class="pill g" onclick="beep();toast('⏰ Test reminder')">Test sound</button></div><p class="note2">Alerts ring while Fin is open, in a tab or the installed app.</p></div>
@@ -612,7 +620,7 @@ function viewInv(id){const i=S.invs.find(x=>x.id==id);if(!i)return;const T=tot(i
 <div class="im"><div><span>Bill to</span><b>${esc(i.client)}</b>${esc(i.email)}</div><div><span>Issued</span><b>${d(i.issued)}</b></div><div><span>Due</span><b>${d(i.due)}</b></div></div>
 <table><tr><th>Description</th><th>Qty</th><th>Price</th><th>Amount</th></tr>${i.items.map(x=>`<tr><td>${esc(x.d)}</td><td>${x.q}</td><td>${fm(x.p,i.cur)}</td><td>${fm(x.q*x.p,i.cur)}</td></tr>`).join('')}</table>
 <div class="tl"><div><span>Subtotal</span>${fm(T.s,i.cur)}</div>${i.tax?`<div><span>Tax ${i.tax}%</span>${fm(T.t,i.cur)}</div>`:''}<div class="gt"><span>Total</span>${fm(T.g,i.cur)}</div></div>${i.notes?`<p class="nt">${esc(i.notes)}</p>`:''}</div>`;$('invv').hidden=false}
-function renderMI0(){mi();const n=Date.now(),w=S.txs.filter(t=>n-t.t<30*DAY&&!t.inc),cats={};
+function renderMI0(){mi();const n=Date.now(),w=S.txs.filter(t=>n-t.t<30*DAY&&!t.inc&&!t.xf),cats={};
  w.forEach(t=>{const c=acct(t.acc).cur;cats[c]=cats[c]||{};cats[c][t.c]=(cats[c][t.c]||0)+t.a});
  const cs=Object.keys(cats);
  $('v-mins').innerHTML=`<h2>Insights</h2><div class="sub">By category · 30 days · each currency kept separate</div>`+(cs.length?cs.map(c=>{const es=Object.entries(cats[c]).sort((a,b)=>b[1]-a[1]),mx=es[0][1];return`<div class="gb" style="margin-bottom:14px"><div class="sl">${c} · ${fm(es.reduce((s,e)=>s+e[1],0),c)}</div>${es.map(([k,v])=>`<div class="bar"><div class="t"><span class="si">${ico(k)}${k}</span><b>${fm(v,c)}</b></div><i style="width:${v/mx*100}%;background:${pal(Math.max(0,MCAT.indexOf(k)))}"></i></div>`).join('')}</div>`}).join(''):`<div class="gb">${empty('Chart','Insights are waiting.<br>Add expenses to see patterns.')}</div>`);
@@ -639,8 +647,8 @@ function renderNav(){const m=S.mode||'tasks',nv=$('nav'),n=m=='money'?(S.mmsgs||
 function syncMode(){if(S.tab!='set'){const m=Object.keys(NAVS).find(k=>NAVS[k].some(x=>x[0]==S.tab));if(m)S.mode=m;else S.tab=NAVS[S.mode||'tasks'][0][0]}document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id=='v-'+S.tab));modeUI();renderNav()}
 function renderMI(){renderMI0();renderMoney()}
 const parseM=t=>{const cc=CURS.join('|'),r=t.match(new RegExp('(?:('+cc+'|NRs\\.?|Rs\\.?|\\$|€|£|₹)\\s?([\\d,]+(?:\\.\\d+)?))|(?:([\\d,]+(?:\\.\\d+)?)\\s?('+cc+'))','i'));if(!r)return null;const sy={'$':'USD','€':'EUR','£':'GBP','₹':'INR','rs':'NPR','rs.':'NPR','nrs':'NPR','nrs.':'NPR'};let c=(r[1]||r[4]);c=sy[c.toLowerCase()]||c.toUpperCase();const mm=t.match(/(?:at|to)\s+([A-Z][\w.&-]*)/);return{a:parseFloat((r[2]||r[3]).replace(/,/g,'')),cur:c,m:mm?mm[1]:'Expense'}};
-function renderMoney(){mi();const n=Date.now(),lim={day:DAY,week:7*DAY,month:30*DAY}[S.mper],w=S.txs.filter(t=>n-t.t<lim&&!t.inc).sort((x,y)=>y.t-x.t),sp=sumBy(w,t=>acct(t.acc).cur,t=>t.a);
- $('v-mhome').innerHTML=`<div class="lbl">Expenses</div><div class="big"><span>${{day:'Day',week:'Week',month:'Month'}[S.mper]}</span><small onclick="cycMPer()">▾</small><button class="plan" onclick="openMAsk()">${ico('Spark')}Ask Fin AI</button></div><div class="tot">${fmm(sp)} spent · ${w.length}</div><div class="stack">`+(w.length?w.map((t,i)=>{const ci=Math.max(0,MCAT.indexOf(t.c)),last=i==w.length-1,a=acct(t.acc);return`<div class="card${last?' last':''}" data-sw="mtx:${t.id}" style="background:${pal(ci)};z-index:${i+1};color:${dark(ci)};animation-delay:${Math.min(i,8)*50}ms" onclick="this.classList.toggle('open')"><div class="row1"><div class="logo">${ico(t.c)}</div><div class="ct"><div class="meta"><span>${esc(t.c)}</span><span>${new Date(t.t).toLocaleDateString('en',{weekday:'long'})}</span></div><div class="name"><span>${esc(t.m)}</span></div></div><div class="mamt">-${fm(t.a,a.cur)}</div></div><div class="dw"><div class="det"><span class="dsp">${esc(a.name)} · ${a.cur}</span><button class="dl" onclick="event.stopPropagation();delMTx(${t.id})">${ico('Trash')}Delete</button></div></div></div>`}).join(''):empty('Savings',S.accts.length?'No expenses this '+S.mper+'.<br>Tap + to add one.':'Your wallet is empty.<br>Add an account to begin.<br><button class="pill" style="margin-top:16px" onclick="openAccM()">Add account</button>'))+'</div>';
+function renderMoney(){mi();const n=Date.now(),lim={day:DAY,week:7*DAY,month:30*DAY}[S.mper],w=S.txs.filter(t=>n-t.t<lim&&!t.inc&&!t.xf&&(!S.macc||t.acc==S.macc)&&(!MQ||(t.m+' '+t.c+' '+(t.note||'')).toLowerCase().includes(MQ))).sort((x,y)=>y.t-x.t),sp=sumBy(w,t=>acct(t.acc).cur,t=>t.a);
+ $('v-mhome').innerHTML=`<div class="lbl">Expenses</div><div class="big"><span>${{day:'Day',week:'Week',month:'Month'}[S.mper]}</span><small onclick="cycMPer()">▾</small><button class="plan" onclick="openMAsk()">${ico('Spark')}Ask Fin AI</button></div><div class="tot">${fmm(sp)} spent · ${w.length}</div><div class="stack">`+(w.length?w.map((t,i)=>{const ci=Math.max(0,MCAT.indexOf(t.c)),last=i==w.length-1,a=acct(t.acc);return`<div class="card${last?' last':''}" data-sw="mtx:${t.id}" style="background:${pal(ci)};z-index:${i+1};color:${dark(ci)};animation-delay:${Math.min(i,8)*50}ms" onclick="this.classList.toggle('open')"><div class="row1"><div class="logo">${ico(t.c)}</div><div class="ct"><div class="meta"><span>${esc(t.c)} · ${esc(a.name)}</span><span>${new Date(t.t).toLocaleDateString('en',{weekday:'short',day:'numeric',month:'short'})}</span></div><div class="name"><span>${esc(t.m)}</span></div>${t.note?`<div class="tdesc">${esc(t.note)}</div>`:''}</div><div class="mamt">-${fm(t.a,a.cur)}</div></div><div class="dw"><div class="det"><span class="dsp">${esc(a.name)} · ${a.cur}</span><button onclick="event.stopPropagation();openMTx({edit:${t.id}})">${ico('Edit')}Edit</button><button onclick="event.stopPropagation();dupTx(${t.id})">${ico('Copy')}Repeat</button><button class="dl" onclick="event.stopPropagation();delMTx(${t.id})">${ico('Trash')}Delete</button></div></div></div>`}).join(''):empty('Savings',S.accts.length?'No expenses this '+S.mper+'.<br>Tap + to add one.':'Your wallet is empty.<br>Add an account to begin.<br><button class="pill" style="margin-top:16px" onclick="openAccM()">Add account</button>'))+'</div>';
  $('v-macc').innerHTML=`<h2>Accounts</h2><div class="sub">${S.accts.length?'Balances · '+fmm(sumBy(S.accts,a=>a.cur,a=>a.bal)):'Add your first account'}</div>`+S.accts.map((a,i)=>`<div class="acc" style="--c:${pal(i)};color:${dark(i)}"><div class="al"><div class="logo">${ico(a.type||'Card')}</div><div class="am"><b>${esc(a.name)}</b><span>${a.type||'Account'} · ${a.cur}</span></div></div><div class="amt">${fm(a.bal,a.cur)}</div></div>`).join('')+`<button class="add" onclick="openAccM()">+ Add account</button>`;
  $('v-mbills').innerHTML=`<h2>Bills</h2><div class="sub">Upcoming and paid</div>`+S.mbills.sort((a,b)=>a.due-b.due).map((b,i)=>{const od=!b.paid&&b.due<n;return`<div class="acc" style="--c:${b.paid?'var(--surf)':pal(i+3)};color:${b.paid?'var(--mute)':'#15121c'}"><div class="al"><div class="logo">${ico(b.paid?'Check':'Bills')}</div><div class="am"><b>${esc(b.n)}</b><span>${b.paid?'Paid':od?'Overdue':'Due '+new Date(b.due).toLocaleDateString('en',{month:'short',day:'numeric'})}</span></div></div><div class="amt">${fm(b.a,b.cur)}${b.paid?'':`<span><button class="pill" style="margin-top:6px" onclick="payB(${b.id})">Mark paid</button></span>`}</div></div>`}).join('')+`<button class="add" onclick="openB()">+ Add bill</button>`;
  if(!$('v-minbox').contains(document.activeElement)){const o=S.mmsgs.filter(x=>!x.done);
@@ -659,9 +667,9 @@ function openB(){sheet(`<h3>Add bill</h3><div class="f"><input id="b_n" placehol
 function saveB(){const a=parseFloat($('b_a').value);if(!a||!$('b_n').value.trim()){toast('Fill name and amount');return}S.base=$('b_c').value;S.mbills.push({id:Date.now(),n:$('b_n').value.trim(),a,cur:$('b_c').value,due:$('b_d').value?new Date($('b_d').value).getTime():Date.now()+7*DAY,paid:false});closeSheet();render();toast('Bill added')}
 function payB(id){S.mbills.find(x=>x.id==id).paid=true;render();toast('Marked paid')}
 function openMAsk(){sheet(`<h3>Ask Fin AI</h3><div class="chips" style="margin-bottom:14px">${['Spent this week?','Top category','Net worth','Bills due'].map((q,i)=>`<button class="chip" onclick="ansM(${i})">${q}</button>`).join('')}</div><div id="mar" class="note" style="font-size:18px;color:var(--ink);margin:0">Pick a question.</div>`)}
-function ansM(i){const wk=S.txs.filter(x=>Date.now()-x.t<7*DAY&&!x.inc),sum=sumBy(wk,x=>acct(x.acc).cur,x=>x.a);let r;
+function ansM(i){const wk=S.txs.filter(x=>Date.now()-x.t<7*DAY&&!x.inc&&!x.xf),sum=sumBy(wk,x=>acct(x.acc).cur,x=>x.a);let r;
  if(i==0)r=`You spent ${fmm(sum)} across ${wk.length} transactions this week.`;
- if(i==1){const m={};S.txs.forEach(x=>{if(x.inc)return;const c=acct(x.acc).cur;m[c]=m[c]||{};m[c][x.c]=(m[c][x.c]||0)+x.a});const o=Object.keys(m).map(c=>{const t=Object.entries(m[c]).sort((a,b)=>b[1]-a[1])[0];return`${t[0]} in ${c} (${fm(t[1],c)})`});r=o.length?'Biggest categories: '+o.join(', ')+'.':'No data yet.'}
+ if(i==1){const m={};S.txs.forEach(x=>{if(x.inc||x.xf)return;const c=acct(x.acc).cur;m[c]=m[c]||{};m[c][x.c]=(m[c][x.c]||0)+x.a});const o=Object.keys(m).map(c=>{const t=Object.entries(m[c]).sort((a,b)=>b[1]-a[1])[0];return`${t[0]} in ${c} (${fm(t[1],c)})`});r=o.length?'Biggest categories: '+o.join(', ')+'.':'No data yet.'}
  if(i==2)r='Balances: '+fmm(sumBy(S.accts,a=>a.cur,a=>a.bal))+' across '+S.accts.length+' accounts.';
  if(i==3){const b=S.mbills.filter(x=>!x.paid);r=b.length?b.map(x=>x.n+' '+fm(x.a,x.cur)).join(', ')+' pending.':'No pending bills.'}
  $('mar').textContent=r}
@@ -700,7 +708,7 @@ Object.assign(I2,{
 /* ===== v7 ===== */
 I2.Income=I2.Savings;
 const GRAD=['linear-gradient(135deg,#5b8dff,#2a3fd6)','linear-gradient(135deg,#a97bf0,#5b2fc4)','linear-gradient(135deg,#2b2b36,#0d0d12)','linear-gradient(135deg,#34c58a,#0f7a56)','linear-gradient(135deg,#ff9a62,#d94a2b)','linear-gradient(135deg,#f07ab0,#a8266b)'];
-const wcard=(a,i,pv)=>`<div class="wc${pv?' pv':''}" style="--g:${GRAD[i%GRAD.length]};animation-delay:${pv?0:Math.min(i,8)*90}ms" ${pv?'':`onclick="openAcc(${a.id})"`}>
+const wcard=(a,i,pv)=>`<div class="wc${pv?' pv':''}" style="--g:${GRAD[i%GRAD.length]};--z:${i+1};animation-delay:${pv?0:Math.min(i,8)*90}ms" ${pv?'':`onclick="openAcc(${a.id})"`}>
  <div class="w1"><div class="wn"><div class="logo">${ico(a.type||'Card')}</div><div style="min-width:0"><b>${esc(a.name)}</b><span>${esc(a.type||'Account')} · ${a.cur}</span></div></div><div class="wb">${fm(a.bal,a.cur)}</div></div>
  <div class="w2"><span class="chp"></span><span class="cn">•••• ${String(a.id).slice(-4)}</span></div></div>`;
 const _RM7=renderMoney;
@@ -708,16 +716,16 @@ renderMoney=function(){_RM7();mi();
  const el=$('v-macc');
  el.innerHTML=`<h2>Accounts</h2><div class="sub">${S.accts.length?'Tap a card to add money · '+fmm(sumBy(S.accts,a=>a.cur,a=>a.bal)):'Add your first account'}</div>`+
   (S.accts.length?`<div class="wal">${S.accts.map((a,i)=>wcard(a,i)).join('')}</div>`:empty('Savings','Your wallet is empty.'))+
-  `<button class="add" onclick="openAccM()">+ Add account</button>`};
+  (S.accts.length>1?`<button class="add" onclick="openXfer()">Transfer between accounts</button>`:'')+`<button class="add" onclick="openAccM()">+ Add account</button>`};
 function openAcc(id){const a=acct(id);if(!a)return;const i=S.accts.indexOf(a);
  const tx=S.txs.filter(t=>t.acc==a.id).sort((x,y)=>y.t-x.t).slice(0,5);
- sheet(`<h3>${esc(a.name)}</h3>${wcard(a,i,1)}<div class="acts"><button class="pill" onclick="openMTx({k:${a.id},inc:true})">+ Add money</button><button class="pill g" onclick="openMTx({k:${a.id}})">Add expense</button></div>
- ${tx.length?`<div class="sl" style="margin-bottom:4px">Recent</div>`+tx.map(t=>`<div class="arow"><span>${esc(t.m)}</span><b class="${t.inc?'pl':''}">${t.inc?'+':'-'}${fm(t.a,a.cur)}</b></div>`).join(''):''}
+ sheet(`<h3>${esc(a.name)}</h3>${wcard(a,i,1)}<div class="acts"><button class="pill" onclick="openMTx({k:${a.id},inc:true})">+ Add money</button><button class="pill g" onclick="openMTx({k:${a.id}})">Add expense</button><button class="pill g" onclick="openXfer(${a.id})">Transfer</button><button class="pill g" onclick="openAccEdit(${a.id})">Edit account</button></div>
+ ${tx.length?`<div class="sl" style="margin-bottom:4px">Recent</div>`+tx.map(t=>`<div class="arow" ${t.xf?'':`onclick="openMTx({edit:${t.id}})" style="cursor:pointer"`}><span>${esc(t.m)}</span><b class="${t.inc?'pl':''}">${t.inc?'+':'-'}${fm(t.a,a.cur)}</b></div>`).join(''):''}
  <button class="pill g" style="width:100%;margin-top:14px;color:#d6364a" onclick="delAcc(${a.id})">Delete account</button>`)}
 function delAcc(id){const a=acct(id);if(!a)return;const ix=S.accts.indexOf(a),tx=S.txs.filter(t=>t.acc==a.id);
  S.accts=S.accts.filter(x=>x.id!=id);S.txs=S.txs.filter(t=>t.acc!=id);closeSheet();render();
  toast('Account deleted · tap to undo',()=>{S.accts.splice(ix,0,a);S.txs.push(...tx);render()})}
-let MINC=false;
+let MINC=false,MEDIT=null,MQ='';
 function setInc(v,b){MINC=v;[...b.parentNode.children].forEach(c=>c.classList.toggle('on',c==b));$('mt_m').placeholder=v?'Source (salary, gift…)':'Merchant';$('mt_c').hidden=v;$('mt_sv').textContent=v?'Add money':'Save'}
 function openMTx(p){mi();MPRE=p||{};MINC=!!MPRE.inc;if(!S.accts.length){toast('Add an account first');openAccM();return}
  sheet(`<h3>${MINC?'Add money':'Add expense'}</h3><div class="tg"><button class="${MINC?'':'on'}" onclick="setInc(false,this)">Expense</button><button class="${MINC?'on':''}" onclick="setInc(true,this)">Money in</button></div>
@@ -732,5 +740,71 @@ function saveAccM(){mi();const n=$('ma_n').value.trim();if(!n){toast('Name it fi
  ex=S.accts.find(x=>x.name.toLowerCase()==n.toLowerCase()&&x.cur==cur);
  if(ex){closeSheet();setTimeout(()=>{openMTx({k:ex.id,inc:true,a:b||''});toast('“'+ex.name+'” exists · add money to it')},420);return}
  S.accts.push({id:Date.now(),name:n,type:$('ma_t').value,cur,bal:b});S.base=cur;closeSheet();render();toast('Account added')}
+
+/* ===== v8: task description, assignee, edit ===== */
+I2.Edit='<path d="M4 20h4l11-11-4-4L4 16z" class="f"/><path d="M13.5 6.5l4 4"/>';
+let TEDIT=null;
+function openTask(id){id=typeof id=='number'?id:null;TEDIT=id;const t=id?S.tasks.find(x=>x.id==id):null;S.people=S.people||[];
+ pri=t?t.pri:1;const nx=new Date();nx.setMinutes(0,0,0);nx.setHours(nx.getHours()+1);const dv=t?(t.due?lt(t.due):''):lt(nx.getTime());
+ sheet(`<h3>${t?'Edit task':'New task'}</h3><div class="f"><input class="amtin" id="tn" placeholder="What needs doing?" value="${esc(t?t.title:'')}" style="font-size:30px!important"><textarea id="tds" placeholder="Details, notes, what to remember…">${esc(t&&t.desc?t.desc:'')}</textarea>
+ <div class="sl">Area</div><select id="tar">${S.areas.map(a=>`<option ${a==(t?t.area:S.area)?'selected':''}>${esc(a)}</option>`).join('')}</select>
+ <div class="sl">Assign to</div><select id="tw" onchange="$('twn').hidden=this.value!='__new'"><option value="">Nobody</option>${S.people.map(p=>`<option ${t&&t.who==p?'selected':''}>${esc(p)}</option>`).join('')}<option value="__new">+ New person or account…</option></select><input id="twn" placeholder="Name" hidden>
+ <div class="sl">Priority</div><div class="chips">${PRI.map((x,i)=>`<button class="chip ${i==pri?'on':''}" onclick="pickP(${i},this)">${x}</button>`).join('')}</div>
+ <div class="sl">Due</div><input id="td" type="datetime-local" value="${dv}"><div class="sl">Remind me</div><select id="tr">${opts(REMS,t?(t.rem==null?'':t.rem):15)}</select><div class="sl">Repeat</div><select id="trp">${opts(REPS,t?t.rep||'':'')}</select></div><button class="save" onclick="saveTask()">${t?'Save changes':'Add task'}</button>`);if(!t)setTimeout(()=>$('tn').focus(),380)}
+function saveTask(){const v=$('tn').value.trim();if(!v){toast('Name the task first');return}
+ const d=$('td').value?new Date($('td').value).getTime():null,r=$('tr').value;let who=$('tw').value;if(who=='__new')who=$('twn').value.trim();
+ if(who){const ex=S.people.find(p=>p.toLowerCase()==who.toLowerCase());if(ex)who=ex;else S.people.push(who)}
+ const f={title:v,desc:$('tds').value.trim(),area:$('tar').value,who,pri,due:d,rem:d&&r!==''?+r:null,rep:$('trp').value};
+ if(TEDIT){const t=S.tasks.find(x=>x.id==TEDIT);if(t){const dc=t.due!=d;Object.assign(t,f);if(dc)t.fired=!!(d&&d<Date.now())}toast('Saved')}
+ else{S.tasks.push({id:Date.now()+Math.floor(Math.random()*999),...f,done:false,doneAt:0,fired:!!(d&&d<Date.now())});toast('Task added')}
+ TEDIT=null;closeSheet();render();if(r!==''&&d)needNoti()}
+function sendTask(id){const t=S.tasks.find(x=>x.id==id);if(!t)return;
+ const L=[`*${t.title}*`,t.desc||null,t.who?`Assigned to: ${t.who}`:null,t.due?`Due: ${fmtDue(t.due)}`:null].filter(x=>x);
+ window.open('https://wa.me/?text='+encodeURIComponent(L.join('\n')),'_blank','noopener')}
+function renderWho(){let e=$('wf');if(!e){e=document.createElement('div');e.id='wf';e.className='chips af';$('af').after(e)}
+ S.people=S.people||[];if(S.who&&!S.people.includes(S.who))S.who='';e.hidden=!S.people.length;
+ e.innerHTML=S.people.length?['',...S.people].map((p,i)=>`<button class="chip ${(S.who||'')==p?'on':''}" onclick="setW(${i-1})">${i?ico('User')+esc(p):'Everyone'}</button>`).join(''):''}
+function setW(i){S.who=i<0?'':S.people[i];render()}
+const _R8=render;render=function(){_R8();renderWho()};
+const _RS8=renderSet;renderSet=function(){_RS8();const so=$('v-set').lastElementChild;
+ so.insertAdjacentHTML('beforebegin',`<div class="set"><div class="sl si">${ico('User')}People &amp; accounts</div><div class="chips">${S.people.map((p,i)=>`<button class="chip" onclick="delPerson(${i})">${esc(p)} ✕</button>`).join('')||'<span class="note2" style="margin:0">Nobody yet. Assign a task to add someone.</span>'}</div><div class="row2"><input id="np" placeholder="Add person or account"><button class="pill" style="flex:none" onclick="addPerson()">Add</button></div></div>`)};
+function addPerson(){const v=$('np').value.trim();if(!v)return;if(S.people.some(p=>p.toLowerCase()==v.toLowerCase())){toast('Already added');return}S.people.push(v);render();renderSet()}
+function delPerson(i){const p=S.people[i];S.people.splice(i,1);if(S.who==p)S.who='';render();renderSet();toast(p+' removed (tasks keep the name)')}
+
+/* ===== v9: edit expenses, transfers, filters ===== */
+I2.Copy='<rect class="f" x="8" y="8" width="12" height="12" rx="3"/><path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2"/>';
+I2.Swap='<path d="M4 8h14l-3-3M20 16H6l3 3"/>';
+function openMTx(p){mi();MPRE=p||{};let e=null;if(MPRE.edit){e=S.txs.find(x=>x.id==MPRE.edit);if(!e)return}
+ MEDIT=e?e.id:null;MINC=e?!!e.inc:!!MPRE.inc;
+ if(!S.accts.length){toast('Add an account first');openAccM();return}
+ const m=e?e.m:(MPRE.m||''),am=e?e.a:(MPRE.a||''),k=e?e.acc:MPRE.k,dv=lt(e?e.t:Date.now());
+ sheet(`<h3>${e?'Edit entry':MINC?'Add money':'Add expense'}</h3><div class="tg"><button class="${MINC?'':'on'}" onclick="setInc(false,this)">Expense</button><button class="${MINC?'on':''}" onclick="setInc(true,this)">Money in</button></div>
+ <div class="f"><input class="amtin" id="mt_a" type="number" inputmode="decimal" placeholder="0.00" value="${am}"><input id="mt_m" placeholder="${MINC?'Source (salary, gift…)':'Merchant'}" value="${esc(m)}">
+ <select id="mt_c" ${MINC?'hidden':''}>${MCAT.map(c=>`<option ${e&&e.c==c?'selected':''}>${c}</option>`).join('')}</select>
+ <div class="sl">${MINC?'Into account':'Paid from'}</div><select id="mt_k" onchange="curHint()">${S.accts.map(a=>`<option value="${a.id}" ${a.id==k?'selected':''}>${esc(a.name)} (${a.cur})</option>`).join('')}</select>
+ <div class="sl">Date</div><input id="mt_d" type="datetime-local" value="${dv}"><input id="mt_n" placeholder="Note (optional)" value="${esc(e&&e.note||'')}"></div>
+ <button class="save" id="mt_sv" onclick="saveMTx()">${e?'Save changes':MINC?'Add money':'Save'}</button>${e?`<button class="pill g" style="width:100%;margin-top:10px;color:#d6364a" onclick="closeSheet();delMTx(${e.id})">Delete</button>`:''}`);curHint()}
+function setInc(v,b){MINC=v;[...b.parentNode.children].forEach(c=>c.classList.toggle('on',c==b));$('mt_m').placeholder=v?'Source (salary, gift…)':'Merchant';$('mt_c').hidden=v;if(!MEDIT)$('mt_sv').textContent=v?'Add money':'Save'}
+function saveMTx(){const a=parseFloat($('mt_a').value);if(!(a>0)){toast('Enter an amount');return}const k=+$('mt_k').value,ac=acct(k),d=$('mt_d').value?new Date($('mt_d').value).getTime():Date.now(),note=$('mt_n').value.trim();
+ const nm=$('mt_m').value.trim()||(MINC?'Money added':'Expense'),cat=MINC?'Income':$('mt_c').value;
+ if(MEDIT){const e=S.txs.find(x=>x.id==MEDIT);if(e){const oa=acct(e.acc);oa.bal+=e.inc?-e.a:e.a;Object.assign(e,{m:nm,c:cat,a,acc:ac.id,t:d,inc:MINC,note});ac.bal+=MINC?a:-a}toast('Saved')}
+ else{S.txs.push({id:Date.now(),m:nm,c:cat,a,acc:k,t:d,inc:MINC,note});ac.bal+=MINC?a:-a;toast(MINC?'Money added':'Added')}
+ if(MPRE.mid){const m=S.mmsgs.find(x=>x.id==MPRE.mid);if(m)m.done=true}MPRE={};MEDIT=null;closeSheet();render()}
+function dupTx(id){const t=S.txs.find(x=>x.id==id);if(!t)return;const n={...t,id:Date.now(),t:Date.now()};delete n.u;S.txs.push(n);acct(t.acc).bal-=t.inc?-t.a:t.a;render();toast('Repeated · today')}
+function openXfer(fid){const A=S.accts;if(A.length<2){toast('Add a second account first');return}fid=typeof fid=='number'?fid:A[0].id;const to=(A.find(x=>x.id!=fid)||A[1]).id;
+ const o=sel=>A.map(a=>`<option value="${a.id}" ${a.id==sel?'selected':''}>${esc(a.name)} (${a.cur})</option>`).join('');
+ sheet(`<h3>Transfer</h3><div class="f"><div class="sl">From</div><select id="xf_f" onchange="xfCur()">${o(fid)}</select><div class="sl">To</div><select id="xf_t" onchange="xfCur()">${o(to)}</select><input class="amtin" id="xf_a" type="number" inputmode="decimal" placeholder="0.00"><input id="xf_r" type="number" inputmode="decimal" placeholder="Amount received" hidden></div><button class="save" onclick="saveXfer()">Transfer</button>`);xfCur()}
+function xfCur(){const f=acct(+$('xf_f').value),t=acct(+$('xf_t').value);$('xf_a').placeholder='0.00 '+f.cur;$('xf_r').hidden=f.cur==t.cur;$('xf_r').placeholder='Amount received ('+t.cur+')'}
+function saveXfer(){const f=acct(+$('xf_f').value),t=acct(+$('xf_t').value),a=parseFloat($('xf_a').value);if(f.id==t.id){toast('Pick two different accounts');return}if(!(a>0)){toast('Enter an amount');return}
+ let r=a;if(f.cur!=t.cur){r=parseFloat($('xf_r').value);if(!(r>0)){toast('Enter the amount received');return}}
+ const n=Date.now();S.txs.push({id:n,m:'To '+t.name,c:'Transfer',a,acc:f.id,t:n,xf:1},{id:n+1,m:'From '+f.name,c:'Transfer',a:r,acc:t.id,t:n,inc:true,xf:1});f.bal-=a;t.bal+=r;closeSheet();render();toast('Transferred')}
+function openAccEdit(id){const a=acct(id);sheet(`<h3>Edit account</h3><div class="f"><input id="ae_n" value="${esc(a.name)}" placeholder="Account name"><select id="ae_t">${['Bank','Cash','Card','Wallet','Savings'].map(c=>`<option ${c==a.type?'selected':''}>${c}</option>`).join('')}</select><div class="sl">Balance (${a.cur})</div><input id="ae_b" type="number" inputmode="decimal" value="${a.bal}"></div><button class="save" onclick="saveAccEdit(${a.id})">Save</button>`)}
+function saveAccEdit(id){const a=acct(id),n=$('ae_n').value.trim();if(!n){toast('Name it first');return}a.name=n;a.type=$('ae_t').value;const b=parseFloat($('ae_b').value);if(!isNaN(b))a.bal=b;closeSheet();render();toast('Saved')}
+const _RM9=renderMoney;
+renderMoney=function(){S.accts=S.accts||[];if(S.macc&&!S.accts.some(a=>a.id==S.macc))S.macc=0;_RM9();
+ const st=$('v-mhome').querySelector('.stack');if(!st)return;
+ st.insertAdjacentHTML('beforebegin',(S.accts.length>1?`<div class="chips af">${['All',...S.accts.map(a=>a.name)].map((n,i)=>`<button class="chip ${(i?S.accts[i-1].id:0)==(S.macc||0)?'on':''}" onclick="setMA(${i-1})">${esc(n)}</button>`).join('')}</div>`:'')+`<div class="paste"><input type="search" placeholder="Search expenses" value="${esc(MQ)}" onchange="setMQ(this.value)"></div>`)};
+function setMA(i){S.macc=i<0?0:S.accts[i].id;render()}
+function setMQ(v){MQ=v.trim().toLowerCase();render()}
 render();
 </script></body></html>
