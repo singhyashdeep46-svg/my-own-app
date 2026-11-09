@@ -374,6 +374,12 @@ button{transition:transform 200ms var(--out),background-color 200ms ease,box-sha
 @media(prefers-reduced-motion:reduce){.app::before,.view.on>*,#accs>*,#bills>*,#ins>*,#msgs>*{animation:none}}
 /* spend pill: desktop grid rule had zeroed its side padding */
 #v-mhome.on>.tot{padding:9px 16px!important;margin-left:0!important}
+/* wallet cards: keep each card's chip/number inside its own layer so they never bleed through the cards stacked above */
+.wc{isolation:isolate}
+/* toast: readable on glass in light and dark */
+.toast{color:var(--ink);font-weight:600}
+/* hide the floating + on account screens so it never covers the Add account button */
+.app:has(#v-acc.on) .fab,.app:has(#v-macc.on) .fab{display:none}
 /* ===== /v5 ===== */
 </style></head><body>
 <div class="app" id="app">
