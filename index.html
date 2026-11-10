@@ -429,6 +429,66 @@ body[data-mode=money] nav .badge{font-size:11px}
 .pr .am{text-align:right;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
 .pr .fa{background:rgba(255,255,255,.6)}
 </style>
+<style>
+/* ===== v13: bold flat system (matches the new Spend home) applied to EVERY screen ===== */
+:root{--cd:#f4f3f5}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--cd:#25252c}}
+:root[data-theme="dark"]{--cd:#25252c}
+body,body .app{background:var(--surf)}
+.app::before{display:none!important}
+.app{animation:none}
+
+/* type: heavy display face for every screen title */
+body h2,body .big{font-family:"Bagel Fat One","Arial Black",system-ui,sans-serif;font-weight:400;letter-spacing:-.005em;line-height:1.1}
+body h2{font-size:clamp(34px,10vw,46px);margin:14px 20px 6px}
+body .big{font-size:clamp(40px,12.5vw,56px);padding:0 20px}
+body .big small{font-family:system-ui,sans-serif}
+body .lbl{font-size:17px}
+
+/* flat surfaces: no glass, no blur, no rims */
+body .top,body .tot,body .msg,body .set,body .gcard,body .add,body .gb,body #ins,body .cal,
+body .plan,body .ask,body .panel,body .seg,body .dd{-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none;border:0}
+body .top{background:var(--surf);box-shadow:0 1px 0 var(--line);border-radius:26px}
+body .tot,body .msg,body .set,body .gcard,body .gb,body #ins,body .cal,body .add,body .plan,body .dd{background:var(--cd)}
+body .add{border:2px dashed var(--line);background:none;color:var(--mute)}
+body .acc{background:var(--c,var(--cd));-webkit-backdrop-filter:none;backdrop-filter:none;border:0;box-shadow:none;border-radius:24px}
+body .acc.bud{background:var(--cd)}
+body .card{background-image:none!important;box-shadow:0 -6px 0 rgba(0,0,0,.04)}
+body .logo{background:rgba(255,255,255,.55);border:0;box-shadow:none;backdrop-filter:none}
+body input,body select{background:var(--cd);border:0;box-shadow:none;border-radius:15px;-webkit-backdrop-filter:none;backdrop-filter:none}
+body input:focus,body select:focus{box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 30%,transparent)}
+body .amtin{background:none!important}
+body .chip,body .modes,body .gear,body .cbtn,body .plus,body .tg{background:var(--cd)}
+body .chip.on{background:var(--ink);color:var(--surf)}
+body .modes button.on,body .seg button.on,body .tg button.on{background:var(--surf)}
+body .sheet,body .pop,body .pop.solid{background:var(--surf);-webkit-backdrop-filter:none;backdrop-filter:none;border:0}
+body .sheet{box-shadow:0 -20px 60px rgba(0,0,0,.18)}
+body .pop{box-shadow:0 18px 50px rgba(0,0,0,.2)}
+body .toast{background:var(--ink);color:var(--surf);-webkit-backdrop-filter:none;backdrop-filter:none;border:0;box-shadow:none}
+body #splash,body #auth{background:var(--surf);-webkit-backdrop-filter:none;backdrop-filter:none}
+
+/* buttons: flat, chunky, same radius as the Add / Lend / Settle row */
+body .pill,body .save,body .fab{background-image:none;box-shadow:none;border-radius:15px;font-weight:600}
+body .pill.g{background:var(--cd);color:var(--ink)}
+body .save{background:var(--ink);color:var(--surf);border-radius:15px;padding:17px}
+body .fab{background:var(--ink);color:var(--surf);border-radius:50%}
+body .fab:active{transform:scale(.92)}
+body .pill.wa{background:#1fa855;color:#fff}
+
+/* bottom bar: black pill with a white circle on the active tab, in every mode */
+@media(max-width:1023px){
+ body nav{background:#0b0b0d;border:0;border-radius:40px;padding:7px;box-shadow:0 14px 34px rgba(0,0,0,.28);-webkit-backdrop-filter:none;backdrop-filter:none}
+ body nav .ind,body nav .mid::after{display:none}
+ body nav button,body nav button.mid{color:#a7a5b0;font-size:0;gap:0;padding:0;height:52px;width:auto;margin:0;background:none;box-shadow:none;transform:none;border-radius:0}
+ body nav button .ic,body nav button.mid .ic{width:52px;height:52px;border-radius:50%;background:none!important;transition:background-color 260ms var(--out),transform 260ms var(--drawer)}
+ body nav button.on,body nav button.mid.on{color:#0b0b0d;background:none;box-shadow:none;transform:none}
+ body nav button.on .ic,body nav button.mid.on .ic{background:#fff!important;transform:scale(1.06)}
+ body nav svg,body nav .mid svg{width:24px;height:24px;fill:none!important;stroke:currentColor;stroke-width:2}
+ body nav .f{fill:none!important}
+ body nav .badge{font-size:11px;top:2px;left:56%}
+}
+body main{padding-bottom:140px}
+</style>
 </head><body>
 <div class="app" id="app">
  <div class="top"><div id="avs" style="display:flex"></div><button class="plus" onclick="openArea()" aria-label="Add area"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="cur" id="curBtn" onclick="go('home')">Today</button><button class="gear" onclick="go('set')" aria-label="Settings"><span class="sdot off" id="sdot"></span><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></button></div>
