@@ -801,9 +801,9 @@ renderMoney=function(){_RM8();mi();
  const t0=sod(),open=S.mbills.filter(b=>!b.paid).sort((a,b)=>a.due-b.due),paid=S.mbills.filter(b=>b.paid).sort((a,b)=>(b.paidAt||0)-(a.paidAt||0)),
   odN=open.filter(b=>b.due<t0).length,pend=sumBy(open,b=>b.cur,b=>b.a);
  const card=(b,i)=>{const od=!b.paid&&b.due<t0,soon=!b.paid&&!od&&b.due-t0<3*DAY,ac=b.paid?S.accts.find(a=>a.id==b.acc):null,
-  sub=b.paid?`Paid · ${ac?esc(ac.name):'Deleted account'} · ${bdate(b.paidAt||b.due)}`:(od?'Overdue · was ':soon?'Due soon · ':'Due ')+bdate(b.due),
+  sub=b.paid?`Paid · ${ac?esc(ac.name):b.acc?'Deleted account':'No account linked'} · ${bdate(b.paidAt||b.due)}`:(od?'Overdue · was ':soon?'Due soon · ':'Due ')+bdate(b.due),
   rec=b.rec&&b.rec!='none'?` · ${RECL[b.rec]}`:'';
-  return`<div class="acc" data-sw="mb:${b.id}" style="--c:${b.paid?'var(--surf)':od?'#ff8a8a':pal(i+3)};color:${b.paid?'var(--mute)':'#15121c'}"><div class="al"><div class="logo">${ico(b.paid?'Check':'Bills')}</div><div class="am"><b>${esc(b.n)}</b><span>${sub}${rec}</span></div></div><div class="amt">${fm(b.a,b.cur)}<span>${b.paid?`<button class="pill g" style="margin-top:6px;padding:6px 12px;font-size:13px" onclick="unpayB(${b.id})">Undo</button>`:`<button class="pill" style="margin-top:6px" onclick="payB(${b.id})">Pay now</button>`}</span></div></div>`};
+  return`<div class="acc" data-sw="mb:${b.id}" style="--c:${b.paid?'var(--surf)':od?'#ff8a8a':pal(i+3)};color:${b.paid?'var(--mute)':'#15121c'}"><div class="al"><div class="logo">${ico(b.paid?'Check':'Bills')}</div><div class="am"><b>${esc(b.n)}</b><span>${sub}${rec}</span></div></div><div class="amt">${fm(b.a,b.cur)}<span>${b.paid?`<button class="pill g" style="margin-top:6px;padding:6px 12px;font-size:13px" onclick="event.stopPropagation();unpayB(${b.id})">Undo</button>`:`<button class="pill" style="margin-top:6px" onclick="payB(${b.id})">Pay now</button>`}</span></div></div>`};
  $('v-mbills').innerHTML=`<h2>Bills</h2><div class="sub">${open.length?(odN?odN+' overdue · ':'')+'Pending '+fmm(pend):'All paid up'}</div>`+
   (open.length?open.map(card).join(''):'')+
   (paid.length?`<div class="sl" style="margin:14px 4px 0">Paid</div>`+paid.map(card).join(''):'')+
@@ -822,7 +822,8 @@ function confirmPay(id){const b=S.mbills.find(x=>x.id==id),a=S.accts.find(x=>x.i
  S.txs.push(tx);a.bal-=b.a;b.paid=true;b.acc=a.id;b.txId=tx.id;b.paidAt=now;
  if(b.rec&&b.rec!='none'&&!b.next){const nb={id:now+1,n:b.n,a:b.a,cur:b.cur,due:nextDue(b.due,b.rec),paid:false,rec:b.rec};S.mbills.push(nb);b.next=nb.id}
  closeSheet();render();toast('Paid from '+a.name+(b.next?' · next bill added':''))}
-function unpayB(id){const b=S.mbills.find(x=>x.id==id);if(!b||!b.paid)return;
+function unpayB(id){try{_unpayB(id)}catch(e){console.error(e);try{const b=S.mbills.find(x=>x.id==id);if(b){b.paid=false;delete b.acc;delete b.txId;delete b.paidAt;delete b.next}render();toast('Marked unpaid')}catch(e2){toast('Undo failed: '+(e2.message||e2))}}}
+function _unpayB(id){const b=S.mbills.find(x=>x.id==id);if(!b||!b.paid)return;
  const tx=S.txs.find(x=>x.id==b.txId),a=S.accts.find(x=>x.id==b.acc);
  if(tx){S.txs=S.txs.filter(x=>x.id!=tx.id);if(a)a.bal+=tx.a}
  if(b.next){const n=S.mbills.find(x=>x.id==b.next);if(n&&!n.paid)S.mbills=S.mbills.filter(x=>x.id!=n.id)}
