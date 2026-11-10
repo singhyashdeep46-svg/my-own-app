@@ -381,7 +381,55 @@ button{transition:transform 200ms var(--out),background-color 200ms ease,box-sha
 /* hide the floating + on account screens so it never covers the Add account button */
 .app:has(#v-acc.on) .fab,.app:has(#v-macc.on) .fab{display:none}
 /* ===== /v5 ===== */
-</style></head><body>
+</style><link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&display=swap" rel="stylesheet">
+<style>
+body[data-mode=money] .app{background:var(--surf)}
+body[data-mode=money] .fab,body[data-mode=money] .ask{display:none!important}
+body[data-mode=money][data-tab=mhome] .top{display:none}
+.mh{display:flex;align-items:center;gap:10px;padding:18px 20px 4px}
+.mav{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:18px;background:#ffb98a;color:#1a0f00}
+.mchip{display:flex;align-items:center;gap:6px;background:var(--line);border-radius:18px;padding:0 14px;height:40px;font-size:14px;font-weight:500}
+.mib{width:44px;height:44px;border-radius:14px;background:var(--line);display:grid;place-items:center;position:relative}
+.mib i{position:absolute;top:10px;right:10px;width:9px;height:9px;border-radius:50%;background:#ff2d2d}
+.mlbl{color:var(--mute);font-size:17px;font-weight:500;padding:16px 20px 2px}
+.mbig{font-family:"Bagel Fat One","Arial Black",system-ui,sans-serif;font-size:clamp(38px,12.5vw,56px);line-height:1.1;padding:0 20px;display:flex;align-items:center;gap:12px}
+.mbig button{width:40px;height:40px;border-radius:50%;background:var(--ink);color:var(--surf);display:grid;place-items:center;flex:none}
+.mup{padding:2px 20px 0;color:var(--mute);font-size:14px}.mup b{color:var(--ink)}
+.tick{margin:16px -8px 18px;transform:rotate(-1.6deg);background:#0b0b0d;color:#fff;border-top:5px solid #ff4a0f;border-bottom:5px solid #4a4cff;overflow:hidden;white-space:nowrap;padding:9px 0;font-size:14px}
+.tick>div{display:inline-block;animation:tk 20s linear infinite}.tick span{margin:0 14px}.tick b{opacity:.6}
+@keyframes tk{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.tick>div{animation:none}}
+.mact{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px}
+.mact button{height:54px;border-radius:15px;color:#fff;font-weight:600;font-size:17px;display:flex;align-items:center;justify-content:center;gap:10px}
+.msec{display:flex;justify-content:space-between;align-items:center;padding:22px 20px 10px;font-size:17px;color:var(--mute)}.msec button{color:var(--ink);font-weight:700;padding:8px 0 8px 12px}
+.frs{display:flex;gap:14px;overflow-x:auto;padding:0 20px 4px;scrollbar-width:none}.frs::-webkit-scrollbar{display:none}
+.fr{flex:none;width:62px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px;position:relative}
+.fr em{font-style:normal;max-width:62px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fa{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:21px;color:#15121c;flex:none}
+.fa.add{background:none;border:2px dashed var(--mute);color:var(--mute)}
+.fb{position:absolute;top:42px;font-size:11px;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--ink);color:var(--surf)}.fb.g{background:#127a3e;color:#fff}.fb.r{background:#c4251f;color:#fff}
+.ws{position:relative;height:210px;margin:4px 20px 0;cursor:pointer}
+.wl{position:absolute;top:12px;bottom:0;left:56px;right:0;border-radius:26px}
+.l3{background:#f0245f;transform:rotate(5deg) translateX(8px)}.l2{background:#34c759;transform:rotate(-3deg) translate(4px,-4px)}
+.l1{background:#ff8a0f;color:#1a0f00;padding:18px 40px 16px 68px;transform:rotate(1deg);display:flex;flex-direction:column}
+.l1 b{font-size:22px;font-weight:600;letter-spacing:-.01em}.l1 span{font-size:13px;opacity:.75;margin-top:2px}
+.l1 .ma{margin-top:auto;font-family:"Bagel Fat One","Arial Black",sans-serif;font-size:24px}
+.vw{position:absolute;right:12px;top:50%;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);font-size:13px;font-weight:600}
+.wf{position:absolute;left:0;top:0;bottom:-6px;width:112px;border-radius:26px;background:radial-gradient(circle at 30% 20%,#2c231d,#141010 65%);border:2px dashed #2f2621;z-index:3}
+body[data-mode=money] nav{background:#0b0b0d;border:0;border-radius:40px;left:16px;right:16px;padding:7px;box-shadow:0 14px 34px rgba(0,0,0,.28);-webkit-backdrop-filter:none;backdrop-filter:none}
+body[data-mode=money] nav .ind{display:none}
+body[data-mode=money] nav button{color:#a7a5b0;font-size:0;gap:0;padding:0;height:52px}
+body[data-mode=money] nav button .ic{width:52px;height:52px;border-radius:50%;transition:background-color 260ms var(--out),transform 260ms var(--drawer)}
+body[data-mode=money] nav button.on{color:#0b0b0d}body[data-mode=money] nav button.on .ic{background:#fff;transform:scale(1.06)}
+body[data-mode=money] nav svg{fill:none!important}
+body[data-mode=money] nav .badge{font-size:11px}
+.sm{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 20px 14px}.sm div{border-radius:20px;padding:14px;color:#15121c}.sm span{display:block;font-size:13px;opacity:.7}.sm b{font-size:20px;font-weight:700;display:block;margin-top:4px}
+.pr{display:flex;align-items:center;gap:14px;margin:0 20px 10px;padding:14px;border-radius:24px;width:calc(100% - 40px);text-align:left;color:#15121c}
+.pr .nm{flex:1;min-width:0}.pr .nm b{display:block;font-size:17px;font-weight:600}.pr .nm span,.pr .am span{display:block;font-size:13px;opacity:.7}
+.pr .am{text-align:right;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.pr .fa{background:rgba(255,255,255,.6)}
+</style>
+</head><body>
 <div class="app" id="app">
  <div class="top"><div id="avs" style="display:flex"></div><button class="plus" onclick="openArea()" aria-label="Add area"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="cur" id="curBtn" onclick="go('home')">Today</button><button class="gear" onclick="go('set')" aria-label="Settings"><span class="sdot off" id="sdot"></span><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></button></div>
  <main id="main">
@@ -421,7 +469,7 @@ const AICONS=['Other','Work','User','Health','Study','Home','Errands','Star','Co
 let S,USER=null,SYNC='',undoFn=null,pushT=0;
 const blank=()=>({tab:'home',per:'today',area:'All',theme:'system',name:'',areas:['Work','Personal','Health','Study','Home','Errands'],aicons:{},tasks:[],log:[],accts:[],txs:[],invs:[],biz:{},base:'USD',mode:'tasks',del:{},su:0});S=blank();
 /* ===== sync engine: per-item merge so every device keeps its edits ===== */
-const UIK=['tab','per','area','mode','mper','theme'],COLS=['tasks','accts','txs','mbills','mmsgs','invs'],SETK=['name','areas','aicons','biz','base'];
+const UIK=['tab','per','area','mode','mper','theme'],COLS=['tasks','accts','txs','mbills','mmsgs','invs','loans'],SETK=['name','areas','aicons','biz','base'];
 let SH={},dirty=false,busy=false,again=false;
 const jx=x=>JSON.stringify(x,(k,v)=>k=='u'?undefined:v);
 function fmerge(a,b){a=a||{};b=b||{};const o={},del={};
@@ -1073,5 +1121,75 @@ let LOADING=false;
 const SKC='<div class="sk sk-card"></div>'.repeat(3),SKR='<div class="sk sk-row"></div>'.repeat(3);
 function skAll(){const s=$('stack');if(s)s.innerHTML=SKC;['accs','ins','bills','msgs'].forEach(i=>{const e=$(i);if(e)e.innerHTML=SKR})}
 const _render=render;render=function(){if(LOADING){skAll();try{renderNav()}catch(e){}return}_render()};
+/* ===== v12: new money home + lend/borrow ===== */
+const AVC=['#8fa8ff','#ffe84d','#d9ff4a','#a9b3ff','#ffb400','#ff9ed0'];
+let HC=0,HIDE=false,LF='all',LDIR='lent';try{HIDE=localStorage.getItem('fin_hide')=='1'}catch(e){}
+const sv=(d,w)=>`<svg viewBox="0 0 24 24" width="${w||20}" height="${w||20}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const ENC=encodeURIComponent,DEC=s=>s?decodeURIComponent(s):'',mk_=s=>HIDE?'••••':s,lns=()=>S.loans=S.loans||[];
+const av=(n,z)=>{const h=[...n].reduce((a,c)=>a+c.charCodeAt(0),0)%6;return`<span class="fa" style="background:${AVC[h]};${z?`width:${z}px;height:${z}px`:''}">${esc((n.trim()[0]||'?').toUpperCase())}</span>`};
+function people(){const m={};lns().forEach(l=>{const k=l.p.toLowerCase(),o=m[k]=m[k]||{n:l.p,t:0,open:0,net:{},due:0};o.t=Math.max(o.t,l.t);if(!l.paid){o.open++;o.net[l.cur]=(o.net[l.cur]||0)+(l.dir=='lent'?l.a:-l.a);if(l.due&&(!o.due||l.due<o.due))o.due=l.due}});
+ const a=Object.values(m);a.forEach(o=>{o.c=Object.keys(o.net).filter(k=>Math.abs(o.net[k])>.004);o.s=o.c.length?Math.sign(o.net[o.c[0]]):0});return a.sort((x,y)=>y.t-x.t)}
+const pnet=o=>o.c.length?o.c.map(k=>(o.net[k]>0?'+':'−')+fm(Math.abs(o.net[k]),k)).join(' · '):'Settled',plab=o=>o.s>0?'owes you':o.s<0?'you owe':'all square';
+const dshort=ts=>new Date(ts).toLocaleDateString('en',{month:'short',day:'numeric'}),dueTxt=ts=>ts<Date.now()?'Overdue since '+dshort(ts):'Due '+dshort(ts);
+function mhomeHTML(){mi();const cs=[...new Set(S.accts.map(a=>a.cur))];if(!cs.length)cs.push(S.base);const cur=cs[HC%cs.length],
+ bal=S.accts.filter(a=>a.cur==cur).reduce((s,a)=>s+a.bal,0),
+ wk=S.txs.filter(t=>Date.now()-t.t<7*DAY&&S.accts.some(a=>a.id==t.acc&&a.cur==cur)).reduce((s,t)=>s+(t.inc?t.a:-t.a),0),ow={},oe={};
+ lns().forEach(l=>{if(l.paid)return;const o=l.dir=='lent'?ow:oe;o[l.cur]=(o[l.cur]||0)+l.a});
+ const tk=`<span>${mk_(fmm(ow))} to collect</span><b>•</b><span>${mk_(fmm(oe))} to repay</span><b>•</b>`.repeat(4),ps=people().slice(0,10),a=S.accts[0],
+ nm=S.name||(USER&&USER.email)||'F',pend=(S.mmsgs||[]).filter(x=>!x.done).length;
+ return `<div class="mh"><button class="mav" onclick="go('set')" aria-label="Profile and settings">${esc(nm.trim()[0].toUpperCase())}</button>
+ <button class="mchip" onclick="HC++;hap();render()" aria-label="Change currency, now ${cur}">${cur}${sv('<path d="M6 9l6 6 6-6"/>',16)}</button><span style="flex:1"></span>
+ <button class="mib" onclick="go('minbox')" aria-label="Messages${pend?', '+pend+' new':''}">${sv('<path d="M6 9a6 6 0 1112 0c0 6 2 7 2 7H4s2-1 2-7M10 20a2 2 0 004 0"/>',22)}${pend?'<i></i>':''}</button>
+ <button class="mib" onclick="go('set')" aria-label="Settings">${sv('<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',22)}</button></div>
+ <div class="mlbl">Available to Spend</div>
+ <div class="mbig"><span>${HIDE?'••••••':fm(bal,cur)}</span><button onclick="togHide()" aria-label="${HIDE?'Show':'Hide'} balance" aria-pressed="${HIDE}">${sv(HIDE?'<path d="M3 3l18 18M10.6 6.1A9.8 9.8 0 0112 6c6 0 10 6 10 6a17 17 0 01-3.2 3.8M6.5 7.5C3.8 9.3 2 12 2 12s4 6 10 6a9.6 9.6 0 004-.9"/>':'<path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',22)}</button></div>
+ <div class="mup">Updated just now · <b>${HIDE?'••••':(wk<0?'−':'+')+fm(Math.abs(wk),cur)}</b> this week</div>
+ <div class="tick" aria-label="${mk_(fmm(ow))} to collect, ${mk_(fmm(oe))} to repay"><div aria-hidden="true">${tk}${tk}</div></div>
+ <div class="mact"><button style="background:#0b0b0d" onclick="openMTx()">Add ${sv('<path d="M12 5v14M5 12h14"/>')}</button>
+ <button style="background:#1f6feb" onclick="openLoan('lent')">Lend ${sv('<path d="M7 17L17 7M8 7h9v9"/>')}</button>
+ <button style="background:#d93a00" onclick="openLoan('borrow')">Borrow ${sv('<path d="M17 7L7 17M16 17H7V8"/>')}</button>
+ <button style="background:#4a4cff" onclick="openSettle()">Settle ${sv('<path d="M5 13l4 4L19 7"/>')}</button></div>
+ <div class="msec"><span>Friends</span><button onclick="go('mloans')">More</button></div>
+ <div class="frs"><button class="fr" onclick="openLoan('lent')" aria-label="Add person"><span class="fa add">+</span><em>Add</em></button>${ps.map(o=>`<button class="fr" onclick="openPerson('${ENC(o.n)}')" aria-label="${esc(o.n)}, ${pnet(o)} ${plab(o)}">${av(o.n)}${o.s?`<span class="fb ${o.s>0?'g':'r'}">${o.s>0?'+':'−'}${Math.abs(o.net[o.c[0]]).toLocaleString('en',{maximumFractionDigits:0})}</span>`:''}<em>${esc(o.n)}</em></button>`).join('')}</div>
+ <div class="msec"><span>Wallets</span><button onclick="go('macc')">All</button></div>`+
+ (a?`<div class="ws" onclick="go('macc')" role="button" aria-label="Open wallets"><i class="wl l3"></i><i class="wl l2"></i><div class="wl l1"><b>${esc(a.name)}</b><span>${esc(a.type||'Account')} · ${a.cur} · ${S.accts.length} wallet${S.accts.length>1?'s':''}</span><div class="ma">${HIDE?'••••':fm(a.bal,a.cur)}</div><span class="vw">View wallet</span></div><i class="wf"></i></div>`:`<button class="add" onclick="openAccM()">+ Add account</button>`)}
+function togHide(){HIDE=!HIDE;try{localStorage.setItem('fin_hide',HIDE?'1':'0')}catch(e){}hap();render()}
+function loansHTML(){const ps=people(),ow={},oe={};lns().forEach(l=>{if(l.paid)return;const o=l.dir=='lent'?ow:oe;o[l.cur]=(o[l.cur]||0)+l.a});
+ const L=ps.filter(o=>LF=='all'||(LF=='owes'&&o.s>0)||(LF=='iowe'&&o.s<0));
+ return `<h2>People</h2><div class="sub">Money you lent and borrowed</div><div class="sm"><div style="background:var(--mint)"><span>Owed to you</span><b>${fmm(ow)}</b></div><div style="background:var(--peach)"><span>You owe</span><b>${fmm(oe)}</b></div></div>
+ <div class="acts" style="margin:0 20px 14px"><button class="pill" onclick="openLoan('lent')">I lent</button><button class="pill g" onclick="openLoan('borrow')">I borrowed</button></div>
+ <div class="seg" style="margin:0 20px 14px">${[['all','All'],['owes','Owes me'],['iowe','I owe']].map(([k,l])=>`<button class="${LF==k?'on':''}" onclick="LF='${k}';render()">${l}</button>`).join('')}</div>`+
+ (L.length?L.map((o,i)=>`<button class="pr" style="background:${pal(i+1)}" onclick="openPerson('${ENC(o.n)}')">${av(o.n,50)}<div class="nm"><b>${esc(o.n)}</b><span>${o.open?o.open+' open'+(o.due?' · '+dueTxt(o.due):''):'Nothing open'}</span></div><div class="am">${pnet(o)}<span>${plab(o)}</span></div></button>`).join(''):empty('Savings',ps.length?'No one in this list.':'No one yet.<br>Tap “I lent” or “I borrowed” to start.'))}
+function openLoan(dir,name){mi();LDIR=dir||'lent';const ps=people(),c0=(S.accts[0]&&S.accts[0].cur)||S.base;
+ sheet(`<h3>Lend or borrow</h3><div class="f"><div class="seg"><button class="${LDIR=='lent'?'on':''}" onclick="setLD('lent',this)">I lent</button><button class="${LDIR=='borrow'?'on':''}" onclick="setLD('borrow',this)">I borrowed</button></div>
+ <input id="ld_p" list="ld_l" placeholder="Person’s name" value="${esc(DEC(name))}"><datalist id="ld_l">${ps.map(p=>`<option value="${esc(p.n)}">`).join('')}</datalist>
+ <input id="ld_a" type="number" inputmode="decimal" placeholder="Amount"><select id="ld_c" aria-label="Currency">${CURS.map(c=>`<option ${c==c0?'selected':''}>${c}</option>`).join('')}</select>
+ <select id="ld_k" aria-label="Account" onchange="const a=S.accts.find(x=>x.id==this.value);if(a)$('ld_c').value=a.cur"><option value="0">Don’t change any account</option>${S.accts.map(a=>`<option value="${a.id}">${esc(a.name)} · ${a.cur}</option>`).join('')}</select>
+ <input id="ld_n" placeholder="What for? (optional)"><div class="sl">Pay back by (optional)</div><input id="ld_d" type="date"><button class="pill" onclick="saveLoan()">Save</button></div>`)}
+function setLD(d,b){LDIR=d;[...b.parentNode.children].forEach(c=>c.classList.toggle('on',c==b))}
+function saveLoan(){const p0=$('ld_p').value.trim(),a=parseFloat($('ld_a').value);if(!p0){toast('Add a name first');return}if(!(a>0)){toast('Enter an amount');return}
+ const ex=people().find(x=>x.n.toLowerCase()==p0.toLowerCase()),k=+$('ld_k').value,ac=k?S.accts.find(x=>x.id==k):null,d=$('ld_d').value,cur=ac?ac.cur:$('ld_c').value;
+ lns().push({id:Date.now()+Math.floor(Math.random()*999),p:ex?ex.n:p0,dir:LDIR,a,cur,acc:ac?ac.id:0,note:$('ld_n').value.trim(),t:Date.now(),due:d?new Date(d+'T23:59:00').getTime():null,paid:false});
+ if(ac)ac.bal+=LDIR=='lent'?-a:a;closeSheet();render();toast((LDIR=='lent'?'Lent ':'Borrowed ')+fm(a,cur)+(LDIR=='lent'?' to ':' from ')+(ex?ex.n:p0))}
+function lAdj(l,rev){const ac=l.acc&&S.accts.find(x=>x.id==l.acc);if(!ac)return;const s=(l.dir=='lent'?-1:1)*(rev?-1:1);ac.bal+=s*l.a}
+function setPaid(l,v){if(!!l.paid==v)return;l.paid=v;l.pt=v?Date.now():null;lAdj(l,v)}
+function settleLoan(id){const l=lns().find(x=>x.id==id);if(!l)return;setPaid(l,true);render();openPerson(ENC(l.p));toast('Settled · tap to undo',()=>{setPaid(l,false);render()})}
+function settleAll(n){const ls=lns().filter(l=>!l.paid&&l.p.toLowerCase()==DEC(n).toLowerCase());ls.forEach(l=>setPaid(l,true));render();closeSheet();toast('All settled · tap to undo',()=>{ls.forEach(l=>setPaid(l,false));render()})}
+function delLoan(id){const l=lns().find(x=>x.id==id);if(!l)return;const was=l.paid;if(!was)lAdj(l,true);S.loans=S.loans.filter(x=>x.id!=id);render();openPerson(ENC(l.p));toast('Deleted · tap to undo',()=>{if(!was)lAdj(l,false);S.loans.push(l);render()})}
+function openPerson(n){const nm=DEC(n),o=people().find(x=>x.n.toLowerCase()==nm.toLowerCase());if(!o){closeSheet();return}
+ const ls=lns().filter(l=>l.p.toLowerCase()==nm.toLowerCase()).sort((a,b)=>b.t-a.t);
+ sheet(`<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">${av(o.n,56)}<div><h3 style="margin:0">${esc(o.n)}</h3><div style="color:var(--mute);font-size:15px">${pnet(o)} · ${plab(o)}</div></div></div>
+ <div class="acts"><button class="pill" onclick="openLoan('lent','${ENC(o.n)}')">I lent</button><button class="pill g" onclick="openLoan('borrow','${ENC(o.n)}')">I borrowed</button></div>
+ ${o.open>1?`<button class="pill g" style="width:100%;margin-bottom:10px" onclick="settleAll('${ENC(o.n)}')">Settle everything</button>`:''}
+ ${ls.map(l=>`<div class="arow"><span><b style="font-weight:600">${l.dir=='lent'?'You lent':'You borrowed'}</b>${l.note?' · '+esc(l.note):''}<br><small style="color:var(--mute)">${dshort(l.t)}${l.paid?' · Settled '+dshort(l.pt||l.t):l.due?' · '+dueTxt(l.due):''}</small></span>
+ <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end"><b class="${l.dir=='lent'?'pl':''}">${l.dir=='lent'?'+':'−'}${fm(l.a,l.cur)}</b>${l.paid?'':`<button class="pill g" onclick="settleLoan(${l.id})">Settle</button>`}<button class="pill g" aria-label="Delete entry" onclick="delLoan(${l.id})">Delete</button></span></div>`).join('')}`)}
+function openSettle(){const ps=people().filter(o=>o.open);if(!ps.length){toast('Nobody owes anything yet');return}
+ sheet(`<h3>Settle up</h3>`+ps.map(o=>`<button class="arow" style="width:100%;text-align:left;align-items:center" onclick="openPerson('${ENC(o.n)}')"><span style="display:flex;align-items:center;gap:12px">${av(o.n,40)}${esc(o.n)}</span><b>${pnet(o)}<br><small style="font-weight:500;color:var(--mute)">${plab(o)}</small></b></button>`).join(''))}
+{const s=document.createElement('section');s.className='view';s.id='v-mloans';$('v-mbills').after(s)}
+const _RM12=renderMoney;renderMoney=function(){_RM12();$('v-mhome').innerHTML=mhomeHTML();$('v-mloans').innerHTML=loansHTML()};
+Object.assign(IC,{mhome:'<path d="M4 11l8-7 8 7v8a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M9.5 21v-6h5v6"/>',mloans:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.5a3 3 0 010 5.8M18 14.3c1.8.8 3 2.6 3 4.7"/>',macc:'<rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M16 15h2"/>',minbox:'<path d="M4 6h16v10H8l-4 4z"/><path d="M8 10h8M8 13h5"/>',mins:'<path d="M5 20V11M12 20V5M19 20v-6"/>'});
+NAVS.money=[['mhome','Home'],['mloans','People'],['macc','Wallets'],['minbox','Inbox'],['mins','Insights']];navMode='';
+const _mu12=modeUI;modeUI=function(){_mu12();document.body.dataset.mode=S.mode||'tasks';document.body.dataset.tab=S.tab||''};
+
 render();
 </script></body></html>
