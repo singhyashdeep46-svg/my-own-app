@@ -734,7 +734,7 @@ mn.addEventListener('pointermove',e=>{if(!sw)return;const dx=e.clientX-sw.x,dy=e
  if(sw.lock=='y'){sw=null;return}
  if(sw.lock=='x'){sw.dx=dx;swMoved=Math.abs(dx)>10;if(sw.el){const x=dx<0?dx:Math.pow(dx,.65);sw.el.style.transition='none';sw.el.style.transform=`translateX(${x}px) rotate(${x/90}deg)`;sw.el.style.opacity=1-Math.min(Math.max(-dx,0)/260,.6);if(dx<-110&&!sw.hit){sw.hit=true;hap()}if(dx>-110)sw.hit=false}}});
 const swEnd=()=>{if(!sw)return;const s=sw;sw=null;if(s.lock!='x')return;const v=s.dx/Math.max(performance.now()-s.t,1);
- if(s.el){const el=s.el;if(s.dx<-110||v<-.7){el.style.transition='transform 280ms var(--out),opacity 220ms ease';el.style.transform='translateX(-120%)';el.style.opacity=0;setTimeout(()=>{const p=el.dataset.sw.split(':');({tx:swDel,msg:swMsg,mtx:delMTx,mm:dismissM,ar:delArea})[p[0]](+p[1])},230)}else{el.style.transition='transform 480ms var(--drawer),opacity 200ms ease';el.style.transform='';el.style.opacity=''}}
+ if(s.el){const el=s.el;if(s.dx<-110||v<-.7){el.style.transition='transform 280ms var(--out),opacity 220ms ease';el.style.transform='translateX(-120%)';el.style.opacity=0;setTimeout(()=>{const p=el.dataset.sw.split(':');({mb:delB,tx:swDel,msg:swMsg,mtx:delMTx,mm:dismissM,ar:delArea})[p[0]](+p[1])},230)}else{el.style.transition='transform 480ms var(--drawer),opacity 200ms ease';el.style.transform='';el.style.opacity=''}}
  else if(Math.abs(s.dx)>80||Math.abs(v)>.6){const n=TABS.indexOf(S.tab)+(s.dx<0?1:-1);if(n>=0&&n<TABS.length){mn.style.setProperty('--dx',(s.dx<0?44:-44)+'px');hap();go(TABS[n])}}
  setTimeout(()=>swMoved=false,60)};
 mn.addEventListener('pointerup',swEnd);mn.addEventListener('pointercancel',swEnd);
@@ -791,6 +791,109 @@ function saveAccM(){mi();const n=$('ma_n').value.trim();if(!n){toast('Name it fi
  ex=S.accts.find(x=>x.name.toLowerCase()==n.toLowerCase()&&x.cur==cur);
  if(ex){closeSheet();setTimeout(()=>{openMTx({k:ex.id,inc:true,a:b||''});toast('“'+ex.name+'” exists · add money to it')},420);return}
  S.accts.push({id:Date.now(),name:n,type:$('ma_t').value,cur,bal:b});S.base=cur;closeSheet();render();toast('Account added')}
+/* ===== v8: bills pay from account -> expense ===== */
+const RECL={none:'One-time',weekly:'Weekly',monthly:'Monthly',yearly:'Yearly'};
+const nextDue=(ts,r)=>{const d=new Date(ts);if(r=='weekly')d.setDate(d.getDate()+7);else if(r=='monthly')d.setMonth(d.getMonth()+1);else if(r=='yearly')d.setFullYear(d.getFullYear()+1);return d.getTime()};
+const sod=()=>new Date().setHours(0,0,0,0);
+const bdate=ts=>new Date(ts).toLocaleDateString('en',{month:'short',day:'numeric'});
+const _RM8=renderMoney;
+renderMoney=function(){_RM8();mi();
+ const t0=sod(),open=S.mbills.filter(b=>!b.paid).sort((a,b)=>a.due-b.due),paid=S.mbills.filter(b=>b.paid).sort((a,b)=>(b.paidAt||0)-(a.paidAt||0)),
+  odN=open.filter(b=>b.due<t0).length,pend=sumBy(open,b=>b.cur,b=>b.a);
+ const card=(b,i)=>{const od=!b.paid&&b.due<t0,soon=!b.paid&&!od&&b.due-t0<3*DAY,ac=b.paid?S.accts.find(a=>a.id==b.acc):null,
+  sub=b.paid?`Paid · ${ac?esc(ac.name):'Deleted account'} · ${bdate(b.paidAt||b.due)}`:(od?'Overdue · was ':soon?'Due soon · ':'Due ')+bdate(b.due),
+  rec=b.rec&&b.rec!='none'?` · ${RECL[b.rec]}`:'';
+  return`<div class="acc" data-sw="mb:${b.id}" style="--c:${b.paid?'var(--surf)':od?'#ff8a8a':pal(i+3)};color:${b.paid?'var(--mute)':'#15121c'}"><div class="al"><div class="logo">${ico(b.paid?'Check':'Bills')}</div><div class="am"><b>${esc(b.n)}</b><span>${sub}${rec}</span></div></div><div class="amt">${fm(b.a,b.cur)}<span>${b.paid?`<button class="pill g" style="margin-top:6px;padding:6px 12px;font-size:13px" onclick="unpayB(${b.id})">Undo</button>`:`<button class="pill" style="margin-top:6px" onclick="payB(${b.id})">Pay now</button>`}</span></div></div>`};
+ $('v-mbills').innerHTML=`<h2>Bills</h2><div class="sub">${open.length?(odN?odN+' overdue · ':'')+'Pending '+fmm(pend):'All paid up'}</div>`+
+  (open.length?open.map(card).join(''):'')+
+  (paid.length?`<div class="sl" style="margin:14px 4px 0">Paid</div>`+paid.map(card).join(''):'')+
+  (!S.mbills.length?empty('Check','No bills yet.<br>Add one below.'):'')+
+  `<button class="add" onclick="openB()">+ Add bill</button>`};
+function openB(){sheet(`<h3>Add bill</h3><div class="f"><input id="b_n" placeholder="Bill name"><input id="b_a" type="number" inputmode="decimal" placeholder="Amount"><select id="b_c">${CURS.map(c=>`<option ${c==S.base?'selected':''}>${c}</option>`).join('')}</select><div class="sl">Due date</div><input id="b_d" type="date"><div class="sl">Repeats</div><select id="b_r">${Object.entries(RECL).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div><button class="save" onclick="saveB()">Save bill</button>`)}
+function saveB(){const a=parseFloat($('b_a').value);if(!(a>0)||!$('b_n').value.trim()){toast('Fill name and amount');return}S.base=$('b_c').value;
+ S.mbills.push({id:Date.now(),n:$('b_n').value.trim(),a,cur:$('b_c').value,due:$('b_d').value?new Date($('b_d').value+'T00:00').getTime():Date.now()+7*DAY,paid:false,rec:$('b_r').value});closeSheet();render();toast('Bill added')}
+function payB(id){mi();const b=S.mbills.find(x=>x.id==id);if(!b||b.paid)return;
+ const ok=S.accts.filter(a=>a.cur==b.cur);
+ if(!ok.length){toast('No '+b.cur+' account yet. Create one first');openAccM(b.cur);return}
+ sheet(`<h3>Pay ${esc(b.n)}</h3><div class="note" style="font-size:28px;color:var(--ink);margin:0 0 12px;font-weight:600">${fm(b.a,b.cur)}</div><div class="f"><div class="sl">Pay from</div><select id="pb_k" onchange="pbHint(${b.id})">${ok.map(a=>`<option value="${a.id}">${esc(a.name)} · ${fm(a.bal,a.cur)}</option>`).join('')}</select></div><div id="pb_w" class="note" style="margin:10px 0 0;color:#d6364a" hidden></div><button class="save" id="pb_s" onclick="confirmPay(${b.id})">Pay ${fm(b.a,b.cur)}</button>`);pbHint(id)}
+function pbHint(id){const b=S.mbills.find(x=>x.id==id),a=S.accts.find(x=>x.id==+$('pb_k').value),w=$('pb_w');if(!a||!w)return;const low=a.bal<b.a;w.hidden=!low;w.textContent=low?`Balance is lower than the bill. It will go to ${fm(a.bal-b.a,a.cur)}.`:''}
+function confirmPay(id){const b=S.mbills.find(x=>x.id==id),a=S.accts.find(x=>x.id==+$('pb_k').value);if(!b||!a||b.paid)return;
+ const now=Date.now(),tx={id:now,m:b.n,c:'Bills',a:b.a,acc:a.id,t:now,bill:b.id};
+ S.txs.push(tx);a.bal-=b.a;b.paid=true;b.acc=a.id;b.txId=tx.id;b.paidAt=now;
+ if(b.rec&&b.rec!='none'&&!b.next){const nb={id:now+1,n:b.n,a:b.a,cur:b.cur,due:nextDue(b.due,b.rec),paid:false,rec:b.rec};S.mbills.push(nb);b.next=nb.id}
+ closeSheet();render();toast('Paid from '+a.name+(b.next?' · next bill added':''))}
+function unpayB(id){const b=S.mbills.find(x=>x.id==id);if(!b||!b.paid)return;
+ const tx=S.txs.find(x=>x.id==b.txId),a=S.accts.find(x=>x.id==b.acc);
+ if(tx){S.txs=S.txs.filter(x=>x.id!=tx.id);if(a)a.bal+=tx.a}
+ if(b.next){const n=S.mbills.find(x=>x.id==b.next);if(n&&!n.paid)S.mbills=S.mbills.filter(x=>x.id!=n.id)}
+ b.paid=false;delete b.acc;delete b.txId;delete b.paidAt;delete b.next;render();toast('Payment reversed · money returned')}
+function delB(id){const b=S.mbills.find(x=>x.id==id);if(!b)return;const ix=S.mbills.indexOf(b);S.mbills=S.mbills.filter(x=>x.id!=id);render();toast('Bill deleted · tap to undo',()=>{S.mbills.splice(ix,0,b);render()})}
+const _delMTx8=delMTx;
+delMTx=function(id){const b=S.mbills.find(x=>x.txId==id);_delMTx8(id);if(b){b.paid=false;delete b.acc;delete b.txId;delete b.paidAt;render()}};
+/* ===== v9: profile photo, budget, transfer, CSV, due alerts ===== */
+(function(){const st=document.createElement('style');st.textContent=`
+.gear.hasav{overflow:visible}.gear .pav{width:100%;height:100%;border-radius:50%;object-fit:cover;display:grid;place-items:center;font-weight:700;font-size:17px;color:#15121c}
+.gear.hasav .sdot{top:0;right:0}
+.pcard{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.pbig{width:84px;height:84px;border-radius:50%;object-fit:cover;display:grid;place-items:center;font-size:34px;font-weight:700;color:#15121c;flex:none;cursor:pointer;box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--rim)}
+.pcard .pn{min-width:0;flex:1}.pcard .pn b{display:block;font-size:20px;letter-spacing:-.02em;overflow:hidden;text-overflow:ellipsis}.pcard .pn span{font-size:13px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;display:block}
+.sw{display:flex;gap:10px;margin-top:14px}.sw i{width:30px;height:30px;border-radius:50%;cursor:pointer;box-shadow:0 0 0 2px var(--bg)}.sw i.on{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--ink)}
+.bud{margin:10px 0 0;padding:14px 16px;border-radius:22px;cursor:pointer}.bud .bt{display:flex;justify-content:space-between;font-size:14px;font-weight:600}.bud .bt span{color:var(--mute);font-weight:500}
+.bud .bar{height:8px;border-radius:6px;background:var(--line);margin-top:10px;overflow:hidden}.bud .bar i{display:block;height:100%;border-radius:6px;background:var(--blue);transition:width .6s var(--out)}.bud.hi .bar i{background:#f0a030}.bud.over .bar i{background:#e5484d}`;document.head.appendChild(st)})();
+SETK.push('pic','avc','budget');
+const avCol=()=>(S.avc==null?0:S.avc)%6;
+function paintAvatar(){const g=document.querySelector('.gear');if(!g||!USER)return;
+ if(!g._ic)g._ic=[...g.children].filter(c=>c.tagName=='svg');
+ let a=g.querySelector('.pav');const ini=esc(((S.name||USER.name||USER.email||'?').trim()[0]||'?').toUpperCase());
+ g.classList.add('hasav');g._ic.forEach(s=>s.style.display='none');
+ if(S.pic){if(!a||a.tagName!='IMG'){if(a)a.remove();a=document.createElement('img');a.className='pav';a.alt='Profile';g.prepend(a)}if(a.src!=S.pic)a.src=S.pic}
+ else{if(!a||a.tagName=='IMG'){if(a)a.remove();a=document.createElement('div');a.className='pav';g.prepend(a)}a.textContent=ini;a.style.background=`var(${COL[avCol()]})`}}
+const avHTML=(cls)=>S.pic?`<img class="${cls}" src="${S.pic}" alt="Profile" onclick="$('pf_f').click()">`:`<div class="${cls}" style="background:var(${COL[avCol()]})" onclick="$('pf_f').click()">${esc(((S.name||USER.name||'?').trim()[0]||'?').toUpperCase())}</div>`;
+function pickPic(inp){const f=inp.files&&inp.files[0];inp.value='';if(!f)return;if(!/^image\//.test(f.type)){toast('Choose an image');return}
+ const r=new FileReader();r.onerror=()=>toast('Could not read photo');r.onload=()=>{const im=new Image();im.onerror=()=>toast('Could not open photo');im.onload=()=>{
+  const enc=(sz,q)=>{const c=document.createElement('canvas');c.width=c.height=sz;const x=c.getContext('2d'),m=Math.min(im.width,im.height);x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,sz,sz);return c.toDataURL('image/jpeg',q)};
+  let d=enc(256,.82);if(d.length>40000)d=enc(192,.7);if(d.length>40000)d=enc(128,.7);
+  S.pic=d;save();paintAvatar();renderSet();toast('Profile photo updated')};im.src=r.result};r.readAsDataURL(f)}
+function rmPic(){S.pic='';save();paintAvatar();renderSet();toast('Photo removed')}
+function setAvc(i){S.avc=i;save();paintAvatar();renderSet()}
+const _renderSet9=renderSet;
+renderSet=function(){_renderSet9();const v=$('v-set'),sub=v.querySelector('.sub');if(!sub||!USER)return;
+ sub.insertAdjacentHTML('afterend',`<div class="set"><div class="pcard">${avHTML('pbig')}<div class="pn"><b>${esc(S.name||USER.name||'You')}</b><span>${esc(USER.email)}</span></div></div>
+ <input id="pf_f" type="file" accept="image/*" hidden onchange="pickPic(this)"><input id="pf_c" type="file" accept="image/*" capture="user" hidden onchange="pickPic(this)">
+ <div class="row2"><button class="pill" onclick="$('pf_f').click()">${S.pic?'Change photo':'Add photo'}</button><button class="pill g" onclick="$('pf_c').click()">Take photo</button></div>
+ ${S.pic?`<div class="row2"><button class="pill g" style="color:#d6364a" onclick="rmPic()">Remove photo</button></div>`:`<div class="sw">${COL.map((c,i)=>`<i class="${i==avCol()?'on':''}" style="background:var(${c})" onclick="setAvc(${i})"></i>`).join('')}</div><p class="note2">No photo? Pick a colour for your initial.</p>`}</div>`);
+ const row=[...v.querySelectorAll('.row2')].find(r=>r.textContent.includes('Export JSON'));
+ if(row&&!row.querySelector('.csv'))row.insertAdjacentHTML('afterbegin','<button class="pill g csv" onclick="exportCSV()">Export expenses CSV</button>')};
+function exportCSV(){mi();const q=s=>'"'+String(s==null?'':s).replace(/"/g,'""')+'"',
+ rows=[['Date','Type','Merchant','Category','Account','Currency','Amount']].concat(S.txs.slice().sort((a,b)=>b.t-a.t).map(t=>{const a=S.accts.find(x=>x.id==t.acc);return[new Date(t.t).toISOString().slice(0,10),t.inc?'Income':'Expense',t.m,t.c,a?a.name:'',a?a.cur:'',t.a]}));
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.map(r=>r.map(q).join(',')).join('\n')],{type:'text/csv'}));a.download='fin-transactions.csv';a.click();toast('CSV exported')}
+document.addEventListener('change',e=>{if(e.target.closest&&e.target.closest('#v-set')&&e.target.type!='file')setTimeout(paintAvatar,0)});
+
+/* monthly budget */
+const monthSpend=cur=>{const d=new Date();d.setDate(1);d.setHours(0,0,0,0);return S.txs.filter(t=>!t.inc&&t.t>=d.getTime()).reduce((s,t)=>{const a=S.accts.find(x=>x.id==t.acc);return a&&a.cur==cur?s+t.a:s},0)};
+const _RM9=renderMoney;
+renderMoney=function(){_RM9();mi();S.budget=S.budget||{};const tot=$('v-mhome').querySelector('.tot');if(!tot)return;
+ const ks=Object.keys(S.budget).filter(c=>S.budget[c]>0);
+ tot.insertAdjacentHTML('afterend',ks.length?ks.map(c=>{const sp=monthSpend(c),b=S.budget[c],p=Math.min(100,sp/b*100),cl=sp>b?' over':p>=80?' hi':'';
+  return`<div class="acc bud${cl}" onclick="openBudget('${c}')" style="--c:var(--surf)"><div class="bt">Budget · this month<span>${fm(sp,c)} of ${fm(b,c)}</span></div><div class="bar"><i style="width:${p}%"></i></div><div class="note2" style="margin:8px 0 0">${sp>b?fm(sp-b,c)+' over budget':fm(b-sp,c)+' left'}</div></div>`}).join(''):
+  (S.accts.length?`<button class="pill g" style="margin:10px 0 0" onclick="openBudget()">Set monthly budget</button>`:''))};
+function openBudget(c){mi();const cs=[...new Set(S.accts.map(a=>a.cur))];if(!cs.length){toast('Add an account first');return}c=c||cs[0];S.budget=S.budget||{};
+ sheet(`<h3>Monthly budget</h3><div class="f"><select id="bd_c" onchange="$('bd_a').value=S.budget[this.value]||''">${cs.map(x=>`<option ${x==c?'selected':''}>${x}</option>`).join('')}</select><input id="bd_a" type="number" inputmode="decimal" placeholder="Amount per month" value="${S.budget[c]||''}"></div><button class="save" onclick="saveBudget()">Save budget</button>${S.budget[c]?`<button class="pill g" style="width:100%;margin-top:12px;color:#d6364a" onclick="saveBudget(1)">Remove budget</button>`:''}`)}
+function saveBudget(rm){const c=$('bd_c').value,a=parseFloat($('bd_a').value);S.budget=S.budget||{};
+ if(rm||!(a>0)){if(!rm&&!S.budget[c]){toast('Enter an amount');return}delete S.budget[c];S.budget={...S.budget}}else S.budget={...S.budget,[c]:a};
+ closeSheet();render();toast(rm?'Budget removed':'Budget saved')}
+
+/* transfer between accounts */
+const _openAcc9=openAcc;
+openAcc=function(id){_openAcc9(id);const r=$('sheet').querySelector('.acts');if(r)r.insertAdjacentHTML('beforeend',`<button class="pill g" onclick="openXfer(${id})">Transfer</button>`)};
+function openXfer(id){const a=acct(id),to=S.accts.filter(x=>x.id!=id&&x.cur==a.cur);if(!to.length){toast('Need another '+a.cur+' account');return}
+ sheet(`<h3>Transfer from ${esc(a.name)}</h3><div class="note" style="margin:0 0 10px">Balance ${fm(a.bal,a.cur)}</div><div class="f"><input class="amtin" id="xf_a" type="number" inputmode="decimal" placeholder="0.00 ${a.cur}"><div class="sl">To</div><select id="xf_t">${to.map(x=>`<option value="${x.id}">${esc(x.name)} · ${fm(x.bal,x.cur)}</option>`).join('')}</select></div><button class="save" onclick="doXfer(${id})">Transfer</button>`)}
+function doXfer(id){const a=acct(id),b=S.accts.find(x=>x.id==+$('xf_t').value),v=parseFloat($('xf_a').value);if(!(v>0)||!b){toast('Enter an amount');return}
+ a.bal-=v;b.bal+=v;closeSheet();render();toast(fm(v,a.cur)+' moved to '+b.name+' · tap to undo',()=>{a.bal+=v;b.bal-=v;render()})}
+
+/* render hook: avatar + due-bill alert */
+let DUEN=0;const _R9=render;
+render=function(){_R9();try{paintAvatar()}catch(e){}
+ if(!DUEN&&USER&&!LOADING){DUEN=1;setTimeout(()=>{const t=new Date().setHours(0,0,0,0),o=(S.mbills||[]).filter(b=>!b.paid&&b.due<t+2*DAY),od=o.filter(b=>b.due<t).length;if(o.length)toast(o.length+(o.length>1?' bills':' bill')+(od?' overdue or':'')+' due soon')},1500)}};
 /* ===== v4: skeleton loading ===== */
 let LOADING=false;
 const SKC='<div class="sk sk-card"></div>'.repeat(3),SKR='<div class="sk sk-row"></div>'.repeat(3);
