@@ -486,6 +486,25 @@ select[data-e]{display:none}
 input[type=date]{accent-color:#ff3d00;min-height:50px}
 @media(prefers-reduced-motion:reduce){.ddl,.ddb{transition:none}}
 </style>
+<style>
+/* ===== v15: top bar, cards, spacing fixes ===== */
+:root{--sh:none;--blur:none}
+.top{background:var(--bg);border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+@media(max-width:499px){.top{top:0;left:0;right:0;width:auto;transform:none;border-radius:0;padding:12px 16px 10px;border-bottom:1px solid var(--rim)!important}main{padding-top:76px}}
+body[data-mode=money][data-tab=mhome] main{padding-top:0!important}
+.modes{background:var(--line);border-radius:24px;padding:3px}
+.modes button{width:40px;height:40px;border-radius:50%}
+.modes button.on{background:var(--ink);color:var(--bg);box-shadow:none}
+.gear,.cur,.plus{box-shadow:none!important}
+.big{line-height:1.22;padding-bottom:4px}.af{padding-top:10px}
+.tot{background:var(--line)!important;border:0!important;box-shadow:none!important;border-radius:14px;font-weight:600}
+.add{background:transparent!important;border:2px dashed var(--mute)!important;box-shadow:none!important;color:var(--ink);font-weight:700;border-radius:20px}
+.card,.acc,.msg,.wc{box-shadow:none!important;background-image:none!important}
+.wc{border-radius:26px}.wc::before{display:none}
+.wc .wb,.mamt{font-family:"Bagel Fat One","Arial Black",system-ui,sans-serif;font-weight:400;letter-spacing:0}.wc .wb{font-size:19px}
+.logo{box-shadow:none!important;border:0!important;-webkit-backdrop-filter:none;backdrop-filter:none}
+#v-mspend>.pill,#v-mspend>.bud{margin:10px 20px 0!important}#v-mspend>.bud{width:calc(100% - 40px)}
+</style>
 </head><body>
 <div class="app" id="app">
  <div class="top"><div id="avs" style="display:flex"></div><button class="plus" onclick="openArea()" aria-label="Add area"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="cur" id="curBtn" onclick="go('home')">Today</button><button class="gear" onclick="go('set')" aria-label="Settings"><span class="sdot off" id="sdot"></span><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></button></div>
@@ -1264,6 +1283,8 @@ function enhSel(){document.querySelectorAll('.app select:not([data-e])').forEach
  b.innerHTML='<span></span>'+sv('<path d="M6 9l6 6 6-6"/>',16);b.firstChild.textContent=(s.options[s.selectedIndex]||{}).text||'';b.onclick=()=>openDD(s);s.after(b)});refDD()}
 {let q=0;new MutationObserver(()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;enhSel()})}).observe(document.querySelector('.app'),{childList:true,subtree:true});
  document.addEventListener('click',()=>setTimeout(refDD,0));enhSel()}
+
+GRAD.splice(0,GRAD.length,'#d93a00','#1f6feb','#0b0b0d','#4a4cff','#127a3e','#d81b52');
 
 render();
 </script></body></html>
