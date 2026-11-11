@@ -385,7 +385,7 @@ button{transition:transform 200ms var(--out),background-color 200ms ease,box-sha
 <style>
 body[data-mode=money] .app{background:var(--surf)}
 body[data-mode=money] .fab,body[data-mode=money] .ask{display:none!important}
-body[data-mode=money][data-tab=mhome] .top{display:none}
+
 .mh{display:flex;align-items:center;gap:10px;padding:18px 20px 4px}
 .mav{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:18px;background:#ffb98a;color:#1a0f00}
 .mchip{display:flex;align-items:center;gap:6px;background:var(--line);border-radius:18px;padding:0 14px;height:40px;font-size:14px;font-weight:500}
@@ -478,20 +478,20 @@ select[data-e]{display:none}
 .dd:focus-visible{border-color:var(--ink);outline:none}.dd span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dd svg{flex:none;color:var(--mute)}
 .set .dd{background:var(--bg)}
 .ddb{position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:45;opacity:0;transition:opacity 200ms ease;display:flex;align-items:flex-end}.ddb.on{opacity:1}
-.ddl{width:100%;background:var(--bg);color:var(--ink);border-radius:32px 32px 0 0;padding:14px 16px calc(20px + env(safe-area-inset-bottom,0px));max-height:70%;overflow:auto;transform:translateY(100%);transition:transform 340ms var(--drawer);box-shadow:0 -12px 40px rgba(0,0,0,.2)}
-.ddb.on .ddl{transform:none}
-.ddl h4{font-family:"Bagel Fat One","Arial Black",system-ui,sans-serif;font-weight:400;font-size:22px;margin:6px 4px 12px}
+.dsl{width:100%;background:var(--bg);color:var(--ink);border-radius:32px 32px 0 0;padding:14px 16px calc(20px + env(safe-area-inset-bottom,0px));max-height:70%;overflow:auto;transform:translateY(100%);transition:transform 340ms var(--drawer);box-shadow:0 -12px 40px rgba(0,0,0,.2)}
+.ddb.on .dsl{transform:none}
+.dsl h4{font-family:"Bagel Fat One","Arial Black",system-ui,sans-serif;font-weight:400;font-size:22px;margin:6px 4px 12px}
 .ddo{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:52px;padding:0 16px;border-radius:16px;font-size:16px;font-weight:600;text-align:left;margin-bottom:6px;background:var(--line);color:var(--ink)}
 .ddo[aria-selected=true]{background:var(--ink);color:var(--bg)}.ddo:focus-visible{outline:2px solid #4a4cff;outline-offset:2px}
 input[type=date]{accent-color:#ff3d00;min-height:50px}
-@media(prefers-reduced-motion:reduce){.ddl,.ddb{transition:none}}
+@media(prefers-reduced-motion:reduce){.dsl,.ddb{transition:none}}
 </style>
 <style>
 /* ===== v15: top bar, cards, spacing fixes ===== */
 :root{--sh:none;--blur:none}
 .top{background:var(--bg);border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 @media(max-width:499px){.top{top:0;left:0;right:0;width:auto;transform:none;border-radius:0;padding:12px 16px 10px;border-bottom:1px solid var(--rim)!important}main{padding-top:76px}}
-body[data-mode=money][data-tab=mhome] main{padding-top:0!important}
+
 .modes{background:var(--line);border-radius:24px;padding:3px}
 .modes button{width:40px;height:40px;border-radius:50%}
 .modes button.on{background:var(--ink);color:var(--bg);box-shadow:none}
@@ -504,6 +504,49 @@ body[data-mode=money][data-tab=mhome] main{padding-top:0!important}
 .wc .wb,.mamt{font-family:"Bagel Fat One","Arial Black",system-ui,sans-serif;font-weight:400;letter-spacing:0}.wc .wb{font-size:19px}
 .logo{box-shadow:none!important;border:0!important;-webkit-backdrop-filter:none;backdrop-filter:none}
 #v-mspend>.pill,#v-mspend>.bud{margin:10px 20px 0!important}#v-mspend>.bud{width:calc(100% - 40px)}
+</style>
+<style>
+/* ===== v16: desktop/tablet layout + wallet cards ===== */
+.wal{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));perspective:none;padding:4px 20px 16px}
+.wc{height:auto;min-height:168px;margin-top:0!important;display:flex;flex-direction:column;justify-content:space-between;gap:14px;padding:18px;border-radius:28px;transform:none}
+.wc .w1{flex-direction:column;align-items:flex-start;gap:14px}.wc .wb{font-size:28px;line-height:1.1}.wc .wn b{font-size:18px}
+.wc .w2{position:static;margin-top:auto;display:flex;justify-content:space-between;align-items:center}
+@media(hover:hover){.wc:hover{transform:translateY(-3px)}}
+@media(min-width:500px){
+ body[data-mode] nav{left:50%;right:auto;width:min(520px,calc(100% - 32px));transform:translateX(-50%)}
+ #v-mspend,#v-mloans,#v-mhome{max-width:700px}
+ .stack .card{margin-top:12px!important;border-radius:26px!important;height:auto!important;padding-bottom:16px!important}
+ .stack .card:first-child{margin-top:0!important}
+}
+@media(min-width:1024px){
+ body[data-mode] nav{left:12px;top:12px;bottom:12px;right:auto;width:224px;transform:none;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:6px;padding:16px 12px;border-radius:32px}
+ body[data-mode] nav::before{display:block!important;content:"Fin";color:#fff;font-family:"Bagel Fat One","Arial Black",system-ui,sans-serif;font-size:30px;letter-spacing:0;padding:4px 14px 16px}
+ body[data-mode] nav button,body[data-mode] nav button.mid{flex:none;flex-direction:row;justify-content:flex-start;align-items:center;gap:10px;width:auto;height:auto;margin:0;padding:6px 14px 6px 8px;border-radius:20px;font-size:15px;font-weight:600;color:#a7a5b0!important;background:none!important;transform:none}
+ body[data-mode] nav button .ic{width:40px;height:40px;background:none;transform:none}
+ body[data-mode] nav button.mid .ic{background:#ff3d00!important;border-radius:50%;color:#fff}
+ body[data-mode] nav button.on,body[data-mode] nav button.mid.on{background:#fff!important;color:#0b0b0d!important;transform:none}
+ body[data-mode] nav button.on .ic{background:none;transform:none}body[data-mode] nav button.mid.on .ic{background:#ff3d00!important;color:#fff}
+ body[data-mode] nav button:hover:not(.on){color:#fff!important}
+ body[data-mode] nav .badge{position:static;margin-left:auto;font-size:11px}
+}
+</style>
+<style>
+/* ===== v17: profile menu + same layout on every page ===== */
+.mh .mav,.mh .mib:last-child{display:none}.mh{padding-top:8px}
+.modes{box-shadow:none!important}.gear.hasav,.gear>*{box-shadow:none!important}
+.pop{min-width:260px}
+.pmn{display:block}
+.pmh{display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid var(--rim)}
+.pmh .pmav{width:48px;height:48px;border-radius:50%;object-fit:cover;display:grid;place-items:center;font-weight:700;font-size:20px;color:#15121c;flex:none}
+.pmh b{display:block;font-size:18px;font-weight:700;letter-spacing:-.01em}.pmh span{display:block;font-size:13px;color:var(--mute);overflow-wrap:anywhere}
+.pop .ddl{display:flex;flex-direction:column;gap:4px;padding:8px;max-height:none;overflow:visible}
+.pop .ddl button{display:flex;align-items:center;gap:12px;width:100%;min-height:50px;padding:0 14px;border-radius:14px;font-size:16px;font-weight:600;color:var(--ink);background:none;text-align:left}
+.pop .ddl button:hover,.pop .ddl button:focus-visible{background:var(--line)}
+.pop .ddl svg{width:22px;height:22px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pop .ddl em{margin-left:auto;font-style:normal;font-size:13px;color:var(--mute);background:var(--line);padding:4px 10px;border-radius:10px;text-transform:capitalize}
+.pop .ddl .dng{color:#c4251f}
+h2{margin:6px 20px 4px}.sub{padding:0 20px 14px}
+@media(min-width:500px){.view,#v-home,#v-ins,#v-inbox,#v-mspend,#v-mloans,#v-mhome,#v-macc,#v-set,#v-acc,#v-bills,#v-ilist,#v-mins,#v-minbox,#v-ibiz,#v-cal{max-width:720px!important;margin-left:auto;margin-right:auto}}
 </style>
 </head><body>
 <div class="app" id="app">
@@ -1273,7 +1316,7 @@ const _mu12=modeUI;modeUI=function(){_mu12();document.body.dataset.mode=S.mode||
 /* ===== v14: themed dropdown for every select ===== */
 function openDD(s){const app=document.querySelector('.app'),b=document.createElement('div');b.className='ddb';
  const pl=s.previousElementSibling,t=s.getAttribute('aria-label')||(pl&&pl.classList&&pl.classList.contains('sl')?pl.textContent:'Choose one');
- b.innerHTML=`<div class="ddl" role="listbox" aria-label="${esc(t)}"><h4>${esc(t)}</h4>`+[...s.options].map((o,i)=>`<button type="button" class="ddo" role="option" data-i="${i}" aria-selected="${i==s.selectedIndex}"><span>${esc(o.text)}</span>${i==s.selectedIndex?sv('<path d="M5 13l4 4L19 7"/>'):''}</button>`).join('')+'</div>';
+ b.innerHTML=`<div class="dsl" role="listbox" aria-label="${esc(t)}"><h4>${esc(t)}</h4>`+[...s.options].map((o,i)=>`<button type="button" class="ddo" role="option" data-i="${i}" aria-selected="${i==s.selectedIndex}"><span>${esc(o.text)}</span>${i==s.selectedIndex?sv('<path d="M5 13l4 4L19 7"/>'):''}</button>`).join('')+'</div>';
  const kd=e=>{if(e.key=='Escape'){e.stopPropagation();close()}},close=()=>{b.classList.remove('on');setTimeout(()=>b.remove(),300);document.removeEventListener('keydown',kd)};
  b.onclick=e=>{const o=e.target.closest('.ddo');if(o){s.selectedIndex=+o.dataset.i;s.dispatchEvent(new Event('change',{bubbles:true}));refDD();hap()}if(o||e.target==b)close()};
  document.addEventListener('keydown',kd);app.appendChild(b);requestAnimationFrame(()=>{b.classList.add('on');const x=b.querySelector('[aria-selected=true]');if(x)x.focus()})}
