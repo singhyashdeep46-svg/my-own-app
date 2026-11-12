@@ -611,7 +611,7 @@ const AICONS=['Other','Work','User','Health','Study','Home','Errands','Star','Co
 let S,USER=null,SYNC='',undoFn=null,pushT=0;
 const blank=()=>({tab:'home',per:'today',area:'All',theme:'system',name:'',areas:['Work','Personal','Health','Study','Home','Errands'],aicons:{},tasks:[],log:[],accts:[],txs:[],invs:[],biz:{},base:'USD',mode:'tasks',del:{},su:0});S=blank();
 /* ===== sync engine: per-item merge so every device keeps its edits ===== */
-const UIK=['tab','per','area','mode','mper','theme'],COLS=['tasks','accts','txs','mbills','mmsgs','invs','loans','groups','gx'],SETK=['name','areas','aicons','biz','base'];
+const UIK=['tab','per','area','mode','mper','theme'],COLS=['tasks','accts','txs','mbills','mmsgs','invs','loans','groups','gx'],SETK=['name','areas','aicons','biz','base','pic','avc','budget'];
 let SH={},dirty=false,busy=false,again=false;
 const jx=x=>JSON.stringify(x,(k,v)=>k=='u'?undefined:v);
 function fmerge(a,b){a=a||{};b=b||{};const o={},del={};
@@ -620,7 +620,7 @@ function fmerge(a,b){a=a||{};b=b||{};const o={},del={};
   const desc=c=='invs'||c=='mmsgs';
   o[c]=Object.keys(m).map(k=>m[k]).filter(x=>!(del[x.id]&&(x.u||0)<=del[x.id])).sort((p,q)=>desc?q.id-p.id:p.id-q.id)});
  const bs=((b.su||0)>(a.su||0)||((b.su||0)==(a.su||0)&&!a.areas&&b.areas))?b:a;
- SETK.forEach(k=>{if(bs[k]!==undefined)o[k]=bs[k]});o.su=Math.max(a.su||0,b.su||0);
+ SETK.forEach(k=>{if(bs[k]!==undefined)o[k]=bs[k]});SETK.forEach(k=>{if(o[k]===undefined){const v=(bs===b?a:b)[k];if(v!==undefined)o[k]=v}});o.su=Math.max(a.su||0,b.su||0);
  const lg={};(a.log||[]).concat(b.log||[]).forEach(t=>lg[t]=1);o.log=Object.keys(lg).map(Number).sort((x,y)=>x-y).slice(-400);
  o.del=del;return o}
 function baseline(){SH={};COLS.forEach(c=>{SH[c]={};(S[c]||[]).forEach(x=>SH[c][x.id]=jx(x))});SH.set=jx(SETK.map(k=>S[k]));SH.log=(S.log||[]).length}
