@@ -473,16 +473,6 @@ body[data-mode=money] .fab{display:grid}
 .mark{background:#0b0b0d!important;overflow:hidden;box-shadow:0 0 0 5px var(--bg),0 0 0 7px #0b0b0d,0 18px 40px rgba(0,0,0,.22)}
 .mark.sm{box-shadow:none}.mark svg,.mark.sm svg{width:100%;height:100%}
 .wm{font-family:"Bagel Fat One","Arial Black",system-ui,sans-serif;font-weight:400;letter-spacing:0}
-select[data-e]{display:none}
-.dd{width:100%;min-height:50px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px;background:var(--line);border:2px solid transparent;border-radius:14px;font-size:16px;text-align:left;color:var(--ink)}
-.dd:focus-visible{border-color:var(--ink);outline:none}.dd span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dd svg{flex:none;color:var(--mute)}
-.set .dd{background:var(--bg)}
-.ddb{position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:45;opacity:0;transition:opacity 200ms ease;display:flex;align-items:flex-end}.ddb.on{opacity:1}
-.dsl{width:100%;background:var(--bg);color:var(--ink);border-radius:32px 32px 0 0;padding:14px 16px calc(20px + env(safe-area-inset-bottom,0px));max-height:70%;overflow:auto;transform:translateY(100%);transition:transform 340ms var(--drawer);box-shadow:0 -12px 40px rgba(0,0,0,.2)}
-.ddb.on .dsl{transform:none}
-.dsl h4{font-family:"Bagel Fat One","Arial Black",system-ui,sans-serif;font-weight:400;font-size:22px;margin:6px 4px 12px}
-.ddo{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:52px;padding:0 16px;border-radius:16px;font-size:16px;font-weight:600;text-align:left;margin-bottom:6px;background:var(--line);color:var(--ink)}
-.ddo[aria-selected=true]{background:var(--ink);color:var(--bg)}.ddo:focus-visible{outline:2px solid #4a4cff;outline-offset:2px}
 input[type=date]{accent-color:#ff3d00;min-height:50px}
 @media(prefers-reduced-motion:reduce){.dsl,.ddb{transition:none}}
 </style>
@@ -539,14 +529,43 @@ input[type=date]{accent-color:#ff3d00;min-height:50px}
 .pmh{display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid var(--rim)}
 .pmh .pmav{width:48px;height:48px;border-radius:50%;object-fit:cover;display:grid;place-items:center;font-weight:700;font-size:20px;color:#15121c;flex:none}
 .pmh b{display:block;font-size:18px;font-weight:700;letter-spacing:-.01em}.pmh span{display:block;font-size:13px;color:var(--mute);overflow-wrap:anywhere}
-.pop .ddl{display:flex;flex-direction:column;gap:4px;padding:8px;max-height:none;overflow:visible}
-.pop .ddl button{display:flex;align-items:center;gap:12px;width:100%;min-height:50px;padding:0 14px;border-radius:14px;font-size:16px;font-weight:600;color:var(--ink);background:none;text-align:left}
-.pop .ddl button:hover,.pop .ddl button:focus-visible{background:var(--line)}
-.pop .ddl svg{width:22px;height:22px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.pop .ddl em{margin-left:auto;font-style:normal;font-size:13px;color:var(--mute);background:var(--line);padding:4px 10px;border-radius:10px;text-transform:capitalize}
-.pop .ddl .dng{color:#c4251f}
+.pop .pmn .ddl{display:flex;flex-direction:column;gap:4px;padding:8px;max-height:none;overflow:visible}
+.pop .pmn .ddl button{display:flex;align-items:center;gap:12px;width:100%;min-height:50px;padding:0 14px;border-radius:14px;font-size:16px;font-weight:600;color:var(--ink);background:none;text-align:left}
+.pop .pmn .ddl button:hover,.pop .pmn .ddl button:focus-visible{background:var(--line)}
+.pop .pmn .ddl svg{width:22px;height:22px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pop .pmn .ddl em{margin-left:auto;font-style:normal;font-size:13px;color:var(--mute);background:var(--line);padding:4px 10px;border-radius:10px;text-transform:capitalize}
+.pop .pmn .ddl .dng{color:#c4251f}
 h2{margin:6px 20px 4px}.sub{padding:0 20px 14px}
 @media(min-width:500px){.view,#v-home,#v-ins,#v-inbox,#v-mspend,#v-mloans,#v-mhome,#v-macc,#v-set,#v-acc,#v-bills,#v-ilist,#v-mins,#v-minbox,#v-ibiz,#v-cal{max-width:720px!important;margin-left:auto;margin-right:auto}}
+</style>
+<style>
+/* ===== v18: one dropdown system, account cards, colours, avatar ===== */
+.dd{width:100%;min-height:50px;padding:0 14px;background:var(--line);border:2px solid transparent;border-radius:14px;box-shadow:none;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.dd:focus-visible,.dd.open{border-color:var(--ink);outline:none}.set .dd{background:var(--bg)}
+.ddl button{border-radius:14px;min-height:46px;font-weight:600}
+.ddl button.on{background:var(--ink)!important;color:var(--bg)!important}
+.dpg button.s,.cal .gd button.s,.dpf button.p{background:var(--ink)!important;color:var(--bg)!important}
+:root{--lilac:#ffe84d;--lime:#d9ff4a;--violet:#ff9ed0;--peri:#9fb2ff;--mint:#9ff0c0;--peach:#ffb48a}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--lilac:#ffe84d;--lime:#d9ff4a;--violet:#ff9ed0;--peri:#9fb2ff;--mint:#9ff0c0;--peach:#ffb48a}}
+:root[data-theme="dark"]{--lilac:#ffe84d;--lime:#d9ff4a;--violet:#ff9ed0;--peri:#9fb2ff;--mint:#9ff0c0;--peach:#ffb48a}
+.card,.pr,.sm div{--ink:#15121c;--mute:#4d4a57;color:#15121c}
+.card .logo{background:rgba(255,255,255,.6)!important;color:#15121c}
+.wc{position:relative;overflow:hidden;min-height:176px;padding:18px;border-radius:28px;color:#fff;display:grid;grid-template-columns:44px 1fr auto;grid-template-rows:auto 1fr;column-gap:12px;row-gap:18px;outline:1px solid rgba(255,255,255,.08);outline-offset:-1px}
+.wc::after{display:none}
+.wc::before{display:block;content:"";position:absolute;right:-24px;bottom:24px;width:150px;height:12px;border-radius:6px;background:rgba(255,255,255,.2);transform:rotate(-12deg);box-shadow:-34px 24px 0 rgba(255,255,255,.12);pointer-events:none}
+.wc .w1,.wc .wn,.wc .w2{display:contents}
+.wc .logo{grid-area:1/1;width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.18)!important;display:grid;place-items:center;color:#fff}
+.wc .wn>div:not(.logo){grid-area:1/2;min-width:0}
+.wc .wn b{display:block;font-size:18px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wc .wn span{font-size:13px;opacity:.8}
+.wc .cn{grid-area:1/3;position:static;align-self:start;font-size:13px;letter-spacing:.14em;opacity:.8}
+.wc .chp{display:none}
+.wc .wb{grid-column:1/-1;grid-row:2;align-self:end;position:relative;z-index:1;font-size:32px;line-height:1.1}
+.wc .wb::before{content:"Balance";display:block;font:600 12px/1.4 system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-bottom:2px}
+#v-macc,#v-mspend,#v-mloans,#v-mhome{padding-bottom:130px}
+.add{margin:12px 20px 0;width:calc(100% - 40px)}
+.gear.hasav{width:44px;height:44px;min-width:44px;aspect-ratio:1;padding:0;flex:none;border-radius:50%}
+.gear.hasav .pav,.pmav{width:40px!important;height:40px!important;aspect-ratio:1;flex:none;border-radius:50%;overflow:hidden;object-fit:cover}
+.pmh .pmav{width:48px!important;height:48px!important}
 </style>
 </head><body>
 <div class="app" id="app">
@@ -1313,21 +1332,15 @@ Object.assign(IC,{mhome:'<path d="M4 11l8-7 8 7v8a2 2 0 01-2 2H6a2 2 0 01-2-2z"/
 NAVS.money=[['mhome','Home'],['mspend','Spending'],['mloans','People'],['macc','Wallets'],['minbox','Inbox'],['mins','Insights']];navMode='';
 const _mu12=modeUI;modeUI=function(){_mu12();document.body.dataset.mode=S.mode||'tasks';document.body.dataset.tab=S.tab||''};
 
-/* ===== v14: themed dropdown for every select ===== */
-function openDD(s){const app=document.querySelector('.app'),b=document.createElement('div');b.className='ddb';
- const pl=s.previousElementSibling,t=s.getAttribute('aria-label')||(pl&&pl.classList&&pl.classList.contains('sl')?pl.textContent:'Choose one');
- b.innerHTML=`<div class="dsl" role="listbox" aria-label="${esc(t)}"><h4>${esc(t)}</h4>`+[...s.options].map((o,i)=>`<button type="button" class="ddo" role="option" data-i="${i}" aria-selected="${i==s.selectedIndex}"><span>${esc(o.text)}</span>${i==s.selectedIndex?sv('<path d="M5 13l4 4L19 7"/>'):''}</button>`).join('')+'</div>';
- const kd=e=>{if(e.key=='Escape'){e.stopPropagation();close()}},close=()=>{b.classList.remove('on');setTimeout(()=>b.remove(),300);document.removeEventListener('keydown',kd)};
- b.onclick=e=>{const o=e.target.closest('.ddo');if(o){s.selectedIndex=+o.dataset.i;s.dispatchEvent(new Event('change',{bubbles:true}));refDD();hap()}if(o||e.target==b)close()};
- document.addEventListener('keydown',kd);app.appendChild(b);requestAnimationFrame(()=>{b.classList.add('on');const x=b.querySelector('[aria-selected=true]');if(x)x.focus()})}
-function refDD(){document.querySelectorAll('.dd').forEach(b=>{const s=b._s;if(!s||!s.isConnected)return;const t=(s.options[s.selectedIndex]||{}).text||'',sp=b.firstChild;if(sp&&sp.textContent!=t)sp.textContent=t})}
-function enhSel(){document.querySelectorAll('.app select:not([data-e])').forEach(s=>{s.dataset.e=1;const b=document.createElement('button');b.type='button';b.className='dd';b._s=s;b.setAttribute('aria-haspopup','listbox');
- if(s.getAttribute('aria-label'))b.setAttribute('aria-label',s.getAttribute('aria-label')+': '+((s.options[s.selectedIndex]||{}).text||''));
- b.innerHTML='<span></span>'+sv('<path d="M6 9l6 6 6-6"/>',16);b.firstChild.textContent=(s.options[s.selectedIndex]||{}).text||'';b.onclick=()=>openDD(s);s.after(b)});refDD()}
-{let q=0;new MutationObserver(()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;enhSel()})}).observe(document.querySelector('.app'),{childList:true,subtree:true});
- document.addEventListener('click',()=>setTimeout(refDD,0));enhSel()}
 
 GRAD.splice(0,GRAD.length,'#d93a00','#1f6feb','#0b0b0d','#4a4cff','#127a3e','#d81b52');
+
+/* ===== v18: clearer add-money vs add-expense ===== */
+const _om18=openMTx;openMTx=function(p){_om18(p);const k=$('mt_k'),c=$('mt_c');if(!k)return;
+ const l=document.createElement('div');l.className='sl';l.id='mt_kl';l.textContent=MINC?'Deposit to':'Pay from';k.before(l);
+ const l2=document.createElement('div');l2.className='sl';l2.id='mt_cl';l2.textContent='Category';l2.hidden=MINC;c.before(l2)};
+const _si18=setInc;setInc=function(v,b){_si18(v,b);const t=document.querySelector('#sheet h3');if(t)t.textContent=v?'Add money':'Add expense';
+ const l=$('mt_kl'),l2=$('mt_cl');if(l)l.textContent=v?'Deposit to':'Pay from';if(l2)l2.hidden=v};
 
 render();
 </script></body></html>
