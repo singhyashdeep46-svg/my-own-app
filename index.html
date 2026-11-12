@@ -571,6 +571,102 @@ h2{margin:6px 20px 4px}.sub{padding:0 20px 14px}
 /* v19: keep text dark on the bright pink cards */
 .card[style*="color:#fff"],.acc[style*="color:#fff"]{color:#15121c!important}
 </style>
+<style>
+/* ===== v20: alignment fixes, motion, navigation, split bill ===== */
+
+/* -- alignment -- */
+/* profile button: was 44x40 with an oval status dot sitting on the picture */
+.gear.hasav{position:relative;display:grid;place-items:center;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;flex:none}
+.gear.hasav .sdot{position:absolute;top:auto;left:auto;right:0;bottom:0;width:12px;height:12px;min-width:12px;min-height:12px;border-radius:50%;box-shadow:0 0 0 2px var(--bg)}
+/* money spending cards were edge to edge while everything else is inset 20px */
+#v-mspend .stack{padding:14px 20px 0}
+#v-mspend .stack .card,#v-mspend .stack .card.last{margin:10px 0 0;border-radius:26px;height:128px}
+#v-mspend .stack .card:first-child{margin-top:0}
+#v-mspend .stack .card.open{height:236px}
+/* avatars vanished on cards of the same colour */
+.pr .fa{background:rgba(255,255,255,.7)!important;color:#15121c}
+/* ghost buttons inside settings cards had the same colour as the card */
+.set .pill.g{background:var(--bg);color:var(--ink)}
+.set .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.set .row2 .pill{width:100%;min-height:46px;display:flex;align-items:center;justify-content:center;text-align:center;white-space:normal}
+#v-set{padding-bottom:30px}
+.set .row2 .pill:only-child{grid-column:1/-1}
+main,.sheet{overscroll-behavior:contain}
+.sheet{scrollbar-width:none}.sheet::-webkit-scrollbar{display:none}
+.arow small{color:var(--mute);font-size:13px;font-weight:500}
+.arow .ng{color:#c4251f}
+.arow{align-items:center}
+
+/* -- navigation: direction-aware screen transitions -- */
+@keyframes vR{from{opacity:0;transform:translateX(26px)}}
+@keyframes vL{from{opacity:0;transform:translateX(-26px)}}
+@keyframes vU{from{opacity:0;transform:translateY(14px) scale(.985)}}
+.view.on.fwd{animation:vR 380ms var(--drawer)}
+.view.on.bwd{animation:vL 380ms var(--drawer)}
+.view.on.up{animation:vU 420ms var(--out)}
+nav button{-webkit-user-select:none;user-select:none}
+nav button:focus-visible,.pill:focus-visible,.chip:focus-visible,.sxr:focus-visible,.gact:focus-visible{outline:2px solid #4a4cff;outline-offset:2px}
+
+/* -- sheet content eases in once, on a fresh open only -- */
+@keyframes sIn{from{opacity:0;transform:translateY(10px)}}
+.sheet.fresh>:not(.gz){animation:sIn 360ms var(--out) backwards}
+.sheet.fresh>:nth-child(3){animation-delay:30ms}.sheet.fresh>:nth-child(4){animation-delay:60ms}.sheet.fresh>:nth-child(5){animation-delay:90ms}
+.sheet.fresh>:nth-child(6){animation-delay:120ms}.sheet.fresh>:nth-child(7){animation-delay:150ms}.sheet.fresh>:nth-child(n+8){animation-delay:180ms}
+.sheet .sl{margin:14px 0 8px}.f .sl{margin:6px 0 -2px}
+.sheet h3{margin-bottom:6px}
+.gsub{color:var(--mute);font-size:14px;margin:0 0 14px}
+
+/* -- people tab switch -- */
+.ptab{margin:0 20px 14px}
+.seg button{transition:background-color 220ms var(--out),color 220ms var(--out),transform 140ms var(--out)}
+
+/* -- split bill -- */
+.sxcta{display:flex;align-items:center;gap:14px;width:calc(100% - 40px);margin:14px 20px 0;padding:14px 16px;border-radius:22px;background:var(--line);text-align:left}
+.sxcta>span:nth-child(2){flex:1;min-width:0}.sxcta b{display:block;font-size:17px;font-weight:700}.sxcta small{display:block;font-size:13px;color:var(--mute);margin-top:2px}
+.sxcta .ic2{width:44px;height:44px;border-radius:14px;background:#4a4cff;color:#fff;display:grid;place-items:center;flex:none}
+.sxcta .chev{color:var(--mute);flex:none}
+.sxgh{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.sxgh h3{margin:0}.sxgh .gsub{margin:2px 0 0}
+.gav{display:flex;flex:none}.gav .fa{border:2px solid var(--bg);margin-right:-12px;width:38px;height:38px;font-size:15px}.gav .fa:last-child{margin-right:0}
+.gst{margin:0 0 14px!important}
+.gok{display:flex;align-items:center;gap:8px;padding:12px 14px;border-radius:16px;background:var(--mint);color:#15121c;font-weight:600;font-size:15px}
+.sxgd{display:flex;align-items:center;gap:12px;min-width:0}.sxgd>span:last-child{min-width:0;line-height:1.3}
+.gar{display:flex;align-items:center;gap:8px;flex:none;text-align:right}
+.gact{cursor:pointer;border-radius:12px;transition:background-color 160ms ease}.gact:active{background:var(--line)}
+.gact>span:first-child{min-width:0;line-height:1.35}
+.gal{display:flex;align-items:center;gap:10px}.gal svg{color:#1a9c4b;flex:none}
+.gar small{display:block;line-height:1.2}
+.gxd{width:36px;height:36px;border-radius:12px;background:var(--line);display:grid;place-items:center;color:var(--mute);flex:none}
+.gdel{width:100%;margin-top:10px;color:#c4251f}
+.sxsm{padding:9px 16px!important}
+.gpick{width:100%;text-align:left}
+.sxh{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.sxh h3{margin:0 0 10px}
+.sxg{font-size:13px;font-weight:600;color:var(--mute);background:var(--line);padding:4px 10px;border-radius:10px;max-width:50%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sxa{display:flex;align-items:center;gap:10px;background:var(--line);border-radius:18px;padding:6px 16px;border:2px solid transparent;transition:border-color 160ms ease,background-color 160ms ease}
+.sxa:focus-within{border-color:var(--ink);background:var(--bg)}
+.sxc{font-size:28px;font-weight:600;color:var(--mute);flex:none}
+input.sxai{border:0!important;background:none!important;box-shadow:none!important;border-radius:0!important;padding:8px 0!important;font-size:40px;font-weight:500;letter-spacing:-.03em;min-width:0;font-variant-numeric:tabular-nums}
+input.sxai:focus{border:0!important;background:none!important}
+.sxp{display:flex;flex-wrap:wrap;gap:8px;padding:2px 0 4px}
+.sxw{display:flex;align-items:center;gap:8px;flex:none;padding:5px 14px 5px 5px;border-radius:22px;background:var(--line);font-weight:600;font-size:14px;transition:background-color 200ms var(--out),color 200ms var(--out)}
+.sxw .fa{width:30px;height:30px;font-size:13px}
+.sxw.on{background:var(--ink);color:var(--bg)}
+.sxr{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 4px;border-bottom:1px solid var(--line);transition:opacity 200ms ease}
+.sxr .fa{flex:none}
+.sxr.off{opacity:.45}.sxr[role=checkbox]{cursor:pointer}
+.sxn{flex:1;min-width:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sxm{min-width:78px;text-align:right;font-variant-numeric:tabular-nums;font-size:15px;font-weight:600;color:var(--mute)}
+.sxk{width:26px;height:26px;border-radius:9px;border:2px solid var(--rim);display:grid;place-items:center;color:transparent;flex:none;transition:background-color 200ms var(--out),border-color 200ms var(--out),color 200ms var(--out),transform 260ms var(--drawer)}
+.sxk.on{background:var(--ink);border-color:var(--ink);color:var(--bg);transform:scale(1.05)}
+input.sxin{width:92px!important;padding:9px 12px!important;text-align:right;font-variant-numeric:tabular-nums;flex:none}
+.sxu{font-style:normal;color:var(--mute);font-weight:600;margin-left:-6px}
+.sxst{display:flex;align-items:center;gap:2px;flex:none}
+.sxst button{width:34px;height:34px;border-radius:50%;background:var(--line);font-size:20px;font-weight:600;line-height:1;display:grid;place-items:center}
+.sxst b{min-width:26px;text-align:center;font-variant-numeric:tabular-nums}
+.sxt{font-size:14px;font-weight:600;color:var(--mute);padding:2px 4px;min-height:20px;transition:color 200ms ease}
+.sxt.ok{color:#1a9c4b}.sxt.bad{color:#c4251f}
+.pill:disabled{opacity:.4;pointer-events:none}
+</style>
 </head><body>
 <div class="app" id="app">
  <div class="top"><div id="avs" style="display:flex"></div><button class="plus" onclick="openArea()" aria-label="Add area"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="cur" id="curBtn" onclick="go('home')">Today</button><button class="gear" onclick="go('set')" aria-label="Settings"><span class="sdot off" id="sdot"></span><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></button></div>
@@ -802,7 +898,7 @@ function renderSet(){$('v-set').innerHTML=`<h2>Settings</h2><div class="sub">${U
 <div class="set"><div class="sl si">${ico('User')}Name</div><input placeholder="Your name" value="${(S.name||'').replace(/"/g,'&quot;')}" onchange="S.name=this.value;save()"></div>
 <div class="set"><div class="sl si">${ico('Bell')}Reminders</div><div class="row2"><button class="pill" onclick="askNoti()">${notiOn()?'Notifications on':'Enable notifications'}</button><button class="pill g" onclick="beep();toast('⏰ Test reminder')">Test sound</button></div><p class="note2">Alerts ring while Fin is open, in a tab or the installed app.</p></div>
 <div class="set"><div class="sl si">${ico('Moon')}Appearance</div><div class="chips">${['system','light','dark'].map(t=>`<button class="chip ${(S.theme||'system')==t?'on':''}" onclick="setTheme('${t}')">${t[0].toUpperCase()+t.slice(1)}</button>`).join('')}</div></div>
-<div class="set"><div class="sl si">${ico('Cloud')}Sync across devices</div><input id="su" placeholder="Apps Script web app URL" value="${esc(getUrl())}"><div class="row2"><button class="pill si" style="justify-content:center" onclick="saveUrl()">${ico('Cloud')}Connect</button><button class="pill g si${busy?' spin':''}" id="syncbtn" style="justify-content:center" onclick="syncNow(true)">${ico('Refresh')}Sync now</button></div><p class="note2" id="syncst">${syncText()}</p><p class="note2">App v6. Sign in with the same email and password on any device. Tasks, money and invoices merge automatically, even when you edit on two devices.</p></div>
+<div class="set"><div class="sl si">${ico('Cloud')}Sync across devices</div><input id="su" placeholder="Apps Script web app URL" value="${esc(getUrl())}"><div class="row2"><button class="pill si" style="justify-content:center" onclick="saveUrl()">${ico('Cloud')}Connect</button><button class="pill g si${busy?' spin':''}" id="syncbtn" style="justify-content:center" onclick="syncNow(true)">${ico('Refresh')}Sync now</button></div><p class="note2" id="syncst">${syncText()}</p><p class="note2">App v7. Sign in with the same email and password on any device. Tasks, money and invoices merge automatically, even when you edit on two devices.</p></div>
 <div class="set"><div class="sl si">${ico('Db')}Data</div><div class="row2"><button class="pill g" onclick="exportData()">Export JSON</button><button class="pill g" onclick="resetData(this)">Erase all data</button></div></div>
 <div class="set"><button class="save" style="background:var(--ink);color:var(--bg)" onclick="signOut()">Sign out</button></div>`}
 async function boot(){let ses=null;try{ses=JSON.parse(localStorage.getItem('fin_session'))}catch(e){}
@@ -1394,141 +1490,171 @@ function recGs(id,f,t,a){gxs().push({id:Date.now(),g:id,settle:true,from:DEC(f),
 function delGx(id){const e=gxs().find(x=>x.id==id);if(!e)return;S.gx=S.gx.filter(x=>x.id!=id);render();openGrp(e.g);toast('Deleted · tap to undo',()=>{S.gx.push(e);render()})}
 function delGrp(id){const g=gps().find(x=>x.id==id);if(!g)return;const es=gxs().filter(e=>e.g==id);S.groups=S.groups.filter(x=>x.id!=id);S.gx=S.gx.filter(e=>e.g!=id);closeSheet();render();toast('Group deleted · tap to undo',()=>{S.groups.push(g);S.gx.push(...es);render()})}
 
-render();
-</script><style id="v20">
-/* ===== v20: alignment, motion, split bills ===== */
-.msec button,.chip,.pill{min-height:40px}.msec{min-height:48px}
-.chip{display:inline-flex;align-items:center}
-.pill{display:inline-flex;align-items:center;justify-content:center;gap:6px;text-align:center}.pill svg{flex:none}
-.frs::after{content:"";flex:none;width:6px}
-.fb{left:50%;transform:translateX(-50%);white-space:nowrap}
-.fa{flex:none;line-height:1}.fa.add{font-size:28px;font-weight:400}
-.arow{align-items:center;flex-wrap:wrap}.arow>span{min-width:0}
-.pr{align-items:center}.pr .am{flex:none;max-width:46%}
-.pr .nm b,.pr .nm span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.stk{display:flex;flex:none}.stk .fa+.fa{margin-left:-14px}.stk .fa{border:2px solid var(--bg)}
-.toast{max-width:calc(100% - 32px);white-space:normal;text-align:center}
-main{overscroll-behavior:contain}
-.sheet input,.sheet select{min-height:50px}
-nav button .ic{transition:background-color 260ms var(--out),transform 460ms cubic-bezier(.34,1.56,.64,1)}
-.sheet{transition:transform 460ms cubic-bezier(.22,1,.36,1)}
-.sheet.on>*:not(.gz){animation:glassIn 420ms var(--out) backwards}
-.sheet.on>*:nth-child(3){animation-delay:40ms}.sheet.on>*:nth-child(4){animation-delay:80ms}.sheet.on>*:nth-child(n+5){animation-delay:120ms}
-#v-grp{padding-bottom:130px}
-.gtop{display:flex;align-items:center;gap:10px;padding:6px 14px 0}
-.gtt{flex:1;min-width:0}.gtt h2{margin:0;font-size:30px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gtt .sub{padding:2px 0 0}
-.gbk{flex:none;width:44px;height:44px;border-radius:14px;background:var(--line);display:grid;place-items:center}
-#v-grp .sm{margin-top:14px}
-.gr{margin:0 20px 14px}.gl{display:flex;align-items:center;gap:12px}
-.gl b{flex:1;min-width:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.gl span{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--mute);text-align:right}.gl .pl{color:#1a9c4b}.gl .ng{color:var(--neg)}
-.gbar{height:8px;border-radius:5px;background:var(--line);margin:8px 0 0 52px;overflow:hidden}
-.gbar i{display:block;height:100%;border-radius:5px;transform-origin:left;animation:grow 700ms var(--out) both}
-.pay{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:0 20px 10px;padding:14px;border-radius:22px;background:var(--bg);box-shadow:inset 0 0 0 2px var(--line)}
-.pb{flex:1 0 100%;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px}.pb .pill{padding:10px 14px}
-.pay .pf{display:flex;align-items:center;gap:6px;flex:none}.pay .pf .fa{width:36px;height:36px;font-size:15px}
-.pay .pt{flex:1;min-width:0}.pay .pt b{display:block;font-size:17px;font-variant-numeric:tabular-nums}.pay .pt span{font-size:13px;color:var(--mute)}
-.pay .pill{padding:9px 14px;font-size:14px}
-.ev{display:flex;align-items:center;gap:12px;width:calc(100% - 40px);margin:0 20px 8px;padding:10px 12px;border-radius:20px;background:var(--line);text-align:left}
-.ev.an{animation:glassIn 420ms var(--out) backwards}
-.ei{flex:none;width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-weight:700;color:#15121c}
-.et{flex:1;min-width:0}.et b{display:block;font-size:16px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.et small{display:block;font-size:13px;color:var(--mute)}
-.ea{flex:none;text-align:right;font-variant-numeric:tabular-nums}.ea b{display:block;font-size:16px}.ea small{font-size:12px;color:var(--mute)}.ea.pl b{color:#1a9c4b}.ea.ng b{color:var(--neg)}
-.spl{display:flex;align-items:center;gap:14px;width:calc(100% - 40px);margin:0 20px 12px;padding:14px;border-radius:22px;background:var(--ink);color:var(--bg);text-align:left}
-.spl>span:nth-child(2){flex:1;min-width:0}.spl b{display:block;font-size:17px}.spl small{font-size:13px;opacity:.7}
-.sp1{width:44px;height:44px;border-radius:14px;background:#ff3d00;color:#fff;display:grid;place-items:center}
-.gxr{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
-.gxn{display:flex;align-items:center;gap:10px;flex:1;min-width:0}.gxn b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.gxp{font-size:13px;color:var(--mute);min-width:60px;text-align:right;font-variant-numeric:tabular-nums}
-.gxr input{width:96px;min-height:44px;padding:0 12px;text-align:right}
-.stp{display:flex;align-items:center;gap:6px}.stp button{width:36px;height:36px;border-radius:12px;background:var(--line);font-size:20px;font-weight:700}.stp i{min-width:22px;text-align:center;font-style:normal;font-weight:700}
-.gtot{font-size:14px;font-weight:600;color:var(--mute);min-height:20px}.gtot.bad{color:var(--neg)}
-.amtin::-webkit-outer-spin-button,.amtin::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}.amtin{-moz-appearance:textfield;appearance:textfield}
-</style>
-<script id="v20js">
-/* ===== v20: navigation (back button, Escape, direction-aware) ===== */
-let HS=0,IGN=0,FOC=null;
-const psh=s=>{try{history.pushState(s,'');return 1}catch(e){return 0}},hb=()=>{IGN++;history.back()};
-const _sh20=sheet;sheet=function(h){if(!HS)FOC=document.activeElement;_sh20(h);const s=$('sheet');s.setAttribute('role','dialog');s.setAttribute('aria-modal','true');s.scrollTop=0;if(!HS&&psh({sh:1}))HS=1};
-const _cs20=closeSheet;closeSheet=function(){const was=$('sheet').classList.contains('on');_cs20();if(HS){HS=0;hb()}if(was&&FOC&&FOC.focus){try{FOC.focus({preventScroll:true})}catch(e){}}};
-const _go20=go;go=function(t){const a=TABS.indexOf(S.tab),b=TABS.indexOf(t);$('main').style.setProperty('--dx',a>=0&&b>=0&&a!=b?(b>a?44:-44)+'px':'0px');
- _go20(t);if(t=='grp'&&!(history.state&&history.state.v=='grp'))psh({v:'grp'})};
-const _rn20=renderNav;renderNav=function(){_rn20();if(S.tab=='grp')$('nav').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k=='mloans'))};
-addEventListener('popstate',()=>{if(IGN){IGN--;return}if(HS){HS=0;_cs20();return}if(S.tab=='grp')go('mloans')});
-addEventListener('keydown',e=>{if(e.key!='Escape')return;if($('sheet').classList.contains('on'))closeSheet();else if(typeof POP!=='undefined'&&POP)closePop()});
-function grpBack(){if(history.state&&history.state.v=='grp')IGN++,history.back();go('mloans')}
+/* ===== v20: navigation (back button, direction-aware transitions), sheets, split bill ===== */
+let SHOPEN=false,BKT=0,SKIPPOP=false,PROGNAV=false;
+const _go20=go,_sheet20=sheet,_close20=closeSheet;
+go=function(t){
+ const prev=S.tab,pm=S.mode||'tasks';
+ document.querySelectorAll('.view.fwd,.view.bwd,.view.up').forEach(v=>v.classList.remove('fwd','bwd','up'));
+ _go20(t);
+ if(t=='inew')return;
+ const nm=S.mode||'tasks',v=document.getElementById('v-'+t);
+ if(prev&&prev!==t&&v&&USER){
+  const ord=(NAVS[nm]||[]).map(x=>x[0]),a=ord.indexOf(prev),b=ord.indexOf(t);
+  v.classList.add(pm!==nm?'up':(a>=0&&b>=0&&b<a?'bwd':'fwd'));
+  if(!PROGNAV&&!SHOPEN&&!BKT){try{if(!history.state)history.replaceState({tab:prev},'');history.pushState({tab:t},'')}catch(e){}}
+ }
+};
+sheet=function(h){
+ const sh=$('sheet');let fresh=false;
+ if(BKT){clearTimeout(BKT);BKT=0;SHOPEN=true}
+ else if(!SHOPEN){SHOPEN=true;fresh=true;try{history.pushState({sheet:1},'')}catch(e){}}
+ _sheet20(h);sh.classList.toggle('fresh',fresh);
+};
+closeSheet=function(){
+ _close20();
+ if(SHOPEN){SHOPEN=false;clearTimeout(BKT);
+  BKT=setTimeout(()=>{BKT=0;if(!SHOPEN&&history.state&&history.state.sheet){SKIPPOP=true;history.back()}},0)}
+};
+addEventListener('popstate',e=>{
+ if(SKIPPOP){SKIPPOP=false;return}
+ if(SHOPEN){SHOPEN=false;clearTimeout(BKT);BKT=0;_close20();return}
+ const t=e.state&&e.state.tab;
+ if(t&&USER&&t!==S.tab){PROGNAV=true;try{go(t)}finally{PROGNAV=false}}
+});
+addEventListener('keydown',e=>{if(e.key=='Escape'&&SHOPEN)closeSheet()});
 
-/* ===== v20: split bills ===== */
-const CATS=['Food','Travel','Stay','Fun','Shop','Bills','Other'],gof=id=>gps().find(x=>x.id==id),lastT=g=>Math.max(g.t,...gxs().filter(e=>e.g==g.id).map(e=>e.t)),
- SV={split:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 9h6M9 13h4"/>',chev:'<path d="M9 5l7 7-7 7"/>',back:'<path d="M15 5l-7 7 7 7"/>',more:'<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',plus:'<path d="M12 5v14M5 12h14"/>',share:'<path d="M12 16V4M7 9l5-5 5 5M5 14v5h14v-5"/>',ok:'<path d="M5 13l4 4L19 7"/>'};
-let GRP={id:0,anim:false},GX2={};
-function dist(c,w){const ks=Object.keys(w).filter(k=>w[k]>0),T=ks.reduce((s,k)=>s+w[k],0);if(!T)return null;const r={};let u=0;
- const f=ks.map(k=>{const x=c*w[k]/T,b=Math.floor(x+1e-9);r[k]=b;u+=b;return[k,x-b]}).sort((a,b)=>b[1]-a[1]);for(let i=0;i<c-u;i++)r[f[i%f.length][0]]++;return r}
-function cu(){const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;document.querySelectorAll('#v-grp [data-cu]').forEach(el=>{const to=+el.dataset.cu,c=el.dataset.cur,t0=performance.now();if(rm||!to)return;
- const f=n=>{const p=Math.min((n-t0)/650,1);el.textContent=fm(to*(1-Math.pow(1-p,3)),c);if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)})}
-{const s=document.createElement('section');s.className='view';s.id='v-grp';$('v-mloans').after(s)}
-const _rm20=renderMoney;renderMoney=function(){_rm20();grpRender()};
-function openGrp(id){if(!gof(id))return;GRP={id,anim:true};if(S.tab=='grp')grpRender();else go('grp');if($('sheet').classList.contains('on'))closeSheet()}
-function grpRender(){if(S.tab!='grp')return;const v=$('v-grp'),g=gof(GRP.id);if(!g){v.innerHTML='';go('mloans');return}
- const m=gbal(g),E=gxs().filter(e=>e.g==g.id).sort((a,b)=>b.t-a.t),X=E.filter(e=>!e.settle),tot=X.reduce((s,e)=>s+e.a,0),mine=X.reduce((s,e)=>s+(e.sp[ME]||0),0),me=m[ME]||0,
- mx=Math.max(.01,...g.members.map(k=>Math.abs(m[k]||0))),L=gsimp(m),an=GRP.anim?' an':'',days={};E.forEach(e=>(days[dshort(e.t)]=days[dshort(e.t)]||[]).push(e));
- v.innerHTML=`<div class="gtop"><button class="gbk" onclick="grpBack()" aria-label="Back to people">${sv(SV.back,22)}</button><div class="gtt"><h2>${esc(g.name)}</h2><div class="sub">${g.members.length} people · ${g.cur}</div></div><button class="gbk" onclick="openGMenu(${g.id})" aria-label="Group options">${sv(SV.more,22)}</button></div>
- <div class="sm"><div style="background:${me<0?'var(--peach)':'var(--mint)'}"><span>${me<0?'You owe':me>0?'You’re owed':'You’re settled'}</span><b data-cu="${Math.abs(me)}" data-cur="${g.cur}">${fm(Math.abs(me),g.cur)}</b></div>
- <div style="background:var(--peri)"><span>Group spend</span><b data-cu="${tot}" data-cur="${g.cur}">${fm(tot,g.cur)}</b><span>Your share ${fm(mine,g.cur)}</span></div></div>
- <div class="acts" style="margin:0 20px 6px"><button class="pill" onclick="openGx(${g.id})">${sv(SV.plus,18)}Add expense</button><button class="pill g" onclick="shareG(${g.id})">${sv(SV.share,18)}Share</button></div>
- <div class="msec"><span>Balances</span></div>${g.members.map(k=>{const b=m[k]||0;return`<div class="gr"><div class="gl">${av(k,40)}<b>${esc(k)}</b><span class="${b>0?'pl':b<0?'ng':''}">${b==0?'Settled':(b>0?'gets back ':'owes ')+fm(Math.abs(b),g.cur)}</span></div><div class="gbar"><i style="width:${b?Math.max(3,Math.abs(b)/mx*100):0}%;background:${b>0?'#1a9c4b':'#c4251f'}"></i></div></div>`}).join('')}
- ${L.length?`<div class="msec"><span>Suggested payments</span></div>`+L.map(x=>`<div class="pay"><div class="pf">${av(x.from,36)}${sv(SV.chev,16)}${av(x.to,36)}</div><div class="pt"><b>${fm(x.a,g.cur)}</b><span>${x.from==ME?'You pay ':esc(x.from)+' pays '}${x.to==ME?'you':esc(x.to)}</span></div><div class="pb">${x.from==ME?'':`<button class="pill g" onclick="remG(${g.id},'${ENC(x.from)}','${ENC(x.to)}',${x.a})">Remind</button>`}<button class="pill" onclick="recG(${g.id},'${ENC(x.from)}','${ENC(x.to)}',${x.a})">Settle</button></div></div>`).join(''):''}
- <div class="msec"><span>Activity</span></div>${E.length?Object.entries(days).map(([d,es])=>`<div class="gh">${d}</div>`+es.map((e,i)=>{const n=e.settle?(e.from==ME?-e.a:e.to==ME?e.a:0):(e.by==ME?e.a:0)-(e.sp[ME]||0),ci=Math.max(0,CATS.indexOf(e.cat));
-  return`<button class="ev${an}" style="animation-delay:${Math.min(i,8)*40}ms" onclick="openEv(${e.id})"><span class="ei" style="background:${pal(ci)}">${e.settle?sv(SV.ok,20):esc((e.cat||'E')[0])}</span><span class="et"><b>${e.settle?esc(gnm(e.from))+' paid '+esc(gnm(e.to)):esc(e.d)}</b><small>${e.settle?'Settlement':(e.by==ME?'You':esc(e.by))+' paid '+fm(e.a,g.cur)}</small></span><span class="ea ${n>0?'pl':n<0?'ng':''}"><small>${n>0?(e.settle?'you received':'you lent'):n<0?(e.settle?'you paid':'you owe'):'not involved'}</small>${n?`<b>${fm(Math.abs(n),g.cur)}</b>`:''}</span></button>`}).join('')).join(''):empty('Savings','No expenses yet.<br>Tap Add expense to split the first bill.')}`;
- if(GRP.anim){cu();requestAnimationFrame(()=>GRP.anim=false)}}
-const gnm=k=>k==ME?'You':k;
-function openEv(id){const e=gxs().find(x=>x.id==id);if(!e)return;const g=gof(e.g);
- sheet(`<h3>${e.settle?'Payment':esc(e.d)}</h3><div class="sub" style="padding:0 0 12px">${e.settle?esc(gnm(e.from))+' paid '+esc(gnm(e.to)):(e.by==ME?'You':esc(e.by))+' paid'} · ${fm(e.a,g.cur)} · ${dshort(e.t)}${e.cat?' · '+e.cat:''}${e.tip?' · incl. '+e.tip+'%':''}</div>`+
- (e.settle?'':`<div class="sl">Split ${({eq:'equally',ex:'by exact amounts',pc:'by percent',sh:'by shares'})[e.mode]||''}</div>`+Object.keys(e.sp).map(k=>`<div class="arow"><span style="display:flex;align-items:center;gap:10px">${av(k,34)}${esc(k)}</span><b>${fm(e.sp[k],g.cur)}</b></div>`).join(''))+
- `<button class="pill g" style="width:100%;margin-top:14px;color:#c4251f" onclick="closeSheet();delGx(${id})">Delete</button>`)}
-function delGx(id){const e=gxs().find(x=>x.id==id);if(!e)return;S.gx=S.gx.filter(x=>x.id!=id);render();toast('Deleted · tap to undo',()=>{S.gx.push(e);render()})}
-function recG(id,f,t,a){f=DEC(f);t=DEC(t);const e={id:Date.now(),g:id,settle:true,from:f,to:t,a,by:f,t:Date.now()};gxs().push(e);render();toast('Payment recorded · tap to undo',()=>{S.gx=S.gx.filter(x=>x.id!=e.id);render()})}
-function remG(id,f,t,a){const g=gof(id);window.open('https://wa.me/?text='+ENC(`Hi ${DEC(f)}, a quick reminder from “${g.name}”: you owe ${DEC(t)==ME?'me':DEC(t)} ${fm(a,g.cur)}.`),'_blank','noopener')}
-function shareG(id){const g=gof(id),m=gbal(g),L=gsimp(m),T=[`*${g.name}* balances`,...g.members.map(k=>`${k}: ${m[k]>0?'gets back '+fm(m[k],g.cur):m[k]<0?'owes '+fm(-m[k],g.cur):'settled'}`),'',...(L.length?['To settle up:',...L.map(x=>`• ${x.from} pays ${x.to} ${fm(x.a,g.cur)}`)]:['All settled'])].join('\n');
- if(navigator.share)navigator.share({title:g.name,text:T}).catch(()=>{});else window.open('https://wa.me/?text='+ENC(T),'_blank','noopener')}
-function openGMenu(id){const g=gof(id);sheet(`<h3>${esc(g.name)}</h3><div class="f"><div class="sl">Rename</div><div class="paste" style="margin:0"><input id="grn" value="${esc(g.name)}" autocomplete="off"><button class="pill" onclick="renG(${id})">Save</button></div>
- <div class="sl">Add a friend</div><div class="paste" style="margin:0"><input id="gam" placeholder="Name" autocomplete="off"><button class="pill" onclick="addMem(${id})">Add</button></div></div>
- <div class="acts"><button class="pill g" onclick="closeSheet();shareG(${id})">Share balances</button><button class="pill g" style="color:#c4251f" onclick="delGrp(${id})">Delete group</button></div>`)}
-function renG(id){const g=gof(id),n=$('grn').value.trim();if(n)g.name=n;closeSheet();render()}
-function addMem(id){const g=gof(id),n=$('gam').value.trim();if(!n)return;if(g.members.some(x=>x.toLowerCase()==n.toLowerCase())){toast('Already in the group');return}g.members.push(n);closeSheet();render();toast(n+' added')}
-groupsHTML=function(){const G=gps().slice().sort((a,b)=>lastT(b)-lastT(a));
- return`<div class="msec"><span>Split bills</span><button onclick="openGroup()">+ New group</button></div><button class="spl" onclick="quickSplit()"><span class="sp1">${sv(SV.split,22)}</span><span><b>Split a bill</b><small>Dinner, trip, rent — with friends</small></span>${sv(SV.chev,20)}</button>`+
- (G.length?G.map((g,i)=>{const b=gbal(g)[ME]||0,n=gxs().filter(e=>e.g==g.id).length;return`<button class="pr" style="background:${pal(i+3)}" onclick="openGrp(${g.id})"><span class="stk">${g.members.slice(0,3).map(k=>av(k,38)).join('')}</span><div class="nm"><b>${esc(g.name)}</b><span>${g.members.length} people · ${n} item${n==1?'':'s'}</span></div><div class="am">${b==0?'Settled':fm(Math.abs(b),g.cur)}<span>${b>0?'you’re owed':b<0?'you owe':'all square'}</span></div></button>`}).join(''):`<div class="sub" style="padding:0 20px 14px">Create a group with your friends, add what each person paid, and Fin works out who owes whom.</div>`)};
-loansHTML=function(){return _lh19().replace('<div class="sm">',groupsHTML()+'<div class="msec"><span>Lend & borrow</span></div><div class="sm">')};
-function quickSplit(){const G=gps();if(!G.length){openGroup();return}if(G.length==1){openGx(G[0].id);return}
- sheet(`<h3>Split with…</h3>`+G.map(g=>`<button class="arow" style="width:100%;text-align:left" onclick="openGx(${g.id})"><span style="display:flex;align-items:center;gap:12px">${av(g.name,40)}${esc(g.name)}</span><small style="color:var(--mute)">${g.members.length} people</small></button>`).join('')+`<button class="pill g" style="width:100%;margin-top:12px" onclick="openGroup()">+ New group</button>`)}
-function openGroup(){mi();const fr=[...new Set([...people().map(p=>p.n),...gps().flatMap(g=>g.members)].filter(n=>n&&n!=ME))].slice(0,12);
- sheet(`<h3>New group</h3><div class="f"><input id="gn" placeholder="Group name (Trip, Flat, Dinner)" autocomplete="off"><div class="sl">Currency</div><select id="gc" aria-label="Currency">${CURS.map(c=>`<option ${c==S.base?'selected':''}>${c}</option>`).join('')}</select><div class="sl">Friends</div><input id="gm" placeholder="Names, separated by commas" autocomplete="off">${fr.length?`<div class="chips">${fr.map(n=>`<button class="chip" onclick="addFr('${ENC(n)}',this)">${esc(n)}</button>`).join('')}</div>`:''}<button class="pill" onclick="saveGroup()">Create group</button></div>`)}
-function addFr(n,b){n=DEC(n);const i=$('gm'),a=i.value.split(',').map(x=>x.trim()).filter(Boolean),on=a.some(x=>x.toLowerCase()==n.toLowerCase());i.value=(on?a.filter(x=>x.toLowerCase()!=n.toLowerCase()):a.concat(n)).join(', ');b.classList.toggle('on',!on)}
-const tg1=(b,f)=>{[...b.parentNode.children].forEach(x=>x.classList.toggle('on',x==b));f&&f()};
-function openGx(id){const g=gof(id);if(!g)return;GX2={g:id,mode:'eq',by:ME,cat:'Food',tip:0,sel:g.members.slice(),ex:{},pc:{},sh:{}};g.members.forEach(k=>GX2.sh[k]=1);
- sheet(`<h3>Add expense</h3><div class="f"><input id="gx_d" placeholder="What was it for?" autocomplete="off"><input class="amtin" id="gx_a" type="number" inputmode="decimal" placeholder="0.00 ${g.cur}" oninput="gxu()">
- <div class="sl">Category</div><div class="chips">${CATS.map(c=>`<button class="chip${c=='Food'?' on':''}" onclick="tg1(this,()=>GX2.cat='${c}')">${c}</button>`).join('')}</div>
- <div class="sl">Paid by</div><div class="chips">${g.members.map(k=>`<button class="chip${k==ME?' on':''}" onclick="tg1(this,()=>GX2.by=DEC('${ENC(k)}'))">${esc(k)}</button>`).join('')}</div>
- <div class="sl">Tip / tax on top</div><div class="chips">${[0,5,10,15,18].map(p=>`<button class="chip${p?'':' on'}" onclick="tg1(this,()=>{GX2.tip=${p};gxu()})">${p?p+'%':'None'}</button>`).join('')}</div>
- <div class="sl">Split</div><div class="seg">${[['eq','Equally'],['ex','Exact'],['pc','Percent'],['sh','Shares']].map(([k,l])=>`<button class="${k=='eq'?'on':''}" onclick="tg1(this,()=>{GX2.mode='${k}';gxb()})">${l}</button>`).join('')}</div><div id="gx_s"></div><div class="gtot" id="gx_n" aria-live="polite"></div><button class="pill" onclick="saveGx()">Save expense</button></div>`);gxb()}
-function gxb(){const g=gof(GX2.g),el=$('gx_s');if(!el)return;const m=GX2.mode;
- el.innerHTML=m=='eq'?`<div class="chips">${g.members.map(k=>`<button class="chip${GX2.sel.includes(k)?' on':''}" onclick="this.classList.toggle('on');gxe('${ENC(k)}')">${esc(k)}</button>`).join('')}</div>`:
- g.members.map(k=>`<div class="gxr"><span class="gxn">${av(k,32)}<b>${esc(k)}</b></span><span class="gxp" data-p="${esc(k)}"></span>${m=='sh'?`<span class="stp"><button onclick="gsh('${ENC(k)}',-1,this)" aria-label="Fewer shares">−</button><i>${GX2.sh[k]}</i><button onclick="gsh('${ENC(k)}',1,this)" aria-label="More shares">+</button></span>`:`<input type="number" inputmode="decimal" data-k="${esc(k)}" placeholder="${m=='pc'?'0 %':'0.00'}" value="${GX2[m][k]||''}" oninput="GX2[GX2.mode][this.dataset.k]=this.value;gxu()">`}</div>`).join('');gxu()}
-function gxe(k){k=DEC(k);GX2.sel=GX2.sel.includes(k)?GX2.sel.filter(x=>x!=k):GX2.sel.concat(k);gxu()}
-function gsh(k,d,b){k=DEC(k);GX2.sh[k]=Math.max(0,Math.min(20,(GX2.sh[k]||0)+d));b.parentNode.querySelector('i').textContent=GX2.sh[k];gxu()}
-function gxcalc(){const g=gof(GX2.g),a=parseFloat($('gx_a').value)||0,f=a*(1+GX2.tip/100),c=Math.round(f*100),m=GX2.mode,w={};let r=null,msg='';
- if(m=='eq'){GX2.sel.forEach(k=>w[k]=1);r=dist(c,w);if(!r)msg='Pick who shares this'}
- else if(m=='sh'){g.members.forEach(k=>w[k]=GX2.sh[k]||0);r=dist(c,w);if(!r)msg='Give at least one person a share'}
- else if(m=='pc'){let t=0;g.members.forEach(k=>{w[k]=parseFloat(GX2.pc[k])||0;t+=w[k]});const d=Math.round((100-t)*10)/10;if(Math.abs(d)>.01)msg=Math.abs(d)+'% '+(d>0?'left':'over');else r=dist(c,w)}
- else{const x={};let t=0;g.members.forEach(k=>{const v=Math.round((parseFloat(GX2.ex[k])||0)*100);if(v){x[k]=v;t+=v}});if(t!=c)msg=fm(Math.abs(c-t)/100,g.cur)+(t<c?' left to assign':' over');else r=x}
- return{a,f,c,r,msg}}
-function gxu(){const g=gof(GX2.g);if(!g||!$('gx_n'))return;const x=gxcalc();
- document.querySelectorAll('#gx_s .gxp').forEach(s=>{const v=x.r&&x.r[s.dataset.p];s.textContent=v?fm(v/100,g.cur):''});
- $('gx_n').textContent=!x.c?'Enter an amount':x.r?`Total ${fm(x.f,g.cur)}${GX2.tip?' (incl. '+GX2.tip+'%)':''}${GX2.mode=='eq'?' · '+fm(x.f/GX2.sel.length,g.cur)+' each':''}`:x.msg;$('gx_n').classList.toggle('bad',!!(x.c&&!x.r))}
-function saveGx(){const g=gof(GX2.g),d=$('gx_d').value.trim(),x=gxcalc();if(!d){toast('Add a description');$('gx_d').focus();return}if(!(x.a>0)){toast('Enter an amount');return}if(!x.r){toast(x.msg);return}
- const sp={};for(const k in x.r)if(x.r[k])sp[k]=x.r[k]/100;gxs().push({id:Date.now(),g:g.id,d,a:x.c/100,by:GX2.by,sp,t:Date.now(),cat:GX2.cat,mode:GX2.mode,tip:GX2.tip||0});
- closeSheet();render();if(S.tab!='grp')openGrp(g.id);toast('Expense added')}
+/* ===== split bill ===== */
+const R2=x=>Math.round(x*100)/100,
+ gcs=g=>{try{return(0).toLocaleString('en',{style:'currency',currency:g.cur,minimumFractionDigits:0,maximumFractionDigits:0}).replace(/[\d\s.,]/g,'')||g.cur}catch(e){return g.cur}},
+ TRASH='<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12h10l1-12M9 7V4h6v3"/>',
+ CHECK='<path d="M5 13l4 4L19 7"/>',
+ knownNames=ex=>{const o={};[...people().map(p=>p.n),...gps().flatMap(g=>g.members)].forEach(n=>{if(n&&n.toLowerCase()!='you'&&!(ex||[]).some(m=>m.toLowerCase()==n.toLowerCase()))o[n.toLowerCase()]=n});return Object.values(o)};
+/* split whole cents by weights, giving leftover cents to the biggest remainders */
+function alloc(c,w){const W=w.reduce((a,b)=>a+b,0);if(!(W>0))return w.map(()=>0);
+ const raw=w.map(x=>c*x/W),fl=raw.map(Math.floor);let r=c-fl.reduce((a,b)=>a+b,0);
+ raw.map((x,i)=>[x-fl[i],i]).sort((a,b)=>b[0]-a[0]||a[1]-b[1]).forEach(p=>{const i=p[1];if(r>0&&w[i]>0){fl[i]++;r--}});
+ return fl}
+
+/* -- People tab: Friends | Groups -- */
+let PT='friends';try{PT=localStorage.getItem('fin_pt')||'friends'}catch(e){}
+function setPT(k){PT=k;try{localStorage.setItem('fin_pt',k)}catch(e){}hap();render()}
+function groupsHTML(){const G=gps().slice().sort((a,b)=>b.t-a.t);
+ return `<div class="mact" style="margin-bottom:14px"><button style="background:#4a4cff" onclick="openGroup()">New group ${sv('<path d="M12 5v14M5 12h14"/>')}</button><button style="background:#0b0b0d" onclick="openSplit()">Split a bill ${sv('<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>')}</button></div>`+
+ (G.length?G.map((g,i)=>{const b=gbal(g)[ME]||0,n=gxs().filter(e=>e.g==g.id&&!e.settle).length;
+  return `<button class="pr" style="background:${pal(i+3)}" onclick="openGrp(${g.id})">${av(g.name,50)}<div class="nm"><b>${esc(g.name)}</b><span>${g.members.length} people · ${n} expense${n==1?'':'s'}</span></div><div class="am">${b==0?'Settled':fm(Math.abs(b),g.cur)}<span>${b>0?'you’re owed':b<0?'you owe':'all square'}</span></div></button>`}).join(''):
+  empty('Savings','No groups yet','<br>Create a group to split trips, rent and dinners.'))}
+loansHTML=function(){const base=_lh19().replace(/^<h2>.*?<\/h2><div class="sub">.*?<\/div>/,'');
+ return `<h2>People</h2><div class="sub">Friends, loans and shared bills</div><div class="seg ptab" role="tablist">${[['friends','Friends'],['groups','Groups · '+gps().length]].map(([k,l])=>`<button role="tab" aria-selected="${PT==k}" class="${PT==k?'on':''}" onclick="setPT('${k}')">${l}</button>`).join('')}</div>`+(PT=='groups'?groupsHTML():base)};
+/* shortcut on Home */
+const _mh20=mhomeHTML;
+mhomeHTML=function(){const h=_mh20(),n=gps().length;
+ return h.replace('<div class="msec"><span>Friends</span>',`<button class="sxcta" onclick="openSplit()"><span class="ic2">${sv('<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>')}</span><span><b>Split a bill</b><small>${n?n+' group'+(n==1?'':'s')+' · dinners, trips, rent':'Dinners, trips, rent — with friends'}</small></span><span class="chev">${sv('<path d="M9 6l6 6-6 6"/>')}</span></button><div class="msec"><span>Friends</span>`)};
+function openSplit(){mi();const G=gps().slice().sort((a,b)=>b.t-a.t);
+ if(!G.length){openGroup();return}
+ if(G.length==1){openGx(G[0].id);return}
+ sheet(`<h3>Split a bill</h3><div class="gsub">Pick a group</div>`+G.map(g=>`<button class="arow gpick" onclick="openGx(${g.id})"><span class="sxgd">${av(g.name,38)}<b>${esc(g.name)}</b></span><span style="color:var(--mute);font-size:14px">${g.members.length} people</span></button>`).join('')+`<button class="pill g" style="width:100%;margin-top:14px" onclick="openGroup()">New group</button>`)}
+
+/* -- create group / add friends -- */
+function chipsOf(names,id){return names.length?`<div class="chips" id="${id}">${names.map(n=>`<button class="chip" data-k="${esc(n)}" onclick="this.classList.toggle('on')">${esc(n)}</button>`).join('')}</div>`:''}
+function pickedNames(chipId,inputId){const o={};[...document.querySelectorAll('#'+chipId+' .chip.on')].map(b=>b.dataset.k).concat($(inputId).value.split(',')).forEach(x=>{x=(x||'').trim();if(x&&x.toLowerCase()!='you')o[x.toLowerCase()]=o[x.toLowerCase()]||x});return Object.values(o)}
+function openGroup(){mi();const kn=knownNames();
+ sheet(`<h3>New group</h3><div class="f"><input id="gn" placeholder="Group name (Trip, Flat, Dinner)" maxlength="40"><select id="gc" aria-label="Currency">${CURS.map(c=>`<option ${c==S.base?'selected':''}>${c}</option>`).join('')}</select>${kn.length?`<div class="sl">Add from your friends</div>${chipsOf(kn,'gk')}`:''}<div class="sl">${kn.length?'Someone new?':'Friends'}</div><input id="gm" placeholder="Names, separated by commas"><button class="pill" onclick="saveGroup()">Create group</button></div>`)}
+function saveGroup(){const n=$('gn').value.trim(),ms=pickedNames('gk','gm');
+ if(!n){toast('Name the group');return}if(!ms.length){toast('Add at least one friend');return}
+ const g={id:Date.now(),name:n,cur:$('gc').value,members:[ME,...ms],t:Date.now()};gps().push(g);PT='groups';try{localStorage.setItem('fin_pt','groups')}catch(e){}render();openGrp(g.id)}
+function openGAdd(id){const g=gps().find(x=>x.id==id);if(!g)return;const kn=knownNames(g.members);
+ sheet(`<h3>Add friends</h3><div class="gsub">${esc(g.name)}</div><div class="f">${kn.length?`<div class="sl">From your friends</div>${chipsOf(kn,'gk')}`:''}<div class="sl">${kn.length?'Someone new?':'Names'}</div><input id="gm" placeholder="Names, separated by commas"><button class="pill" onclick="saveGAdd(${id})">Add to group</button><button class="pill g" onclick="openGrp(${id})">Back</button></div>`)}
+function saveGAdd(id){const g=gps().find(x=>x.id==id);if(!g)return;const ms=pickedNames('gk','gm').filter(n=>!g.members.some(m=>m.toLowerCase()==n.toLowerCase()));
+ if(!ms.length){toast('Add a name first');return}g.members.push(...ms);render();openGrp(id);toast(ms.length+' added')}
+
+/* -- group page -- */
+function openGrp(id){const g=gps().find(x=>x.id==id);if(!g){closeSheet();return}
+ const m=gbal(g),ex=gxs().filter(e=>e.g==id).sort((a,b)=>b.t-a.t),bills=ex.filter(e=>!e.settle),L=gsimp(m),me=m[ME]||0,spent=R2(bills.reduce((t,e)=>t+e.a,0));
+ sheet(`<div class="sxgh"><div class="gav">${g.members.slice(0,4).map(k=>av(k)).join('')}</div><div style="min-width:0"><h3>${esc(g.name)}</h3><div class="gsub">${g.members.length} people · ${bills.length} expense${bills.length==1?'':'s'}</div></div></div>
+ <div class="sm gst"><div style="background:var(--mint)"><span>Total spent</span><b>${fm(spent,g.cur)}</b></div><div style="background:${me<0?'var(--peach)':'var(--peri)'}"><span>${me<0?'You owe':me>0?'You’re owed':'You’re'}</span><b>${me==0?'All square':fm(Math.abs(me),g.cur)}</b></div></div>
+ <div class="acts"><button class="pill" onclick="openGx(${id})">Add expense</button><button class="pill g" onclick="openGSettle(${id})">Settle up</button></div>
+ <div class="sl">Who pays whom</div>${L.length?L.map(x=>`<div class="arow"><span class="sxgd">${av(x.from,32)}<span><b style="font-weight:600">${esc(x.from)}</b> pays <b style="font-weight:600">${esc(x.to)}</b></span></span><b>${fm(x.a,g.cur)}</b></div>`).join(''):`<div class="gok">${sv(CHECK,18)}Everyone is settled up</div>`}
+ <div class="sl">Balances</div>${g.members.map(k=>{const b=m[k]||0;return `<div class="arow"><span class="sxgd">${av(k,32)}${esc(k)}</span><b class="${b>0?'pl':b<0?'ng':''}">${b==0?'Settled':(b>0?'gets back ':'owes ')+fm(Math.abs(b),g.cur)}</b></div>`}).join('')}
+ <div class="sl">Activity</div>${ex.length?ex.map(e=>{
+  if(e.settle)return `<div class="arow"><span class="gal">${sv(CHECK,18)}<span>${esc(e.from)} paid ${esc(e.to)}<br><small>${dshort(e.t)}</small></span></span><span class="gar"><b>${fm(e.a,g.cur)}</b><button class="gxd" aria-label="Delete payment" onclick="delGx(${e.id})">${sv(TRASH,16)}</button></span></div>`;
+  const my=(e.sp&&e.sp[ME])||0,net=R2((e.by==ME?e.a:0)-my);
+  return `<div class="arow gact" role="button" tabindex="0" aria-label="Edit ${esc(e.d)}" onclick="openGx(${id},${e.id})" onkeydown="if(event.key=='Enter'){openGx(${id},${e.id})}"><span><b style="font-weight:600">${esc(e.d)}</b><br><small>${esc(e.by)} paid ${fm(e.a,g.cur)} · ${dshort(e.t)}</small></span><span class="gar"><span><b class="${net>0?'pl':net<0?'ng':''}">${net==0?(my?'even':'—'):fm(Math.abs(net),g.cur)}</b><small>${net>0?'you lent':net<0?'you owe':my?'':'not in'}</small></span><button class="gxd" aria-label="Delete ${esc(e.d)}" onclick="event.stopPropagation();delGx(${e.id})">${sv(TRASH,16)}</button></span></div>`}).join(''):`<div class="gsub">No expenses yet. Tap “Add expense”.</div>`}
+ <div class="acts" style="margin-top:16px"><button class="pill g" onclick="openGAdd(${id})">Add friend</button><button class="pill g" onclick="shareG(${id})">Share summary</button></div>
+ <button class="pill g gdel" onclick="delGrp(${id})">Delete group</button>`)}
+function shareG(id){const g=gps().find(x=>x.id==id);if(!g)return;const L=gsimp(gbal(g)),
+ tx=g.name+' · who owes who\n'+(L.length?L.map(x=>`• ${x.from} pays ${x.to} ${fm(x.a,g.cur)}`).join('\n'):'Everyone is settled up ✅')+'\n\nvia Fin';
+ if(navigator.share){navigator.share({text:tx}).catch(()=>{})}
+ else{try{navigator.clipboard.writeText(tx).then(()=>toast('Summary copied'),()=>window.open('https://wa.me/?text='+encodeURIComponent(tx),'_blank'))}catch(e){window.open('https://wa.me/?text='+encodeURIComponent(tx),'_blank')}}}
+
+/* -- add / edit expense -- */
+function gxInit(g,e){const eq={},sh={},pc={},ex={},ks=g.members,ep=alloc(10000,ks.map(()=>1));
+ ks.forEach((k,i)=>{eq[k]=1;sh[k]=1;ex[k]='';pc[k]=String(ep[i]/100)});
+ GX={g:g.id,id:e?e.id:0,mode:'eq',by:ME,tip:0,d:'',a:'',v:{eq,sh,pc,ex}};
+ if(!e)return;
+ GX.d=e.d||'';GX.a=String(e.bill||e.a);GX.tip=e.tip||0;GX.by=ks.includes(e.by)?e.by:ME;
+ const sp=e.sp||{},vals=Object.values(sp);
+ ks.forEach(k=>{ex[k]=sp[k]?String(sp[k]):'';eq[k]=sp[k]>0?1:0});
+ GX.mode=e.mode||(vals.length&&Math.max(...vals)-Math.min(...vals)<=.011?'eq':'ex');
+ if(e.w)ks.forEach(k=>{if(e.mode=='sh')sh[k]=e.w[k]!=null?e.w[k]:0;if(e.mode=='pc')pc[k]=e.w[k]!=null?String(e.w[k]):''})}
+function openGx(id,eid){const g=gps().find(x=>x.id==id);if(!g)return;const e=eid?gxs().find(x=>x.id==eid):null;gxInit(g,e);
+ sheet(`<div class="sxh"><h3>${e?'Edit expense':'Add expense'}</h3><span class="sxg">${esc(g.name)}</span></div>
+ <div class="f">
+  <div class="sxa"><span class="sxc">${esc(gcs(g))}</span><input class="sxai" id="gx_a" type="number" inputmode="decimal" placeholder="0" value="${esc(GX.a)}" oninput="gxu()" aria-label="Bill amount in ${g.cur}"></div>
+  <input id="gx_d" placeholder="What was it for?" value="${esc(GX.d)}" maxlength="60" aria-label="Description">
+  <div class="sl">Tip or tax on top</div>
+  <div class="chips" id="gx_tip">${[0,5,10,15,18].map(p=>`<button class="chip ${GX.tip==p?'on':''}" data-p="${p}" onclick="gxTip(${p})">${p?p+'%':'None'}</button>`).join('')}</div>
+  <div class="sl">Paid by</div>
+  <div class="sxp" id="gx_by">${g.members.map(k=>`<button class="sxw ${GX.by==k?'on':''}" data-k="${esc(k)}" onclick="gxBy('${ENC(k)}')">${av(k,30)}<span>${esc(k)}</span></button>`).join('')}</div>
+  <div class="sl">Split</div>
+  <div class="seg" id="gx_m">${[['eq','Equally'],['sh','Shares'],['pc','%'],['ex','Exact']].map(([k,l])=>`<button class="${GX.mode==k?'on':''}" data-m="${k}" onclick="gxm('${k}')">${l}</button>`).join('')}</div>
+  <div id="gx_s"></div><div class="sxt" id="gx_t" aria-live="polite"></div>
+  <button class="pill" id="gx_save" onclick="saveGx()">${e?'Save changes':'Save expense'}</button>
+ </div>`);gxr()}
+function gxCalc(){const g=gps().find(x=>x.id==GX.g),m=GX.mode,V=GX.v[m],ks=g.members,bill=parseFloat($('gx_a')?$('gx_a').value:GX.a)||0,
+ total=R2(bill*(1+GX.tip/100)),c=Math.round(total*100),sp={};let ok=false,msg='';
+ const put=a=>ks.forEach((k,i)=>{if(a[i])sp[k]=a[i]/100});
+ if(!(bill>0))msg='Enter the bill amount';
+ else if(m=='eq'||m=='sh'){const w=ks.map(k=>m=='eq'?(V[k]?1:0):Math.max(0,Math.floor(+V[k]||0)));
+  if(!w.some(x=>x>0))msg=m=='eq'?'Pick who shares this':'Give at least one person a share';
+  else{put(alloc(c,w));ok=true;msg=(GX.tip?GX.tip+'% on top · ':'')+'Total '+fm(total,g.cur)+(m=='eq'?' · '+fm(total/w.filter(x=>x>0).length,g.cur)+' each':'')}}
+ else if(m=='pc'){const w=ks.map(k=>Math.max(0,parseFloat(V[k])||0)),s=w.reduce((a,b)=>a+b,0);
+  if(Math.abs(s-100)>.009)msg=R2(Math.abs(100-s))+'% '+(s<100?'left':'over')+' · must add up to 100%';
+  else{put(alloc(c,w));ok=true;msg='Total '+fm(total,g.cur)}}
+ else{const w=ks.map(k=>Math.round((parseFloat(V[k])||0)*100)),s=w.reduce((a,b)=>a+b,0);
+  if(s!=c)msg=fm(Math.abs(c-s)/100,g.cur)+(s<c?' left to assign':' over the total');
+  else{put(w);ok=true;msg='Total '+fm(total,g.cur)}}
+ return{ok,msg,sp,total,bill}}
+function gxr(){const g=gps().find(x=>x.id==GX.g),el=$('gx_s');if(!g||!el)return;const m=GX.mode,V=GX.v[m];
+ el.innerHTML=g.members.map(k=>{const q=ENC(k);let c='';
+  if(m=='eq')c=`<span class="sxk ${V[k]?'on':''}" aria-hidden="true">${sv(CHECK,16)}</span>`;
+  else if(m=='sh')c=`<span class="sxst"><button aria-label="Fewer shares for ${esc(k)}" onclick="gxS('${q}',-1)">−</button><b>${V[k]}</b><button aria-label="More shares for ${esc(k)}" onclick="gxS('${q}',1)">+</button></span>`;
+  else c=`<input class="sxin" type="number" inputmode="decimal" value="${esc(V[k])}" placeholder="0" aria-label="${esc(k)} ${m=='pc'?'percent':'amount'}" oninput="gxI('${q}',this.value)">${m=='pc'?'<i class="sxu">%</i>':''}`;
+  return `<div class="sxr ${m=='eq'&&!V[k]?'off':''}"${m=='eq'?` role="checkbox" aria-checked="${!!V[k]}" tabindex="0" onclick="gxT('${q}')" onkeydown="if(event.key==' '||event.key=='Enter'){event.preventDefault();gxT('${q}')}"`:''}>${av(k,36)}<span class="sxn">${esc(k)}</span>${c}<b class="sxm" data-n="${esc(k)}">–</b></div>`}).join('');gxu()}
+function gxu(){const g=gps().find(x=>x.id==GX.g);if(!g||!$('gx_t'))return;const r=gxCalc();
+ document.querySelectorAll('#gx_s .sxm').forEach(b=>{const v=r.sp[b.dataset.n];b.textContent=v?fm(v,g.cur):'–'});
+ const t=$('gx_t');t.className='sxt '+(r.ok?'ok':(r.bill>0?'bad':''));t.textContent=r.msg;$('gx_save').disabled=!r.ok}
+function gxT(q){const k=DEC(q),V=GX.v.eq;V[k]=V[k]?0:1;gxr()}
+function gxS(q,d){const k=DEC(q),V=GX.v.sh;V[k]=Math.min(99,Math.max(0,(+V[k]||0)+d));gxr()}
+function gxI(q,v){GX.v[GX.mode][DEC(q)]=v;gxu()}
+function gxm(k){GX.mode=k;document.querySelectorAll('#gx_m button').forEach(b=>b.classList.toggle('on',b.dataset.m==k));gxr()}
+function gxTip(p){GX.tip=p;document.querySelectorAll('#gx_tip .chip').forEach(b=>b.classList.toggle('on',+b.dataset.p==p));gxu()}
+function gxBy(q){GX.by=DEC(q);document.querySelectorAll('#gx_by .sxw').forEach(b=>b.classList.toggle('on',b.dataset.k==GX.by))}
+function saveGx(){const g=gps().find(x=>x.id==GX.g);if(!g)return;const r=gxCalc();if(!r.ok){toast(r.msg||'Check the split');return}
+ const old=GX.id?gxs().find(x=>x.id==GX.id):null,rec={id:GX.id||Date.now(),g:g.id,d:($('gx_d').value||'').trim()||'Expense',a:r.total,by:GX.by,sp:r.sp,t:old?old.t:Date.now(),mode:GX.mode,tip:GX.tip||0,bill:r.bill};
+ if(GX.mode=='sh'||GX.mode=='pc'){rec.w={};g.members.forEach(k=>rec.w[k]=GX.mode=='sh'?(+GX.v.sh[k]||0):(parseFloat(GX.v.pc[k])||0))}
+ if(old)S.gx[S.gx.indexOf(old)]=rec;else gxs().push(rec);
+ render();openGrp(g.id);toast(old?'Expense updated':'Expense added · '+fm(r.total,g.cur))}
+
+/* -- settle up -- */
+function openGSettle(id){const g=gps().find(x=>x.id==id);if(!g)return;const L=gsimp(gbal(g));
+ sheet(`<h3>Settle up</h3><div class="gsub">The fewest payments that square everyone</div>`+(L.length?L.map(x=>`<div class="arow"><span class="sxgd">${av(x.from,36)}<span><b style="font-weight:600">${esc(x.from)}</b> pays <b style="font-weight:600">${esc(x.to)}</b><br><small>${fm(x.a,g.cur)}</small></span></span><button class="pill sxsm" onclick="openGPay(${id},'${ENC(x.from)}','${ENC(x.to)}',${x.a})">Record</button></div>`).join('')+`<button class="pill" style="width:100%;margin-top:14px" onclick="recAll(${id})">Record all payments</button>`:`<div class="gok">${sv(CHECK,18)}Everyone is settled up</div>`)+`<button class="pill g" style="width:100%;margin-top:10px" onclick="openGrp(${id})">Back</button>`)}
+function openGPay(id,f,t,a){const g=gps().find(x=>x.id==id);if(!g)return;f=DEC(f);t=DEC(t);
+ sheet(`<h3>Record payment</h3><div class="sxgh">${av(f,40)}<div><b style="font-weight:600">${esc(f)}</b> pays <b style="font-weight:600">${esc(t)}</b><div class="gsub" style="margin:2px 0 0">Owes ${fm(a,g.cur)}. Lower the amount for a part payment.</div></div></div><div class="f"><div class="sxa"><span class="sxc">${esc(gcs(g))}</span><input class="sxai" id="gp_a" type="number" inputmode="decimal" value="${a}" aria-label="Amount paid"></div><button class="pill" onclick="recGs2(${id},'${ENC(f)}','${ENC(t)}',${a})">Record payment</button><button class="pill g" onclick="openGSettle(${id})">Back</button></div>`)}
+function recGs2(id,f,t,max){const g=gps().find(x=>x.id==id),v=R2(parseFloat($('gp_a').value)||0);if(!(v>0)){toast('Enter an amount');return}if(v>max+.004){toast('That is more than '+fm(max,g.cur));return}recGs(id,f,t,v)}
+function recGs(id,f,t,a){gxs().push({id:Date.now(),g:id,settle:true,from:DEC(f),to:DEC(t),a,by:DEC(f),t:Date.now()});render();openGSettle(id);toast('Payment recorded')}
+function recAll(id){const g=gps().find(x=>x.id==id);if(!g)return;const L=gsimp(gbal(g));if(!L.length)return;const now=Date.now(),es=L.map((x,i)=>({id:now+i,g:id,settle:true,from:x.from,to:x.to,a:x.a,by:x.from,t:now}));
+ gxs().push(...es);render();openGrp(id);toast('All settled · tap to undo',()=>{const ids=es.map(e=>e.id);S.gx=S.gx.filter(e=>!ids.includes(e.id));render()})}
+
 render();
-</script>
-</body></html>
+</script></body></html>
