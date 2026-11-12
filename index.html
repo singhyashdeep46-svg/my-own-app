@@ -667,6 +667,41 @@ input.sxin{width:92px!important;padding:9px 12px!important;text-align:right;font
 .sxt.ok{color:#1a9c4b}.sxt.bad{color:#c4251f}
 .pill:disabled{opacity:.4;pointer-events:none}
 </style>
+<style>
+/* ===== v21: premium wallet accounts page ===== */
+.wh{position:relative;margin:4px 20px 14px;padding:44px 0 38px;border-radius:36px;display:grid;place-items:center;overflow:hidden;background:radial-gradient(90% 70% at 20% 0%,rgba(255,255,255,.55),transparent 60%),linear-gradient(160deg,#cfcbff,#a79fF4 85%)}
+.wbody{position:relative;width:min(300px,76%);aspect-ratio:1.1;border-radius:34px;background:linear-gradient(180deg,#2a2a30,#141418);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 34px 46px -22px rgba(40,30,140,.65)}
+.wbody::before{content:"";position:absolute;inset:-14px;border-radius:46px;background:rgba(255,255,255,.2);z-index:-1}
+.wbody>em{position:absolute;top:13px;left:0;right:0;text-align:center;font-style:normal;font-size:15px;font-weight:500;color:rgba(255,255,255,.55)}
+.wk{position:absolute;left:7%;right:7%;top:17%;height:56%;border-radius:22px;background:linear-gradient(120deg,rgba(255,255,255,.4),rgba(255,255,255,0) 55%),var(--g);box-shadow:0 8px 18px -8px rgba(0,0,0,.45);animation:wkin 800ms var(--drawer) backwards}
+.wk::after{content:"";position:absolute;left:14px;top:13px;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.75);box-shadow:13px 0 0 rgba(255,255,255,.4)}
+.wk1{transform:translate(-6%,-2%) rotate(-9deg);z-index:1}.wk2{transform:translate(2%,-9%) rotate(3deg);z-index:2;animation-delay:90ms}.wk3{transform:translate(8%,-4%) rotate(11deg);z-index:0;animation-delay:180ms}
+@keyframes wkin{from{opacity:0;transform:translateY(46px) rotate(0)}}
+.wfront{position:absolute;left:3%;right:3%;bottom:4%;height:50%;z-index:3;border-radius:30px;display:grid;align-content:center;justify-items:center;gap:4px;color:#fff;background:linear-gradient(160deg,rgba(170,180,205,.5),rgba(70,70,92,.82));-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);border:1px solid rgba(255,255,255,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 16px 30px -14px rgba(0,0,0,.7);animation:wkin 700ms var(--drawer) 120ms backwards}
+.wfront small{font-size:13px;opacity:.78;letter-spacing:.02em}
+.wtot{font-size:clamp(24px,8vw,32px);font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.dc{opacity:.55}
+.wcur{display:flex;gap:8px;margin:0 20px 6px;overflow-x:auto;scrollbar-width:none}.wcur button{flex:none;min-height:40px;padding:0 16px;border-radius:14px;background:var(--line);font-weight:600}.wcur button.on{background:var(--ink);color:var(--bg)}
+.wal{gap:16px;padding:4px 20px 16px}
+.wc{position:relative;isolation:isolate;overflow:hidden;min-height:188px;padding:20px;border-radius:28px;color:#fff;display:grid;grid-template-columns:44px 1fr auto;grid-template-rows:auto 1fr auto;column-gap:12px;row-gap:12px;
+ background:radial-gradient(130% 95% at 0% 0%,rgba(255,255,255,.4),rgba(255,255,255,0) 52%),linear-gradient(160deg,rgba(255,255,255,.1),rgba(0,0,0,.3)),var(--g)!important;
+ outline:0;transition:transform 260ms var(--drawer)}
+.wal .wc,.wc.pv{box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 0 0 1px rgba(255,255,255,.1),0 24px 40px -20px rgba(0,0,0,.55)!important}
+.wc::before{display:block;content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;pointer-events:none;mix-blend-mode:overlay;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(#n)'/%3E%3C/svg%3E") 0 0/160px,linear-gradient(115deg,transparent 38%,rgba(255,255,255,.2) 50%,transparent 62%)}
+.wc::after{display:block!important;content:"";grid-area:1/3;justify-self:end;position:relative;z-index:1;width:26px;height:26px;border:0;border-radius:0;opacity:.85;right:auto;top:auto;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M8 6c3 3.5 3 8.5 0 12M12 4c4.5 5 4.5 11 0 16M16 2c6 6.5 6 13.5 0 20'/%3E%3C/svg%3E") center/contain no-repeat}
+.wc .w1,.wc .wn,.wc .w2{display:contents}
+.wc>*,.wc .wn>*,.wc .w1>*,.wc .w2>*{position:relative;z-index:1}
+.wc .logo{grid-area:1/1;width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.16)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)!important}
+.wc .wn>div:not(.logo){grid-area:1/2}
+.wc .wn b{font-size:17px;font-weight:600;letter-spacing:-.01em}.wc .wn span{font-size:12px;opacity:.78;letter-spacing:.04em;text-transform:uppercase}
+.wc .chp{display:block;grid-area:2/1/3/3;align-self:center;position:relative;left:auto;bottom:auto;margin:0;width:44px;height:33px;border-radius:8px;background:linear-gradient(90deg,transparent 47%,rgba(0,0,0,.2) 48% 52%,transparent 53%),linear-gradient(0deg,transparent 47%,rgba(0,0,0,.2) 48% 52%,transparent 53%),linear-gradient(135deg,#f6e3a1,#bf9a41);box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.wc.nc .chp{display:none}
+.wc .wb{grid-area:3/1/4/3;align-self:end;font-family:inherit!important;font-size:30px!important;font-weight:600;letter-spacing:-.035em;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.wc .wb::before{content:"Balance";display:block;font:600 11px/1.5 system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;opacity:.7;margin-bottom:3px}
+.wc .cn{grid-area:3/3;align-self:end;position:static;font-size:13px;letter-spacing:.16em;opacity:.8;font-variant-numeric:tabular-nums}
+.wc.pv{height:auto;min-height:188px;margin:0 0 16px}
+@media(prefers-reduced-motion:reduce){.wk,.wfront{animation:none}}
+</style>
 </head><body>
 <div class="app" id="app">
  <div class="top"><div id="avs" style="display:flex"></div><button class="plus" onclick="openArea()" aria-label="Add area"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="cur" id="curBtn" onclick="go('home')">Today</button><button class="gear" onclick="go('set')" aria-label="Settings"><span class="sdot off" id="sdot"></span><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></button></div>
@@ -1655,6 +1690,19 @@ function recGs2(id,f,t,max){const g=gps().find(x=>x.id==id),v=R2(parseFloat($('g
 function recGs(id,f,t,a){gxs().push({id:Date.now(),g:id,settle:true,from:DEC(f),to:DEC(t),a,by:DEC(f),t:Date.now()});render();openGSettle(id);toast('Payment recorded')}
 function recAll(id){const g=gps().find(x=>x.id==id);if(!g)return;const L=gsimp(gbal(g));if(!L.length)return;const now=Date.now(),es=L.map((x,i)=>({id:now+i,g:id,settle:true,from:x.from,to:x.to,a:x.a,by:x.from,t:now}));
  gxs().push(...es);render();openGrp(id);toast('All settled · tap to undo',()=>{const ids=es.map(e=>e.id);S.gx=S.gx.filter(e=>!ids.includes(e.id));render()})}
+
+/* ===== v21: premium wallet accounts page ===== */
+GRAD.splice(0,GRAD.length,'#17171c','#2f4dff','#7a3cff','#dc3f1c','#0e8a6a','#c2185b');
+function dimDec(r){(r||document).querySelectorAll('.wtot,.wc .wb').forEach(el=>{if(el.dataset.d)return;el.dataset.d=1;const m=el.textContent.match(/^(.*?)(\.\d{1,2})$/);if(m)el.innerHTML=esc(m[1])+'<span class="dc">'+m[2]+'</span>'});
+ (r||document).querySelectorAll('.wc').forEach(w=>{const s=w.querySelector('.wn span'),t=s?s.textContent.split(' · ')[0]:'';w.classList.toggle('nc',/cash|wallet/i.test(t))})}
+function accHTML(){mi();const A=S.accts,cs=[...new Set(A.map(a=>a.cur))];if(!cs.length)cs.push(S.base);const cur=cs[HC%cs.length],tot=A.filter(a=>a.cur==cur).reduce((s,a)=>s+a.bal,0),
+ dec=['#f1efff','#4f63ff','#ff8f66'],fan=[0,1,2].map(i=>A[i]?GRAD[i%GRAD.length]:dec[i]);
+ return `<h2>Accounts</h2><div class="sub">${A.length?A.length+' account'+(A.length>1?'s':'')+' · tap a card to add money':'Add your first account'}</div>
+ <div class="wh"><div class="wbody"><em>Wallet</em>${fan.map((c,i)=>`<i class="wk wk${i+1}" style="--g:${c}"></i>`).join('')}<div class="wfront"><small>Total Balance</small><b class="wtot">${HIDE?'••••••':fm(tot,cur)}</b></div></div></div>
+ ${cs.length>1?`<div class="wcur">${cs.map((c,i)=>`<button class="${c==cur?'on':''}" onclick="HC=${i};hap();render()">${c}</button>`).join('')}</div>`:''}
+ <div class="msec"><span>My cards</span><button onclick="openAccM()">+ Add</button></div>`+(A.length?`<div class="wal">${A.map((a,i)=>wcard(a,i)).join('')}</div>`:empty('Savings','Your wallet is empty.<br>Add an account to begin.'))}
+const _RM21=renderMoney;renderMoney=function(){_RM21();const el=$('v-macc');if(el){el.innerHTML=accHTML();dimDec(el)}};
+const _oa21=openAcc;openAcc=function(id){_oa21(id);dimDec($('sheet'))};
 
 render();
 </script></body></html>
