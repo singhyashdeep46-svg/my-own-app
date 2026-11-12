@@ -567,6 +567,10 @@ h2{margin:6px 20px 4px}.sub{padding:0 20px 14px}
 .gear.hasav .pav,.pmav{width:40px!important;height:40px!important;aspect-ratio:1;flex:none;border-radius:50%;overflow:hidden;object-fit:cover}
 .pmh .pmav{width:48px!important;height:48px!important}
 </style>
+<style>
+/* v19: keep text dark on the bright pink cards */
+.card[style*="color:#fff"],.acc[style*="color:#fff"]{color:#15121c!important}
+</style>
 </head><body>
 <div class="app" id="app">
  <div class="top"><div id="avs" style="display:flex"></div><button class="plus" onclick="openArea()" aria-label="Add area"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="cur" id="curBtn" onclick="go('home')">Today</button><button class="gear" onclick="go('set')" aria-label="Settings"><span class="sdot off" id="sdot"></span><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></button></div>
@@ -607,7 +611,7 @@ const AICONS=['Other','Work','User','Health','Study','Home','Errands','Star','Co
 let S,USER=null,SYNC='',undoFn=null,pushT=0;
 const blank=()=>({tab:'home',per:'today',area:'All',theme:'system',name:'',areas:['Work','Personal','Health','Study','Home','Errands'],aicons:{},tasks:[],log:[],accts:[],txs:[],invs:[],biz:{},base:'USD',mode:'tasks',del:{},su:0});S=blank();
 /* ===== sync engine: per-item merge so every device keeps its edits ===== */
-const UIK=['tab','per','area','mode','mper','theme'],COLS=['tasks','accts','txs','mbills','mmsgs','invs','loans'],SETK=['name','areas','aicons','biz','base'];
+const UIK=['tab','per','area','mode','mper','theme'],COLS=['tasks','accts','txs','mbills','mmsgs','invs','loans','groups','gx'],SETK=['name','areas','aicons','biz','base'];
 let SH={},dirty=false,busy=false,again=false;
 const jx=x=>JSON.stringify(x,(k,v)=>k=='u'?undefined:v);
 function fmerge(a,b){a=a||{};b=b||{};const o={},del={};
@@ -1341,6 +1345,54 @@ const _om18=openMTx;openMTx=function(p){_om18(p);const k=$('mt_k'),c=$('mt_c');i
  const l2=document.createElement('div');l2.className='sl';l2.id='mt_cl';l2.textContent='Category';l2.hidden=MINC;c.before(l2)};
 const _si18=setInc;setInc=function(v,b){_si18(v,b);const t=document.querySelector('#sheet h3');if(t)t.textContent=v?'Add money':'Add expense';
  const l=$('mt_kl'),l2=$('mt_cl');if(l)l.textContent=v?'Deposit to':'Pay from';if(l2)l2.hidden=v};
+
+/* ===== v19: carry loans + groups through an existing synced collection, so older backends keep them ===== */
+const CAR=['loans','groups','gx'],CID=9007000000000,carr=o=>((o&&o.mmsgs)||[]).find(x=>x.id==CID);
+const _fm19=fmerge;fmerge=function(a,b){
+ const ex=o=>{o=o||{};const c=carr(o);if(!c||!c.x)return o;const r={...o};CAR.forEach(k=>{r[k]=(o[k]||[]).concat(c.x[k]||[])});return r};
+ const o=_fm19(ex(a),ex(b));let u=0;const x={};
+ CAR.forEach(k=>{x[k]=o[k]||[];x[k].forEach(i=>{u=Math.max(u,i.u||0)})});Object.values(o.del||{}).forEach(t=>{u=Math.max(u,t)});
+ o.mmsgs=(o.mmsgs||[]).filter(m=>m.id!=CID);if(CAR.some(k=>x[k].length))o.mmsgs.unshift({id:CID,src:'__fin',text:'',done:true,x,u});return o};
+const _norm19=norm;norm=function(){_norm19();S.mmsgs=(S.mmsgs||[]).filter(m=>m.id!=CID)};
+S.mmsgs=(S.mmsgs||[]).filter(m=>m.id!=CID);
+/* ===== v19: Splitwise-style groups ===== */
+const gps=()=>S.groups=S.groups||[],gxs=()=>S.gx=S.gx||[],ME='You';let GX={g:0,mode:'eq',sel:[]};
+const gbal=g=>{const m={};g.members.forEach(x=>m[x]=0);gxs().filter(e=>e.g==g.id).forEach(e=>{if(e.settle){m[e.from]=(m[e.from]||0)+e.a;m[e.to]=(m[e.to]||0)-e.a}else{m[e.by]=(m[e.by]||0)+e.a;for(const k in e.sp)m[k]=(m[k]||0)-e.sp[k]}});for(const k in m)m[k]=Math.round(m[k]*100)/100;return m};
+const gsimp=m=>{const c=[],d=[];for(const k in m){if(m[k]>.004)c.push([k,m[k]]);else if(m[k]<-.004)d.push([k,-m[k]])}c.sort((a,b)=>b[1]-a[1]);d.sort((a,b)=>b[1]-a[1]);const r=[];let i=0,j=0;
+ while(i<c.length&&j<d.length){const t=Math.min(c[i][1],d[j][1]);r.push({from:d[j][0],to:c[i][0],a:Math.round(t*100)/100});c[i][1]-=t;d[j][1]-=t;if(c[i][1]<.005)i++;if(d[j][1]<.005)j++}return r};
+function groupsHTML(){const G=gps().slice().sort((a,b)=>b.t-a.t);
+ return `<div class="msec"><span>Groups</span><button onclick="openGroup()">+ New group</button></div>`+(G.length?G.map((g,i)=>{const b=gbal(g)[ME]||0;
+  return `<button class="pr" style="background:${pal(i+3)}" onclick="openGrp(${g.id})">${av(g.name,50)}<div class="nm"><b>${esc(g.name)}</b><span>${g.members.length} members</span></div><div class="am">${b==0?'Settled':fm(Math.abs(b),g.cur)}<span>${b>0?'you’re owed':b<0?'you owe':'all square'}</span></div></button>`}).join(''):`<div class="sub" style="padding:0 20px 14px">Split trips, rent and dinners. Create a group to start.</div>`)}
+const _lh19=loansHTML;loansHTML=function(){return _lh19()+groupsHTML()};
+function openGroup(){mi();sheet(`<h3>New group</h3><div class="f"><input id="gn" placeholder="Group name (Trip, Flat, Dinner)"><select id="gc" aria-label="Currency">${CURS.map(c=>`<option ${c==S.base?'selected':''}>${c}</option>`).join('')}</select><input id="gm" placeholder="Friends, separated by commas"><button class="pill" onclick="saveGroup()">Create group</button></div>`)}
+function saveGroup(){const n=$('gn').value.trim(),ms=[...new Set($('gm').value.split(',').map(x=>x.trim()).filter(x=>x&&x.toLowerCase()!='you'))];
+ if(!n){toast('Name the group');return}if(!ms.length){toast('Add at least one friend');return}
+ const g={id:Date.now(),name:n,cur:$('gc').value,members:[ME,...ms],t:Date.now()};gps().push(g);closeSheet();render();openGrp(g.id)}
+function openGrp(id){const g=gps().find(x=>x.id==id);if(!g){closeSheet();return}const m=gbal(g),ex=gxs().filter(e=>e.g==id).sort((a,b)=>b.t-a.t);
+ sheet(`<h3>${esc(g.name)}</h3><div style="color:var(--mute);margin:-6px 0 12px">${g.members.map(esc).join(', ')}</div>
+ <div class="acts"><button class="pill" onclick="openGx(${id})">Add expense</button><button class="pill g" onclick="openGSettle(${id})">Settle up</button></div>
+ <div class="sl">Balances</div>${g.members.map(k=>{const b=m[k]||0;return `<div class="arow"><span style="display:flex;align-items:center;gap:10px">${av(k,34)}${esc(k)}</span><b class="${b>0?'pl':''}">${b==0?'Settled':(b>0?'gets back ':'owes ')+fm(Math.abs(b),g.cur)}</b></div>`}).join('')}
+ ${ex.length?`<div class="sl" style="margin-top:12px">Activity</div>`+ex.map(e=>`<div class="arow"><span>${e.settle?esc(e.from)+' paid '+esc(e.to):esc(e.d)+'<br><small style="color:var(--mute)">'+esc(e.by)+' paid · '+dshort(e.t)+'</small>'}</span><span style="display:flex;align-items:center;gap:8px"><b>${fm(e.a,g.cur)}</b><button class="pill g" aria-label="Delete entry" onclick="delGx(${e.id})">Delete</button></span></div>`).join(''):''}
+ <button class="pill g" style="width:100%;margin-top:14px;color:#c4251f" onclick="delGrp(${id})">Delete group</button>`)}
+function openGx(id){const g=gps().find(x=>x.id==id);if(!g)return;GX={g:id,mode:'eq',sel:g.members.slice()};
+ sheet(`<h3>Add expense</h3><div class="f"><input id="gx_d" placeholder="What was it for?"><input class="amtin" id="gx_a" type="number" inputmode="decimal" placeholder="0.00 ${g.cur}" oninput="gxr()"><div class="sl">Paid by</div><select id="gx_p" aria-label="Paid by">${g.members.map(k=>`<option>${esc(k)}</option>`).join('')}</select>
+ <div class="seg"><button class="on" onclick="gxm('eq',this)">Equally</button><button onclick="gxm('ex',this)">Exact amounts</button></div><div id="gx_s"></div><button class="pill" onclick="saveGx()">Save expense</button></div>`);gxr()}
+function gxr(){const g=gps().find(x=>x.id==GX.g),el=$('gx_s');if(!g||!el)return;const a=parseFloat($('gx_a').value)||0;
+ if(GX.mode=='eq'){el.innerHTML=`<div class="chips">${g.members.map(k=>`<button class="chip ${GX.sel.includes(k)?'on':''}" onclick="gxt('${ENC(k)}')">${esc(k)}</button>`).join('')}</div><div class="sub" style="padding:8px 0 0">${GX.sel.length?'Each pays '+fm(a/GX.sel.length,g.cur):'Pick who shares this'}</div>`}
+ else{if(!el.dataset.m){el.dataset.m=1;el.innerHTML=g.members.map(k=>`<div class="arow"><span>${esc(k)}</span><input type="number" inputmode="decimal" class="gxe" data-k="${esc(k)}" placeholder="0.00" style="width:120px" oninput="gxr()"></div>`).join('')+'<div class="sub" id="gx_l" style="padding:8px 0 0"></div>'}
+  const s=[...el.querySelectorAll('.gxe')].reduce((t,i)=>t+(parseFloat(i.value)||0),0);$('gx_l').textContent=Math.abs(a-s)<.005?'Adds up':fm(a-s,g.cur)+' left to assign'}}
+function gxt(k){k=DEC(k);GX.sel=GX.sel.includes(k)?GX.sel.filter(x=>x!=k):GX.sel.concat(k);gxr()}
+function gxm(m,b){GX.mode=m;[...b.parentNode.children].forEach(c=>c.classList.toggle('on',c==b));delete $('gx_s').dataset.m;gxr()}
+function saveGx(){const g=gps().find(x=>x.id==GX.g),d=$('gx_d').value.trim(),a=parseFloat($('gx_a').value);if(!d){toast('Add a description');return}if(!(a>0)){toast('Enter an amount');return}
+ const c=Math.round(a*100),sp={};
+ if(GX.mode=='eq'){const n=GX.sel.length;if(!n){toast('Pick who shares this');return}const b=Math.floor(c/n),r=c-b*n;GX.sel.forEach((k,i)=>sp[k]=(b+(i<r?1:0))/100)}
+ else{let t=0;document.querySelectorAll('.gxe').forEach(i=>{const v=Math.round((parseFloat(i.value)||0)*100);if(v){sp[i.dataset.k]=v/100;t+=v}});if(t!=c){toast('Amounts must add up to '+fm(a,g.cur));return}}
+ gxs().push({id:Date.now(),g:g.id,d,a,by:$('gx_p').value,sp,t:Date.now()});render();openGrp(g.id);toast('Expense added')}
+function openGSettle(id){const g=gps().find(x=>x.id==id);if(!g)return;const L=gsimp(gbal(g));
+ sheet(`<h3>Settle up</h3>`+(L.length?L.map(x=>`<div class="arow"><span style="display:flex;align-items:center;gap:10px">${av(x.from,34)}<span>${esc(x.from)} pays ${esc(x.to)}<br><b>${fm(x.a,g.cur)}</b></span></span><button class="pill" onclick="recGs(${id},'${ENC(x.from)}','${ENC(x.to)}',${x.a})">Record</button></div>`).join(''):`<div class="sub" style="padding:8px 0">Everyone is settled in this group.</div>`)+`<button class="pill g" style="width:100%;margin-top:12px" onclick="openGrp(${id})">Back</button>`)}
+function recGs(id,f,t,a){gxs().push({id:Date.now(),g:id,settle:true,from:DEC(f),to:DEC(t),a,by:DEC(f),t:Date.now()});render();openGSettle(id);toast('Payment recorded')}
+function delGx(id){const e=gxs().find(x=>x.id==id);if(!e)return;S.gx=S.gx.filter(x=>x.id!=id);render();openGrp(e.g);toast('Deleted · tap to undo',()=>{S.gx.push(e);render()})}
+function delGrp(id){const g=gps().find(x=>x.id==id);if(!g)return;const es=gxs().filter(e=>e.g==id);S.groups=S.groups.filter(x=>x.id!=id);S.gx=S.gx.filter(e=>e.g!=id);closeSheet();render();toast('Group deleted · tap to undo',()=>{S.groups.push(g);S.gx.push(...es);render()})}
 
 render();
 </script></body></html>
