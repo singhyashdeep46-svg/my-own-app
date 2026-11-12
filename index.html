@@ -1395,4 +1395,140 @@ function delGx(id){const e=gxs().find(x=>x.id==id);if(!e)return;S.gx=S.gx.filter
 function delGrp(id){const g=gps().find(x=>x.id==id);if(!g)return;const es=gxs().filter(e=>e.g==id);S.groups=S.groups.filter(x=>x.id!=id);S.gx=S.gx.filter(e=>e.g!=id);closeSheet();render();toast('Group deleted · tap to undo',()=>{S.groups.push(g);S.gx.push(...es);render()})}
 
 render();
-</script></body></html>
+</script><style id="v20">
+/* ===== v20: alignment, motion, split bills ===== */
+.msec button,.chip,.pill{min-height:40px}.msec{min-height:48px}
+.chip{display:inline-flex;align-items:center}
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:6px;text-align:center}.pill svg{flex:none}
+.frs::after{content:"";flex:none;width:6px}
+.fb{left:50%;transform:translateX(-50%);white-space:nowrap}
+.fa{flex:none;line-height:1}.fa.add{font-size:28px;font-weight:400}
+.arow{align-items:center;flex-wrap:wrap}.arow>span{min-width:0}
+.pr{align-items:center}.pr .am{flex:none;max-width:46%}
+.pr .nm b,.pr .nm span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stk{display:flex;flex:none}.stk .fa+.fa{margin-left:-14px}.stk .fa{border:2px solid var(--bg)}
+.toast{max-width:calc(100% - 32px);white-space:normal;text-align:center}
+main{overscroll-behavior:contain}
+.sheet input,.sheet select{min-height:50px}
+nav button .ic{transition:background-color 260ms var(--out),transform 460ms cubic-bezier(.34,1.56,.64,1)}
+.sheet{transition:transform 460ms cubic-bezier(.22,1,.36,1)}
+.sheet.on>*:not(.gz){animation:glassIn 420ms var(--out) backwards}
+.sheet.on>*:nth-child(3){animation-delay:40ms}.sheet.on>*:nth-child(4){animation-delay:80ms}.sheet.on>*:nth-child(n+5){animation-delay:120ms}
+#v-grp{padding-bottom:130px}
+.gtop{display:flex;align-items:center;gap:10px;padding:6px 14px 0}
+.gtt{flex:1;min-width:0}.gtt h2{margin:0;font-size:30px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gtt .sub{padding:2px 0 0}
+.gbk{flex:none;width:44px;height:44px;border-radius:14px;background:var(--line);display:grid;place-items:center}
+#v-grp .sm{margin-top:14px}
+.gr{margin:0 20px 14px}.gl{display:flex;align-items:center;gap:12px}
+.gl b{flex:1;min-width:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gl span{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--mute);text-align:right}.gl .pl{color:#1a9c4b}.gl .ng{color:var(--neg)}
+.gbar{height:8px;border-radius:5px;background:var(--line);margin:8px 0 0 52px;overflow:hidden}
+.gbar i{display:block;height:100%;border-radius:5px;transform-origin:left;animation:grow 700ms var(--out) both}
+.pay{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:0 20px 10px;padding:14px;border-radius:22px;background:var(--bg);box-shadow:inset 0 0 0 2px var(--line)}
+.pb{flex:1 0 100%;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px}.pb .pill{padding:10px 14px}
+.pay .pf{display:flex;align-items:center;gap:6px;flex:none}.pay .pf .fa{width:36px;height:36px;font-size:15px}
+.pay .pt{flex:1;min-width:0}.pay .pt b{display:block;font-size:17px;font-variant-numeric:tabular-nums}.pay .pt span{font-size:13px;color:var(--mute)}
+.pay .pill{padding:9px 14px;font-size:14px}
+.ev{display:flex;align-items:center;gap:12px;width:calc(100% - 40px);margin:0 20px 8px;padding:10px 12px;border-radius:20px;background:var(--line);text-align:left}
+.ev.an{animation:glassIn 420ms var(--out) backwards}
+.ei{flex:none;width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-weight:700;color:#15121c}
+.et{flex:1;min-width:0}.et b{display:block;font-size:16px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.et small{display:block;font-size:13px;color:var(--mute)}
+.ea{flex:none;text-align:right;font-variant-numeric:tabular-nums}.ea b{display:block;font-size:16px}.ea small{font-size:12px;color:var(--mute)}.ea.pl b{color:#1a9c4b}.ea.ng b{color:var(--neg)}
+.spl{display:flex;align-items:center;gap:14px;width:calc(100% - 40px);margin:0 20px 12px;padding:14px;border-radius:22px;background:var(--ink);color:var(--bg);text-align:left}
+.spl>span:nth-child(2){flex:1;min-width:0}.spl b{display:block;font-size:17px}.spl small{font-size:13px;opacity:.7}
+.sp1{width:44px;height:44px;border-radius:14px;background:#ff3d00;color:#fff;display:grid;place-items:center}
+.gxr{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.gxn{display:flex;align-items:center;gap:10px;flex:1;min-width:0}.gxn b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gxp{font-size:13px;color:var(--mute);min-width:60px;text-align:right;font-variant-numeric:tabular-nums}
+.gxr input{width:96px;min-height:44px;padding:0 12px;text-align:right}
+.stp{display:flex;align-items:center;gap:6px}.stp button{width:36px;height:36px;border-radius:12px;background:var(--line);font-size:20px;font-weight:700}.stp i{min-width:22px;text-align:center;font-style:normal;font-weight:700}
+.gtot{font-size:14px;font-weight:600;color:var(--mute);min-height:20px}.gtot.bad{color:var(--neg)}
+.amtin::-webkit-outer-spin-button,.amtin::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}.amtin{-moz-appearance:textfield;appearance:textfield}
+</style>
+<script id="v20js">
+/* ===== v20: navigation (back button, Escape, direction-aware) ===== */
+let HS=0,IGN=0,FOC=null;
+const psh=s=>{try{history.pushState(s,'');return 1}catch(e){return 0}},hb=()=>{IGN++;history.back()};
+const _sh20=sheet;sheet=function(h){if(!HS)FOC=document.activeElement;_sh20(h);const s=$('sheet');s.setAttribute('role','dialog');s.setAttribute('aria-modal','true');s.scrollTop=0;if(!HS&&psh({sh:1}))HS=1};
+const _cs20=closeSheet;closeSheet=function(){const was=$('sheet').classList.contains('on');_cs20();if(HS){HS=0;hb()}if(was&&FOC&&FOC.focus){try{FOC.focus({preventScroll:true})}catch(e){}}};
+const _go20=go;go=function(t){const a=TABS.indexOf(S.tab),b=TABS.indexOf(t);$('main').style.setProperty('--dx',a>=0&&b>=0&&a!=b?(b>a?44:-44)+'px':'0px');
+ _go20(t);if(t=='grp'&&!(history.state&&history.state.v=='grp'))psh({v:'grp'})};
+const _rn20=renderNav;renderNav=function(){_rn20();if(S.tab=='grp')$('nav').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k=='mloans'))};
+addEventListener('popstate',()=>{if(IGN){IGN--;return}if(HS){HS=0;_cs20();return}if(S.tab=='grp')go('mloans')});
+addEventListener('keydown',e=>{if(e.key!='Escape')return;if($('sheet').classList.contains('on'))closeSheet();else if(typeof POP!=='undefined'&&POP)closePop()});
+function grpBack(){if(history.state&&history.state.v=='grp')IGN++,history.back();go('mloans')}
+
+/* ===== v20: split bills ===== */
+const CATS=['Food','Travel','Stay','Fun','Shop','Bills','Other'],gof=id=>gps().find(x=>x.id==id),lastT=g=>Math.max(g.t,...gxs().filter(e=>e.g==g.id).map(e=>e.t)),
+ SV={split:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 9h6M9 13h4"/>',chev:'<path d="M9 5l7 7-7 7"/>',back:'<path d="M15 5l-7 7 7 7"/>',more:'<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',plus:'<path d="M12 5v14M5 12h14"/>',share:'<path d="M12 16V4M7 9l5-5 5 5M5 14v5h14v-5"/>',ok:'<path d="M5 13l4 4L19 7"/>'};
+let GRP={id:0,anim:false},GX2={};
+function dist(c,w){const ks=Object.keys(w).filter(k=>w[k]>0),T=ks.reduce((s,k)=>s+w[k],0);if(!T)return null;const r={};let u=0;
+ const f=ks.map(k=>{const x=c*w[k]/T,b=Math.floor(x+1e-9);r[k]=b;u+=b;return[k,x-b]}).sort((a,b)=>b[1]-a[1]);for(let i=0;i<c-u;i++)r[f[i%f.length][0]]++;return r}
+function cu(){const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;document.querySelectorAll('#v-grp [data-cu]').forEach(el=>{const to=+el.dataset.cu,c=el.dataset.cur,t0=performance.now();if(rm||!to)return;
+ const f=n=>{const p=Math.min((n-t0)/650,1);el.textContent=fm(to*(1-Math.pow(1-p,3)),c);if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)})}
+{const s=document.createElement('section');s.className='view';s.id='v-grp';$('v-mloans').after(s)}
+const _rm20=renderMoney;renderMoney=function(){_rm20();grpRender()};
+function openGrp(id){if(!gof(id))return;GRP={id,anim:true};if(S.tab=='grp')grpRender();else go('grp');if($('sheet').classList.contains('on'))closeSheet()}
+function grpRender(){if(S.tab!='grp')return;const v=$('v-grp'),g=gof(GRP.id);if(!g){v.innerHTML='';go('mloans');return}
+ const m=gbal(g),E=gxs().filter(e=>e.g==g.id).sort((a,b)=>b.t-a.t),X=E.filter(e=>!e.settle),tot=X.reduce((s,e)=>s+e.a,0),mine=X.reduce((s,e)=>s+(e.sp[ME]||0),0),me=m[ME]||0,
+ mx=Math.max(.01,...g.members.map(k=>Math.abs(m[k]||0))),L=gsimp(m),an=GRP.anim?' an':'',days={};E.forEach(e=>(days[dshort(e.t)]=days[dshort(e.t)]||[]).push(e));
+ v.innerHTML=`<div class="gtop"><button class="gbk" onclick="grpBack()" aria-label="Back to people">${sv(SV.back,22)}</button><div class="gtt"><h2>${esc(g.name)}</h2><div class="sub">${g.members.length} people · ${g.cur}</div></div><button class="gbk" onclick="openGMenu(${g.id})" aria-label="Group options">${sv(SV.more,22)}</button></div>
+ <div class="sm"><div style="background:${me<0?'var(--peach)':'var(--mint)'}"><span>${me<0?'You owe':me>0?'You’re owed':'You’re settled'}</span><b data-cu="${Math.abs(me)}" data-cur="${g.cur}">${fm(Math.abs(me),g.cur)}</b></div>
+ <div style="background:var(--peri)"><span>Group spend</span><b data-cu="${tot}" data-cur="${g.cur}">${fm(tot,g.cur)}</b><span>Your share ${fm(mine,g.cur)}</span></div></div>
+ <div class="acts" style="margin:0 20px 6px"><button class="pill" onclick="openGx(${g.id})">${sv(SV.plus,18)}Add expense</button><button class="pill g" onclick="shareG(${g.id})">${sv(SV.share,18)}Share</button></div>
+ <div class="msec"><span>Balances</span></div>${g.members.map(k=>{const b=m[k]||0;return`<div class="gr"><div class="gl">${av(k,40)}<b>${esc(k)}</b><span class="${b>0?'pl':b<0?'ng':''}">${b==0?'Settled':(b>0?'gets back ':'owes ')+fm(Math.abs(b),g.cur)}</span></div><div class="gbar"><i style="width:${b?Math.max(3,Math.abs(b)/mx*100):0}%;background:${b>0?'#1a9c4b':'#c4251f'}"></i></div></div>`}).join('')}
+ ${L.length?`<div class="msec"><span>Suggested payments</span></div>`+L.map(x=>`<div class="pay"><div class="pf">${av(x.from,36)}${sv(SV.chev,16)}${av(x.to,36)}</div><div class="pt"><b>${fm(x.a,g.cur)}</b><span>${x.from==ME?'You pay ':esc(x.from)+' pays '}${x.to==ME?'you':esc(x.to)}</span></div><div class="pb">${x.from==ME?'':`<button class="pill g" onclick="remG(${g.id},'${ENC(x.from)}','${ENC(x.to)}',${x.a})">Remind</button>`}<button class="pill" onclick="recG(${g.id},'${ENC(x.from)}','${ENC(x.to)}',${x.a})">Settle</button></div></div>`).join(''):''}
+ <div class="msec"><span>Activity</span></div>${E.length?Object.entries(days).map(([d,es])=>`<div class="gh">${d}</div>`+es.map((e,i)=>{const n=e.settle?(e.from==ME?-e.a:e.to==ME?e.a:0):(e.by==ME?e.a:0)-(e.sp[ME]||0),ci=Math.max(0,CATS.indexOf(e.cat));
+  return`<button class="ev${an}" style="animation-delay:${Math.min(i,8)*40}ms" onclick="openEv(${e.id})"><span class="ei" style="background:${pal(ci)}">${e.settle?sv(SV.ok,20):esc((e.cat||'E')[0])}</span><span class="et"><b>${e.settle?esc(gnm(e.from))+' paid '+esc(gnm(e.to)):esc(e.d)}</b><small>${e.settle?'Settlement':(e.by==ME?'You':esc(e.by))+' paid '+fm(e.a,g.cur)}</small></span><span class="ea ${n>0?'pl':n<0?'ng':''}"><small>${n>0?(e.settle?'you received':'you lent'):n<0?(e.settle?'you paid':'you owe'):'not involved'}</small>${n?`<b>${fm(Math.abs(n),g.cur)}</b>`:''}</span></button>`}).join('')).join(''):empty('Savings','No expenses yet.<br>Tap Add expense to split the first bill.')}`;
+ if(GRP.anim){cu();requestAnimationFrame(()=>GRP.anim=false)}}
+const gnm=k=>k==ME?'You':k;
+function openEv(id){const e=gxs().find(x=>x.id==id);if(!e)return;const g=gof(e.g);
+ sheet(`<h3>${e.settle?'Payment':esc(e.d)}</h3><div class="sub" style="padding:0 0 12px">${e.settle?esc(gnm(e.from))+' paid '+esc(gnm(e.to)):(e.by==ME?'You':esc(e.by))+' paid'} · ${fm(e.a,g.cur)} · ${dshort(e.t)}${e.cat?' · '+e.cat:''}${e.tip?' · incl. '+e.tip+'%':''}</div>`+
+ (e.settle?'':`<div class="sl">Split ${({eq:'equally',ex:'by exact amounts',pc:'by percent',sh:'by shares'})[e.mode]||''}</div>`+Object.keys(e.sp).map(k=>`<div class="arow"><span style="display:flex;align-items:center;gap:10px">${av(k,34)}${esc(k)}</span><b>${fm(e.sp[k],g.cur)}</b></div>`).join(''))+
+ `<button class="pill g" style="width:100%;margin-top:14px;color:#c4251f" onclick="closeSheet();delGx(${id})">Delete</button>`)}
+function delGx(id){const e=gxs().find(x=>x.id==id);if(!e)return;S.gx=S.gx.filter(x=>x.id!=id);render();toast('Deleted · tap to undo',()=>{S.gx.push(e);render()})}
+function recG(id,f,t,a){f=DEC(f);t=DEC(t);const e={id:Date.now(),g:id,settle:true,from:f,to:t,a,by:f,t:Date.now()};gxs().push(e);render();toast('Payment recorded · tap to undo',()=>{S.gx=S.gx.filter(x=>x.id!=e.id);render()})}
+function remG(id,f,t,a){const g=gof(id);window.open('https://wa.me/?text='+ENC(`Hi ${DEC(f)}, a quick reminder from “${g.name}”: you owe ${DEC(t)==ME?'me':DEC(t)} ${fm(a,g.cur)}.`),'_blank','noopener')}
+function shareG(id){const g=gof(id),m=gbal(g),L=gsimp(m),T=[`*${g.name}* balances`,...g.members.map(k=>`${k}: ${m[k]>0?'gets back '+fm(m[k],g.cur):m[k]<0?'owes '+fm(-m[k],g.cur):'settled'}`),'',...(L.length?['To settle up:',...L.map(x=>`• ${x.from} pays ${x.to} ${fm(x.a,g.cur)}`)]:['All settled'])].join('\n');
+ if(navigator.share)navigator.share({title:g.name,text:T}).catch(()=>{});else window.open('https://wa.me/?text='+ENC(T),'_blank','noopener')}
+function openGMenu(id){const g=gof(id);sheet(`<h3>${esc(g.name)}</h3><div class="f"><div class="sl">Rename</div><div class="paste" style="margin:0"><input id="grn" value="${esc(g.name)}" autocomplete="off"><button class="pill" onclick="renG(${id})">Save</button></div>
+ <div class="sl">Add a friend</div><div class="paste" style="margin:0"><input id="gam" placeholder="Name" autocomplete="off"><button class="pill" onclick="addMem(${id})">Add</button></div></div>
+ <div class="acts"><button class="pill g" onclick="closeSheet();shareG(${id})">Share balances</button><button class="pill g" style="color:#c4251f" onclick="delGrp(${id})">Delete group</button></div>`)}
+function renG(id){const g=gof(id),n=$('grn').value.trim();if(n)g.name=n;closeSheet();render()}
+function addMem(id){const g=gof(id),n=$('gam').value.trim();if(!n)return;if(g.members.some(x=>x.toLowerCase()==n.toLowerCase())){toast('Already in the group');return}g.members.push(n);closeSheet();render();toast(n+' added')}
+groupsHTML=function(){const G=gps().slice().sort((a,b)=>lastT(b)-lastT(a));
+ return`<div class="msec"><span>Split bills</span><button onclick="openGroup()">+ New group</button></div><button class="spl" onclick="quickSplit()"><span class="sp1">${sv(SV.split,22)}</span><span><b>Split a bill</b><small>Dinner, trip, rent — with friends</small></span>${sv(SV.chev,20)}</button>`+
+ (G.length?G.map((g,i)=>{const b=gbal(g)[ME]||0,n=gxs().filter(e=>e.g==g.id).length;return`<button class="pr" style="background:${pal(i+3)}" onclick="openGrp(${g.id})"><span class="stk">${g.members.slice(0,3).map(k=>av(k,38)).join('')}</span><div class="nm"><b>${esc(g.name)}</b><span>${g.members.length} people · ${n} item${n==1?'':'s'}</span></div><div class="am">${b==0?'Settled':fm(Math.abs(b),g.cur)}<span>${b>0?'you’re owed':b<0?'you owe':'all square'}</span></div></button>`}).join(''):`<div class="sub" style="padding:0 20px 14px">Create a group with your friends, add what each person paid, and Fin works out who owes whom.</div>`)};
+loansHTML=function(){return _lh19().replace('<div class="sm">',groupsHTML()+'<div class="msec"><span>Lend & borrow</span></div><div class="sm">')};
+function quickSplit(){const G=gps();if(!G.length){openGroup();return}if(G.length==1){openGx(G[0].id);return}
+ sheet(`<h3>Split with…</h3>`+G.map(g=>`<button class="arow" style="width:100%;text-align:left" onclick="openGx(${g.id})"><span style="display:flex;align-items:center;gap:12px">${av(g.name,40)}${esc(g.name)}</span><small style="color:var(--mute)">${g.members.length} people</small></button>`).join('')+`<button class="pill g" style="width:100%;margin-top:12px" onclick="openGroup()">+ New group</button>`)}
+function openGroup(){mi();const fr=[...new Set([...people().map(p=>p.n),...gps().flatMap(g=>g.members)].filter(n=>n&&n!=ME))].slice(0,12);
+ sheet(`<h3>New group</h3><div class="f"><input id="gn" placeholder="Group name (Trip, Flat, Dinner)" autocomplete="off"><div class="sl">Currency</div><select id="gc" aria-label="Currency">${CURS.map(c=>`<option ${c==S.base?'selected':''}>${c}</option>`).join('')}</select><div class="sl">Friends</div><input id="gm" placeholder="Names, separated by commas" autocomplete="off">${fr.length?`<div class="chips">${fr.map(n=>`<button class="chip" onclick="addFr('${ENC(n)}',this)">${esc(n)}</button>`).join('')}</div>`:''}<button class="pill" onclick="saveGroup()">Create group</button></div>`)}
+function addFr(n,b){n=DEC(n);const i=$('gm'),a=i.value.split(',').map(x=>x.trim()).filter(Boolean),on=a.some(x=>x.toLowerCase()==n.toLowerCase());i.value=(on?a.filter(x=>x.toLowerCase()!=n.toLowerCase()):a.concat(n)).join(', ');b.classList.toggle('on',!on)}
+const tg1=(b,f)=>{[...b.parentNode.children].forEach(x=>x.classList.toggle('on',x==b));f&&f()};
+function openGx(id){const g=gof(id);if(!g)return;GX2={g:id,mode:'eq',by:ME,cat:'Food',tip:0,sel:g.members.slice(),ex:{},pc:{},sh:{}};g.members.forEach(k=>GX2.sh[k]=1);
+ sheet(`<h3>Add expense</h3><div class="f"><input id="gx_d" placeholder="What was it for?" autocomplete="off"><input class="amtin" id="gx_a" type="number" inputmode="decimal" placeholder="0.00 ${g.cur}" oninput="gxu()">
+ <div class="sl">Category</div><div class="chips">${CATS.map(c=>`<button class="chip${c=='Food'?' on':''}" onclick="tg1(this,()=>GX2.cat='${c}')">${c}</button>`).join('')}</div>
+ <div class="sl">Paid by</div><div class="chips">${g.members.map(k=>`<button class="chip${k==ME?' on':''}" onclick="tg1(this,()=>GX2.by=DEC('${ENC(k)}'))">${esc(k)}</button>`).join('')}</div>
+ <div class="sl">Tip / tax on top</div><div class="chips">${[0,5,10,15,18].map(p=>`<button class="chip${p?'':' on'}" onclick="tg1(this,()=>{GX2.tip=${p};gxu()})">${p?p+'%':'None'}</button>`).join('')}</div>
+ <div class="sl">Split</div><div class="seg">${[['eq','Equally'],['ex','Exact'],['pc','Percent'],['sh','Shares']].map(([k,l])=>`<button class="${k=='eq'?'on':''}" onclick="tg1(this,()=>{GX2.mode='${k}';gxb()})">${l}</button>`).join('')}</div><div id="gx_s"></div><div class="gtot" id="gx_n" aria-live="polite"></div><button class="pill" onclick="saveGx()">Save expense</button></div>`);gxb()}
+function gxb(){const g=gof(GX2.g),el=$('gx_s');if(!el)return;const m=GX2.mode;
+ el.innerHTML=m=='eq'?`<div class="chips">${g.members.map(k=>`<button class="chip${GX2.sel.includes(k)?' on':''}" onclick="this.classList.toggle('on');gxe('${ENC(k)}')">${esc(k)}</button>`).join('')}</div>`:
+ g.members.map(k=>`<div class="gxr"><span class="gxn">${av(k,32)}<b>${esc(k)}</b></span><span class="gxp" data-p="${esc(k)}"></span>${m=='sh'?`<span class="stp"><button onclick="gsh('${ENC(k)}',-1,this)" aria-label="Fewer shares">−</button><i>${GX2.sh[k]}</i><button onclick="gsh('${ENC(k)}',1,this)" aria-label="More shares">+</button></span>`:`<input type="number" inputmode="decimal" data-k="${esc(k)}" placeholder="${m=='pc'?'0 %':'0.00'}" value="${GX2[m][k]||''}" oninput="GX2[GX2.mode][this.dataset.k]=this.value;gxu()">`}</div>`).join('');gxu()}
+function gxe(k){k=DEC(k);GX2.sel=GX2.sel.includes(k)?GX2.sel.filter(x=>x!=k):GX2.sel.concat(k);gxu()}
+function gsh(k,d,b){k=DEC(k);GX2.sh[k]=Math.max(0,Math.min(20,(GX2.sh[k]||0)+d));b.parentNode.querySelector('i').textContent=GX2.sh[k];gxu()}
+function gxcalc(){const g=gof(GX2.g),a=parseFloat($('gx_a').value)||0,f=a*(1+GX2.tip/100),c=Math.round(f*100),m=GX2.mode,w={};let r=null,msg='';
+ if(m=='eq'){GX2.sel.forEach(k=>w[k]=1);r=dist(c,w);if(!r)msg='Pick who shares this'}
+ else if(m=='sh'){g.members.forEach(k=>w[k]=GX2.sh[k]||0);r=dist(c,w);if(!r)msg='Give at least one person a share'}
+ else if(m=='pc'){let t=0;g.members.forEach(k=>{w[k]=parseFloat(GX2.pc[k])||0;t+=w[k]});const d=Math.round((100-t)*10)/10;if(Math.abs(d)>.01)msg=Math.abs(d)+'% '+(d>0?'left':'over');else r=dist(c,w)}
+ else{const x={};let t=0;g.members.forEach(k=>{const v=Math.round((parseFloat(GX2.ex[k])||0)*100);if(v){x[k]=v;t+=v}});if(t!=c)msg=fm(Math.abs(c-t)/100,g.cur)+(t<c?' left to assign':' over');else r=x}
+ return{a,f,c,r,msg}}
+function gxu(){const g=gof(GX2.g);if(!g||!$('gx_n'))return;const x=gxcalc();
+ document.querySelectorAll('#gx_s .gxp').forEach(s=>{const v=x.r&&x.r[s.dataset.p];s.textContent=v?fm(v/100,g.cur):''});
+ $('gx_n').textContent=!x.c?'Enter an amount':x.r?`Total ${fm(x.f,g.cur)}${GX2.tip?' (incl. '+GX2.tip+'%)':''}${GX2.mode=='eq'?' · '+fm(x.f/GX2.sel.length,g.cur)+' each':''}`:x.msg;$('gx_n').classList.toggle('bad',!!(x.c&&!x.r))}
+function saveGx(){const g=gof(GX2.g),d=$('gx_d').value.trim(),x=gxcalc();if(!d){toast('Add a description');$('gx_d').focus();return}if(!(x.a>0)){toast('Enter an amount');return}if(!x.r){toast(x.msg);return}
+ const sp={};for(const k in x.r)if(x.r[k])sp[k]=x.r[k]/100;gxs().push({id:Date.now(),g:g.id,d,a:x.c/100,by:GX2.by,sp,t:Date.now(),cat:GX2.cat,mode:GX2.mode,tip:GX2.tip||0});
+ closeSheet();render();if(S.tab!='grp')openGrp(g.id);toast('Expense added')}
+render();
+</script>
+</body></html>
