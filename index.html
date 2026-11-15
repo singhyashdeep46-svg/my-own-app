@@ -702,6 +702,38 @@ input.sxin{width:92px!important;padding:9px 12px!important;text-align:right;font
 .wc.pv{height:auto;min-height:188px;margin:0 0 16px}
 @media(prefers-reduced-motion:reduce){.wk,.wfront{animation:none}}
 </style>
+<style>
+/* ===== v22: split with one friend (Splitwise-style: who paid + how to split) ===== */
+.sxsplit{display:flex;align-items:center;justify-content:center;gap:8px;width:calc(100% - 40px);margin:0 20px 14px;background:#4a4cff;color:#fff}
+.sxsplit svg{flex:none}
+.sxpick{display:flex;align-items:center;gap:14px;width:100%;padding:14px 4px;text-align:left;border-bottom:1px solid var(--line)}
+.sxpick .ic2s{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:#fff;background:#4a4cff;flex:none}
+.sxpick>span:nth-child(2){flex:1;min-width:0;line-height:1.35}.sxpick small{color:var(--mute);font-size:13px}
+.sxpick .chev{color:var(--mute);flex:none}
+.sxo{display:flex;align-items:center;gap:12px;min-height:56px;padding:10px 14px;border-radius:16px;background:var(--line);text-align:left;width:100%;border:2px solid transparent;transition:background-color 200ms var(--out),border-color 200ms var(--out)}
+.sxo>span:nth-child(2){flex:1;min-width:0;font-weight:600;line-height:1.3}.sxo small{display:block;font-weight:500;color:var(--mute);font-size:13px}
+.sxo .rd{width:22px;height:22px;border-radius:50%;border:2px solid var(--rim);flex:none;display:grid;place-items:center;transition:border-color 200ms var(--out)}
+.sxo .rd::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--ink);transform:scale(0);transition:transform 260ms var(--drawer)}
+.sxo.on{background:var(--bg);border-color:var(--ink)}.sxo.on .rd{border-color:var(--ink)}.sxo.on .rd::after{transform:scale(1)}
+.sxo input{width:96px;flex:none;padding:9px 12px;text-align:right}
+.sxos{display:grid;gap:8px}
+.sxbig{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sxbig button{min-height:54px;border-radius:18px;background:var(--line);font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 10px;transition:background-color 200ms var(--out),color 200ms var(--out),transform 140ms var(--out)}
+.sxbig button .fa{width:30px;height:30px;font-size:13px;flex:none}
+.sxbig button span.t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sxbig button.on{background:var(--ink);color:var(--bg)}
+.sxbig button:active{transform:scale(.97)}
+.sxres{padding:14px 16px;border-radius:18px;background:var(--mint);color:#15121c;font-weight:700;font-size:16px;line-height:1.35;transition:background-color 220ms var(--out)}
+.sxres.r{background:var(--peach)}.sxres.n{background:var(--line);color:var(--mute);font-weight:600}
+.sxres small{display:block;font-weight:500;opacity:.7;font-size:13px;margin-top:2px}
+</style>
+<style>
+/* ===== v23: WhatsApp buttons ===== */
+.gxd.wab,.wab{background:#1fa855;color:#fff}
+.pill.wa{display:flex;align-items:center;justify-content:center;gap:8px}
+.sxsm.wab{padding:9px 12px!important;display:grid;place-items:center}
+.wafull{width:calc(100% - 0px);margin:0 0 10px}
+</style>
 </head><body>
 <div class="app" id="app">
  <div class="top"><div id="avs" style="display:flex"></div><button class="plus" onclick="openArea()" aria-label="Add area"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="cur" id="curBtn" onclick="go('home')">Today</button><button class="gear" onclick="go('set')" aria-label="Settings"><span class="sdot off" id="sdot"></span><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></button></div>
@@ -1609,13 +1641,13 @@ function openGrp(id){const g=gps().find(x=>x.id==id);if(!g){closeSheet();return}
  sheet(`<div class="sxgh"><div class="gav">${g.members.slice(0,4).map(k=>av(k)).join('')}</div><div style="min-width:0"><h3>${esc(g.name)}</h3><div class="gsub">${g.members.length} people · ${bills.length} expense${bills.length==1?'':'s'}</div></div></div>
  <div class="sm gst"><div style="background:var(--mint)"><span>Total spent</span><b>${fm(spent,g.cur)}</b></div><div style="background:${me<0?'var(--peach)':'var(--peri)'}"><span>${me<0?'You owe':me>0?'You’re owed':'You’re'}</span><b>${me==0?'All square':fm(Math.abs(me),g.cur)}</b></div></div>
  <div class="acts"><button class="pill" onclick="openGx(${id})">Add expense</button><button class="pill g" onclick="openGSettle(${id})">Settle up</button></div>
- <div class="sl">Who pays whom</div>${L.length?L.map(x=>`<div class="arow"><span class="sxgd">${av(x.from,32)}<span><b style="font-weight:600">${esc(x.from)}</b> pays <b style="font-weight:600">${esc(x.to)}</b></span></span><b>${fm(x.a,g.cur)}</b></div>`).join(''):`<div class="gok">${sv(CHECK,18)}Everyone is settled up</div>`}
+ <div class="sl">Who pays whom</div>${L.length?L.map(x=>`<div class="arow"><span class="sxgd">${av(x.from,32)}<span><b style="font-weight:600">${esc(x.from)}</b> pays <b style="font-weight:600">${esc(x.to)}</b></span></span><span class="gar"><b>${fm(x.a,g.cur)}</b><button class="gxd wab" aria-label="Remind ${esc(x.from)} on WhatsApp" onclick="gRem(${id},'${ENC(x.from)}','${ENC(x.to)}',${x.a})">${sv(WAI,18)}</button></span></div>`).join(''):`<div class="gok">${sv(CHECK,18)}Everyone is settled up</div>`}
  <div class="sl">Balances</div>${g.members.map(k=>{const b=m[k]||0;return `<div class="arow"><span class="sxgd">${av(k,32)}${esc(k)}</span><b class="${b>0?'pl':b<0?'ng':''}">${b==0?'Settled':(b>0?'gets back ':'owes ')+fm(Math.abs(b),g.cur)}</b></div>`}).join('')}
  <div class="sl">Activity</div>${ex.length?ex.map(e=>{
   if(e.settle)return `<div class="arow"><span class="gal">${sv(CHECK,18)}<span>${esc(e.from)} paid ${esc(e.to)}<br><small>${dshort(e.t)}</small></span></span><span class="gar"><b>${fm(e.a,g.cur)}</b><button class="gxd" aria-label="Delete payment" onclick="delGx(${e.id})">${sv(TRASH,16)}</button></span></div>`;
   const my=(e.sp&&e.sp[ME])||0,net=R2((e.by==ME?e.a:0)-my);
   return `<div class="arow gact" role="button" tabindex="0" aria-label="Edit ${esc(e.d)}" onclick="openGx(${id},${e.id})" onkeydown="if(event.key=='Enter'){openGx(${id},${e.id})}"><span><b style="font-weight:600">${esc(e.d)}</b><br><small>${esc(e.by)} paid ${fm(e.a,g.cur)} · ${dshort(e.t)}</small></span><span class="gar"><span><b class="${net>0?'pl':net<0?'ng':''}">${net==0?(my?'even':'—'):fm(Math.abs(net),g.cur)}</b><small>${net>0?'you lent':net<0?'you owe':my?'':'not in'}</small></span><button class="gxd" aria-label="Delete ${esc(e.d)}" onclick="event.stopPropagation();delGx(${e.id})">${sv(TRASH,16)}</button></span></div>`}).join(''):`<div class="gsub">No expenses yet. Tap “Add expense”.</div>`}
- <div class="acts" style="margin-top:16px"><button class="pill g" onclick="openGAdd(${id})">Add friend</button><button class="pill g" onclick="shareG(${id})">Share summary</button></div>
+ <div class="acts" style="margin-top:16px"><button class="pill g" onclick="openGAdd(${id})">Add friend</button><button class="pill wa" onclick="shareG(${id})">${sv(WAI,18)}WhatsApp summary</button></div>
  <button class="pill g gdel" onclick="delGrp(${id})">Delete group</button>`)}
 function shareG(id){const g=gps().find(x=>x.id==id);if(!g)return;const L=gsimp(gbal(g)),
  tx=g.name+' · who owes who\n'+(L.length?L.map(x=>`• ${x.from} pays ${x.to} ${fm(x.a,g.cur)}`).join('\n'):'Everyone is settled up ✅')+'\n\nvia Fin';
@@ -1683,7 +1715,7 @@ function saveGx(){const g=gps().find(x=>x.id==GX.g);if(!g)return;const r=gxCalc(
 
 /* -- settle up -- */
 function openGSettle(id){const g=gps().find(x=>x.id==id);if(!g)return;const L=gsimp(gbal(g));
- sheet(`<h3>Settle up</h3><div class="gsub">The fewest payments that square everyone</div>`+(L.length?L.map(x=>`<div class="arow"><span class="sxgd">${av(x.from,36)}<span><b style="font-weight:600">${esc(x.from)}</b> pays <b style="font-weight:600">${esc(x.to)}</b><br><small>${fm(x.a,g.cur)}</small></span></span><button class="pill sxsm" onclick="openGPay(${id},'${ENC(x.from)}','${ENC(x.to)}',${x.a})">Record</button></div>`).join('')+`<button class="pill" style="width:100%;margin-top:14px" onclick="recAll(${id})">Record all payments</button>`:`<div class="gok">${sv(CHECK,18)}Everyone is settled up</div>`)+`<button class="pill g" style="width:100%;margin-top:10px" onclick="openGrp(${id})">Back</button>`)}
+ sheet(`<h3>Settle up</h3><div class="gsub">The fewest payments that square everyone</div>`+(L.length?L.map(x=>`<div class="arow"><span class="sxgd">${av(x.from,36)}<span><b style="font-weight:600">${esc(x.from)}</b> pays <b style="font-weight:600">${esc(x.to)}</b><br><small>${fm(x.a,g.cur)}</small></span></span><span class="gar"><button class="gxd wab" aria-label="Remind ${esc(x.from)} on WhatsApp" onclick="gRem(${id},'${ENC(x.from)}','${ENC(x.to)}',${x.a})">${sv(WAI,18)}</button><button class="pill sxsm" onclick="openGPay(${id},'${ENC(x.from)}','${ENC(x.to)}',${x.a})">Record</button></span></div>`).join('')+`<button class="pill" style="width:100%;margin-top:14px" onclick="recAll(${id})">Record all payments</button>`:`<div class="gok">${sv(CHECK,18)}Everyone is settled up</div>`)+`<button class="pill g" style="width:100%;margin-top:10px" onclick="openGrp(${id})">Back</button>`)}
 function openGPay(id,f,t,a){const g=gps().find(x=>x.id==id);if(!g)return;f=DEC(f);t=DEC(t);
  sheet(`<h3>Record payment</h3><div class="sxgh">${av(f,40)}<div><b style="font-weight:600">${esc(f)}</b> pays <b style="font-weight:600">${esc(t)}</b><div class="gsub" style="margin:2px 0 0">Owes ${fm(a,g.cur)}. Lower the amount for a part payment.</div></div></div><div class="f"><div class="sxa"><span class="sxc">${esc(gcs(g))}</span><input class="sxai" id="gp_a" type="number" inputmode="decimal" value="${a}" aria-label="Amount paid"></div><button class="pill" onclick="recGs2(${id},'${ENC(f)}','${ENC(t)}',${a})">Record payment</button><button class="pill g" onclick="openGSettle(${id})">Back</button></div>`)}
 function recGs2(id,f,t,max){const g=gps().find(x=>x.id==id),v=R2(parseFloat($('gp_a').value)||0);if(!(v>0)){toast('Enter an amount');return}if(v>max+.004){toast('That is more than '+fm(max,g.cur));return}recGs(id,f,t,v)}
@@ -1703,6 +1735,133 @@ function accHTML(){mi();const A=S.accts,cs=[...new Set(A.map(a=>a.cur))];if(!cs.
  <div class="msec"><span>My cards</span><button onclick="openAccM()">+ Add</button></div>`+(A.length?`<div class="wal">${A.map((a,i)=>wcard(a,i)).join('')}</div>`:empty('Savings','Your wallet is empty.<br>Add an account to begin.'))}
 const _RM21=renderMoney;renderMoney=function(){_RM21();const el=$('v-macc');if(el){el.innerHTML=accHTML();dimDec(el)}};
 const _oa21=openAcc;openAcc=function(id){_oa21(id);dimDec($('sheet'))};
+
+/* ===== v22: split a bill with ONE friend (who paid + how to split) ===== */
+const SPL_ICON='<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>';
+let PRS={f:'',by:'me',mode:'eq'};
+function openSplit(){mi();const G=gps().slice().sort((a,b)=>b.t-a.t);
+ sheet(`<h3>Split a bill</h3><div class="gsub">Who are you splitting with?</div>
+ <button class="sxpick" onclick="openPair()"><span class="ic2s">${sv('<circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/>',22)}</span><span><b>One friend</b><br><small>Either of you paid · equal, full or custom</small></span><span class="chev">${sv('<path d="M9 6l6 6-6 6"/>',20)}</span></button>
+ <div class="sl" style="margin-top:16px">Or in a group</div>
+ ${G.map(g=>`<button class="arow gpick" onclick="openGx(${g.id})"><span class="sxgd">${av(g.name,38)}<b>${esc(g.name)}</b></span><span style="color:var(--mute);font-size:14px">${g.members.length} people</span></button>`).join('')}
+ <button class="pill g" style="width:100%;margin-top:14px" onclick="openGroup()">New group</button>`)}
+function openPair(name){mi();const nm=name?DEC(name):'',kn=knownNames(),c0=(S.accts[0]&&S.accts[0].cur)||S.base;
+ PRS={f:nm,by:'me',mode:'eq'};
+ sheet(`<div class="sxh"><h3>Split with a friend</h3></div><div class="f">
+  <input id="pr_f" list="pr_l" placeholder="Friend’s name" value="${esc(nm)}" oninput="PRS.f=this.value.trim();pru()" aria-label="Friend’s name" maxlength="40"><datalist id="pr_l">${kn.map(n=>`<option value="${esc(n)}">`).join('')}</datalist>
+  ${!nm&&kn.length?`<div class="chips" id="pr_k">${kn.slice(0,8).map(n=>`<button class="chip" data-k="${esc(n)}" onclick="prSel(this)">${esc(n)}</button>`).join('')}</div>`:''}
+  <div class="sxa"><span class="sxc" id="pr_s">${esc((0).toLocaleString('en',{style:'currency',currency:c0,minimumFractionDigits:0,maximumFractionDigits:0}).replace(/[\d\s.,]/g,'')||c0)}</span><input class="sxai" id="pr_a" type="number" inputmode="decimal" placeholder="0" oninput="pru()" aria-label="Bill amount"></div>
+  <input id="pr_d" placeholder="What was it for? (dinner, cab, groceries)" maxlength="60" aria-label="Description">
+  <select id="pr_c" aria-label="Currency" onchange="pru()">${CURS.map(c=>`<option ${c==c0?'selected':''}>${c}</option>`).join('')}</select>
+  <div class="sl">Who paid?</div>
+  <div class="sxbig" id="pr_by"><button class="on" data-v="me" onclick="prBy('me')">${av('You',30)}<span class="t">You paid</span></button><button data-v="fr" onclick="prBy('fr')"><span class="fa" id="pr_fa" style="background:var(--line)">?</span><span class="t" id="pr_fn">Friend paid</span></button></div>
+  <div class="sl">How to split it?</div>
+  <div class="sxos" id="pr_m">
+   <button class="sxo on" data-m="eq" onclick="prM('eq')"><span class="rd"></span><span>Split equally<small id="pr_eq"></small></span></button>
+   <button class="sxo" data-m="full" onclick="prM('full')"><span class="rd"></span><span id="pr_fl">They owe the full amount</span></button>
+   <div class="sxo" data-m="cu" role="button" tabindex="0" onclick="prM('cu',true)"><span class="rd"></span><span id="pr_cl">Custom amount</span><input id="pr_u" type="number" inputmode="decimal" placeholder="0" oninput="PRS.mode='cu';prM('cu');pru()" onclick="event.stopPropagation()" aria-label="Custom amount owed"></div>
+  </div>
+  <div class="sxres n" id="pr_t" aria-live="polite">Enter the amount</div>
+  <button class="pill" id="pr_save" onclick="savePair()" disabled>Save</button></div>`);pru()}
+function prSel(b){PRS.f=b.dataset.k;$('pr_f').value=PRS.f;document.querySelectorAll('#pr_k .chip').forEach(x=>x.classList.toggle('on',x==b));pru()}
+function prBy(v){PRS.by=v;document.querySelectorAll('#pr_by button').forEach(b=>b.classList.toggle('on',b.dataset.v==v));pru()}
+function prM(m,f){PRS.mode=m;document.querySelectorAll('#pr_m .sxo').forEach(b=>b.classList.toggle('on',b.dataset.m==m));if(f&&$('pr_u'))$('pr_u').focus();pru()}
+function prCalc(){const T=R2(parseFloat($('pr_a').value)||0),c=$('pr_c').value,fr=PRS.f||'Friend',me=PRS.by=='me',payer=me?'You':fr,other=me?fr:'You';let owed=0;
+ if(PRS.mode=='eq')owed=Math.floor(T*100/2)/100;else if(PRS.mode=='full')owed=T;else owed=R2(parseFloat($('pr_u').value)||0);
+ const ok=T>0&&!!PRS.f&&owed>0&&owed<=T+.0001;let msg='Enter the amount';
+ if(!(T>0))msg='Enter the amount';else if(!PRS.f)msg='Add your friend’s name';else if(PRS.mode=='cu'&&!(owed>0))msg='Enter the custom amount';else if(owed>T+.0001)msg='That is more than the bill';
+ return{T,c,fr,me,payer,other,owed,ok,msg}}
+function pru(){if(!$('pr_t'))return;const r=prCalc(),f=r.fr;
+ $('pr_fn').textContent=(PRS.f?f:'Friend')+' paid';$('pr_fa').textContent=(PRS.f||'?').trim()[0].toUpperCase();
+ $('pr_fl').textContent=r.me?`${f} owes the full amount`:'You owe the full amount';
+ $('pr_cl').textContent=r.me?`${f} owes`:'You owe';
+ $('pr_eq').textContent=r.T>0?`${fm(r.T-Math.floor(r.T*100/2)/100,r.c)} each, ${r.payer=='You'?'you':r.payer} paid`:'';
+ const t=$('pr_t'),mine=!r.me;t.className='sxres'+(r.ok?(mine?' r':''):' n');
+ t.innerHTML=r.ok?(r.me?`${esc(f)} owes you ${fm(r.owed,r.c)}`:`You owe ${esc(f)} ${fm(r.owed,r.c)}`)+`<small>${esc(r.payer)} paid ${fm(r.T,r.c)}${r.owed<r.T&&PRS.mode!='full'?' · own share '+fm(r.T-r.owed,r.c):''}</small>`:esc(r.msg);
+ $('pr_save').disabled=!r.ok;if($('pr_s')){try{$('pr_s').textContent=(0).toLocaleString('en',{style:'currency',currency:r.c,minimumFractionDigits:0,maximumFractionDigits:0}).replace(/[\d\s.,]/g,'')||r.c}catch(e){}}}
+function savePair(){const r=prCalc();if(!r.ok){toast(r.msg);return}
+ const ex=people().find(x=>x.n.toLowerCase()==PRS.f.toLowerCase()),nm=ex?ex.n:PRS.f,d=($('pr_d').value||'').trim()||'Split bill',
+ how=PRS.mode=='eq'?'split equally':PRS.mode=='full'?'full amount':'custom share';
+ lns().push({id:Date.now()+Math.floor(Math.random()*999),p:nm,dir:r.me?'lent':'borrow',a:r.owed,cur:r.c,acc:0,note:`${d} · ${r.me?'you':nm} paid ${fm(r.T,r.c)}, ${how}`,t:Date.now(),due:null,paid:false});
+ PT='friends';try{localStorage.setItem('fin_pt','friends')}catch(e){}
+ render();openPerson(ENC(nm));toast(r.me?`${nm} owes you ${fm(r.owed,r.c)}`:`You owe ${nm} ${fm(r.owed,r.c)}`)}
+/* entry points: People tab and a friend's page */
+const _lh22=loansHTML;
+loansHTML=function(){const h=_lh22();return h.replace(`onclick="openLoan('borrow')">I borrowed</button></div>`,`onclick="openLoan('borrow')">I borrowed</button></div><button class="pill sxsplit" onclick="openPair()">${sv(SPL_ICON,18)}Split a bill with a friend</button>`)};
+const _op22=openPerson;
+openPerson=function(n){_op22(n);const a=$('sheet').querySelector('.acts');if(a&&!$('sheet').querySelector('.sxsplit'))a.insertAdjacentHTML('afterend',`<button class="pill sxsplit" style="width:100%;margin:0 0 10px" onclick="openPair('${n}')">${sv(SPL_ICON,18)}Split a bill with ${esc(DEC(n))}</button>`)};
+
+/* ===== v23: WhatsApp messages that actually say something ===== */
+const WAI='<path d="M20 12a8 8 0 01-11.8 7L4 20l1.1-4A8 8 0 1120 12z"/><path d="M9.2 8.8c-.2 2.8 2.6 5.8 5.6 6l1-1.3-1.9-1-.8.7a3.8 3.8 0 01-1.8-1.8l.7-.8-1-1.9z"/>',
+ wnm=k=>k==ME?((S.name||'').trim().split(/\s+/)[0]||'Me'):k,
+ wdt=ts=>new Date(ts).toLocaleDateString('en',{day:'numeric',month:'short'}),
+ wlong=ts=>new Date(ts).toLocaleDateString('en',{day:'numeric',month:'short',year:'numeric'}),
+ wplural=(n,w)=>n+' '+w+(n==1?'':'s');
+function waOpen(text){const w=window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
+ if(w){try{w.opener=null}catch(e){}return}
+ try{navigator.clipboard.writeText(text).then(()=>toast('Message copied. Paste it into WhatsApp'),()=>toast('Allow pop-ups to open WhatsApp'))}catch(e){toast('Allow pop-ups to open WhatsApp')}}
+
+/* ---- group summary ---- */
+function gWaText(g){
+ const c=g.cur,m=gbal(g),ex=gxs().filter(e=>e.g==g.id).sort((a,b)=>a.t-b.t),bills=ex.filter(e=>!e.settle),pays=ex.filter(e=>e.settle),L=gsimp(m),
+  spent=R2(bills.reduce((t,e)=>t+e.a,0)),N=15,shown=bills.slice(-N),off=bills.length-shown.length;
+ const how=e=>{const ks=Object.keys(e.sp||{}),v=ks.map(k=>e.sp[k]);if(!ks.length)return'';
+  if(v.length>1&&Math.max(...v)-Math.min(...v)<=.011)return `split equally between ${v.length} · ${fm(v[0],c)} each`;
+  if(v.length==1)return `all on ${wnm(ks[0])}`;
+  return 'split: '+ks.map(k=>`${wnm(k)} ${fm(e.sp[k],c)}`).join(', ')};
+ const o=[`*${g.name}* · expense summary`,`${wlong(Date.now())} · ${wplural(g.members.length,'person').replace('persons','people')} · ${wplural(bills.length,'expense')}`,'',`*Total spent: ${fm(spent,c)}*`];
+ if(bills.length){o.push('','*Expenses*');if(off>0)o.push(`_(latest ${N} of ${bills.length})_`);
+  shown.forEach((e,i)=>{o.push(`${off+i+1}. ${e.d} — *${fm(e.a,c)}*${e.tip?` (incl. ${e.tip}% tip/tax)`:''}`,`    paid by ${wnm(e.by)} · ${wdt(e.t)}`);const h=how(e);if(h)o.push('    '+h)})}
+ o.push('','*Balances*');
+ g.members.forEach(k=>{const b=m[k]||0;o.push(b>.004?`✅ ${wnm(k)} gets back ${fm(b,c)}`:b<-.004?`🔻 ${wnm(k)} owes ${fm(-b,c)}`:`➖ ${wnm(k)} is settled up`)});
+ o.push('');
+ if(L.length){o.push('*To settle up*');L.forEach(x=>o.push(`• ${wnm(x.from)} → ${wnm(x.to)}: *${fm(x.a,c)}*`))}else o.push('🎉 Everyone is settled up!');
+ if(pays.length){o.push('','*Payments already made*');pays.slice(-8).forEach(p=>o.push(`• ${wnm(p.from)} paid ${wnm(p.to)} ${fm(p.a,c)} · ${wdt(p.t)}`))}
+ o.push('','_Sent from Fin_');return o.join('\n')}
+function shareG(id){const g=gps().find(x=>x.id==id);if(!g)return;waOpen(gWaText(g))}
+
+/* ---- reminder for one payment inside a group ---- */
+function gRemText(g,from,to,a){
+ const c=g.cur,ex=gxs().filter(e=>e.g==g.id&&!e.settle).sort((x,y)=>x.t-y.t),st=gxs().filter(e=>e.g==g.id&&e.settle),me=from==ME,P=me?'My':'Your',meN=wnm(ME);
+ let share=0,paid=0;const rows=[];
+ ex.forEach(e=>{const s=(e.sp&&e.sp[from])||0,p=e.by==from?e.a:0;if(!s&&!p)return;share+=s;paid+=p;
+  rows.push(`• ${e.d} · ${wdt(e.t)} — total ${fm(e.a,c)}, paid by ${wnm(e.by)}${s?`, ${me?'my':'your'} share *${fm(s,c)}*`:''}`)});
+ const made=R2(st.filter(e=>e.from==from).reduce((t,e)=>t+e.a,0)),got=R2(st.filter(e=>e.to==from).reduce((t,e)=>t+e.a,0));
+ const o=me?[`Hi ${wnm(to)} 👋`,`Settling up for *${g.name}*: I owe you *${fm(a,c)}*.`]
+  :[`Hi ${wnm(from)} 👋`,`${meN} here, a quick reminder about *${g.name}*.`,`You owe ${to==ME?'me':wnm(to)} *${fm(a,c)}*.`];
+ if(rows.length){o.push('',`*${P} part*`);if(rows.length>12)o.push(`_(latest 12 of ${rows.length})_`);o.push(...rows.slice(-12))}
+ o.push('',`${P} total share: ${fm(share,c)}`,`${me?'I':'You'} paid for the group: ${fm(paid,c)}`);
+ if(made>0)o.push(`Payments already made: ${fm(made,c)}`);if(got>0)o.push(`Payments received: ${fm(got,c)}`);
+ o.push('',`*Balance due: ${fm(a,c)}*`,me?'I will send it soon. 🙏':'Please send it when you can. Thanks! 🙏','','_Sent from Fin_');return o.join('\n')}
+function gRem(id,f,t,a){const g=gps().find(x=>x.id==id);if(!g)return;waOpen(gRemText(g,DEC(f),DEC(t),a))}
+
+/* ---- running balance with one friend ---- */
+function pWaText(nm){
+ const all=lns().filter(l=>l.p.toLowerCase()==nm.toLowerCase()),ls=all.filter(l=>!l.paid).sort((a,b)=>a.t-b.t),done=all.length-ls.length,o=people().find(x=>x.n.toLowerCase()==nm.toLowerCase());
+ if(!o||!ls.length)return '';
+ const out=[`Hi ${o.n} 👋`,`Here is where we stand, from Fin (${wlong(Date.now())}):`,'','*Open items*'];
+ ls.forEach((l,i)=>{const mine=l.dir=='lent';
+  out.push(`${i+1}. ${l.note||(mine?'Money I lent you':'Money you lent me')} · ${wdt(l.t)}`,`    ${mine?'You owe me':'I owe you'} *${fm(l.a,l.cur)}*${l.due?(l.due<Date.now()?' · ⚠️ overdue since '+wdt(l.due):' · due '+wdt(l.due)):''}`)});
+ out.push('');
+ o.c.forEach(k=>{const v=o.net[k];out.push(v>0?`*Net: you owe me ${fm(v,k)}*`:`*Net: I owe you ${fm(-v,k)}*`)});
+ if(!o.c.length)out.push('*Net: all square* ✅');
+ if(done)out.push(`_${wplural(done,'earlier item')} already settled._`);
+ out.push('',o.s>0?'Could you please settle this when you can? Thanks! 🙏':o.s<0?'I will settle my part soon. Thanks! 🙏':'Thanks! 🙏',`— ${wnm(ME)}`,'','_Sent from Fin_');return out.join('\n')}
+function pWa(n){const t=pWaText(DEC(n));if(!t){toast('Nothing open with '+DEC(n));return}waOpen(t)}
+
+/* ---- invoice ---- */
+function waInv(id){const i=S.invs.find(x=>x.id==id);if(!i)return;const T=tot(i),b=S.biz||{},ph=(i.phone||'').replace(/\D/g,''),late=!i.paid&&i.due<Date.now(),days=Math.round((i.due-Date.now())/DAY),
+ status=i.paid?'✅ Paid':late?`⚠️ Overdue by ${wplural(Math.max(1,-days),'day')}`:days<=0?'Due today':`Due in ${wplural(days,'day')}`;
+ const L=[`*INVOICE ${i.no}*`,b.name?`From: ${b.name}`:null,`Bill to: ${i.client}`,`Issued: ${wlong(i.issued)}`,`Due: ${wlong(i.due)}`,`Status: ${status}`,'','*Items*',
+  ...i.items.map((x,n)=>`${n+1}. ${x.d} · ${x.q} × ${fm(x.p,i.cur)} = ${fm(x.q*x.p,i.cur)}`),'',
+  i.tax?`Subtotal: ${fm(T.s,i.cur)}`:null,i.tax?`Tax (${i.tax}%): ${fm(T.t,i.cur)}`:null,`*${i.paid?'Total paid':'Total due'}: ${fm(T.g,i.cur)}*`,
+  i.notes?'':null,i.notes?`Note: ${i.notes}`:null,'',i.paid?'Thank you for your payment! 🙏':'Please reply here once paid. Thank you! 🙏','',`_Sent from Fin_`].filter(x=>x!==null);
+ window.open('https://wa.me/'+ph+'?text='+encodeURIComponent(L.join('\n')),'_blank','noopener')}
+
+/* ---- entry point on a friend's page ---- */
+const _op23=openPerson;
+openPerson=function(n){_op23(n);const sh=$('sheet'),a=sh.querySelector('.sxsplit')||sh.querySelector('.acts');
+ if(a&&!sh.querySelector('.wafull')&&pWaText(DEC(n)))a.insertAdjacentHTML('afterend',`<button class="pill wa wafull" onclick="pWa('${n}')">${sv(WAI,18)}Send balance on WhatsApp</button>`)};
 
 render();
 </script></body></html>
