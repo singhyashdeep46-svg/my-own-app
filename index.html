@@ -734,6 +734,15 @@ input.sxin{width:92px!important;padding:9px 12px!important;text-align:right;font
 .sxsm.wab{padding:9px 12px!important;display:grid;place-items:center}
 .wafull{width:calc(100% - 0px);margin:0 0 10px}
 </style>
+<style>
+/* ===== v24: group balances on Home ===== */
+.hbal{margin:14px 20px 0}
+.hbal button{border-radius:20px;padding:14px;text-align:left;color:#15121c;min-height:84px;transition:transform 160ms var(--out)}
+.hbal button:active{transform:scale(.97)}
+.hbal span{display:block;font-size:13px;opacity:.7}
+.hbal b{display:block;margin-top:4px;font-size:20px;font-weight:700;line-height:1.25;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.hbal small{display:block;font-size:12px;opacity:.65;margin-top:2px}
+</style>
 </head><body>
 <div class="app" id="app">
  <div class="top"><div id="avs" style="display:flex"></div><button class="plus" onclick="openArea()" aria-label="Add area"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="cur" id="curBtn" onclick="go('home')">Today</button><button class="gear" onclick="go('set')" aria-label="Settings"><span class="sdot off" id="sdot"></span><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></button></div>
@@ -1000,7 +1009,7 @@ const CURS=['USD','EUR','GBP','INR','NPR','AUD','CAD','AED','JPY','CNY','SGD'],M
 const fm=(v,c)=>{try{return new Intl.NumberFormat('en',{style:'currency',currency:c}).format(v)}catch(e){return c+' '+v.toFixed(2)}};
 // totals are kept per currency, never converted
 const sumBy=(arr,cf,vf)=>{const o={};arr.forEach(x=>{const c=cf(x);o[c]=(o[c]||0)+vf(x)});return o};
-const fmm=o=>{const k=Object.keys(o);return k.length?k.map(c=>fm(o[c],c)).join(' · '):fm(0,S.base||'USD')};
+const fmm=o=>{const k=Object.keys(o);return k.length?k.map(c=>fm(o[c],c)).join(' · '):fm(0,(typeof homeCurs=='function'&&homeCurs()[0])||S.base||'USD')};
 function mi(){S.accts=S.accts||[];S.txs=S.txs||[];S.invs=S.invs||[];S.biz=S.biz||{};S.base=S.base||'USD'}
 const acct=id=>S.accts.find(x=>x.id==id)||S.accts[0],tot=i=>{const s=i.items.reduce((a,x)=>a+x.q*x.p,0),t=s*(i.tax||0)/100;return{s,t,g:s+t}};
 function openAccM(){sheet(`<h3>Add account</h3><div class="f"><input id="ma_n" placeholder="Account name"><select id="ma_c">${CURS.map(c=>`<option>${c}</option>`).join('')}</select><input id="ma_b" type="number" inputmode="decimal" placeholder="Opening balance"></div><button class="save" onclick="saveAccM()">Create account</button>`)}
@@ -1432,14 +1441,14 @@ let HC=0,HIDE=false,LF='all',LDIR='lent';try{HIDE=localStorage.getItem('fin_hide
 const sv=(d,w)=>`<svg viewBox="0 0 24 24" width="${w||20}" height="${w||20}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 const ENC=encodeURIComponent,DEC=s=>s?decodeURIComponent(s):'',mk_=s=>HIDE?'••••':s,lns=()=>S.loans=S.loans||[];
 const av=(n,z)=>{const h=[...n].reduce((a,c)=>a+c.charCodeAt(0),0)%6;return`<span class="fa" style="background:${AVC[h]};${z?`width:${z}px;height:${z}px`:''}">${esc((n.trim()[0]||'?').toUpperCase())}</span>`};
-function people(){const m={};lns().forEach(l=>{const k=l.p.toLowerCase(),o=m[k]=m[k]||{n:l.p,t:0,open:0,net:{},due:0};o.t=Math.max(o.t,l.t);if(!l.paid){o.open++;o.net[l.cur]=(o.net[l.cur]||0)+(l.dir=='lent'?l.a:-l.a);if(l.due&&(!o.due||l.due<o.due))o.due=l.due}});
+function people(){const m={};allLoans().forEach(l=>{const k=l.p.toLowerCase(),o=m[k]=m[k]||{n:l.p,t:0,open:0,net:{},due:0};o.t=Math.max(o.t,l.t);if(!l.paid){o.open++;o.net[l.cur]=(o.net[l.cur]||0)+(l.dir=='lent'?l.a:-l.a);if(l.due&&(!o.due||l.due<o.due))o.due=l.due}});
  const a=Object.values(m);a.forEach(o=>{o.c=Object.keys(o.net).filter(k=>Math.abs(o.net[k])>.004);o.s=o.c.length?Math.sign(o.net[o.c[0]]):0});return a.sort((x,y)=>y.t-x.t)}
 const pnet=o=>o.c.length?o.c.map(k=>(o.net[k]>0?'+':'−')+fm(Math.abs(o.net[k]),k)).join(' · '):'Settled',plab=o=>o.s>0?'owes you':o.s<0?'you owe':'all square';
 const dshort=ts=>new Date(ts).toLocaleDateString('en',{month:'short',day:'numeric'}),dueTxt=ts=>ts<Date.now()?'Overdue since '+dshort(ts):'Due '+dshort(ts);
-function mhomeHTML(){mi();const cs=[...new Set(S.accts.map(a=>a.cur))];if(!cs.length)cs.push(S.base);const cur=cs[HC%cs.length],
+function mhomeHTML(){mi();const cs=homeCurs(),cur=cs[HC%cs.length],
  bal=S.accts.filter(a=>a.cur==cur).reduce((s,a)=>s+a.bal,0),
  wk=S.txs.filter(t=>Date.now()-t.t<7*DAY&&S.accts.some(a=>a.id==t.acc&&a.cur==cur)).reduce((s,t)=>s+(t.inc?t.a:-t.a),0),ow={},oe={};
- lns().forEach(l=>{if(l.paid)return;const o=l.dir=='lent'?ow:oe;o[l.cur]=(o[l.cur]||0)+l.a});
+ allLoans().forEach(l=>{if(l.paid)return;const o=l.dir=='lent'?ow:oe;o[l.cur]=(o[l.cur]||0)+l.a});
  const tk=`<span>${mk_(fmm(ow))} to collect</span><b>•</b><span>${mk_(fmm(oe))} to repay</span><b>•</b>`.repeat(4),ps=people().slice(0,10),a=S.accts[0],
  nm=S.name||(USER&&USER.email)||'F',pend=(S.mmsgs||[]).filter(x=>!x.done).length;
  return `<div class="mh"><button class="mav" onclick="go('set')" aria-label="Profile and settings">${esc(nm.trim()[0].toUpperCase())}</button>
@@ -1459,7 +1468,7 @@ function mhomeHTML(){mi();const cs=[...new Set(S.accts.map(a=>a.cur))];if(!cs.le
  <div class="msec"><span>Wallets</span><button onclick="go('macc')">All</button></div>`+
  (a?`<div class="ws" onclick="go('macc')" role="button" aria-label="Open wallets"><i class="wl l3"></i><i class="wl l2"></i><div class="wl l1"><b>${esc(a.name)}</b><span>${esc(a.type||'Account')} · ${a.cur} · ${S.accts.length} wallet${S.accts.length>1?'s':''}</span><div class="ma">${HIDE?'••••':fm(a.bal,a.cur)}</div><span class="vw">View wallet</span></div><i class="wf"></i></div>`:`<button class="add" onclick="openAccM()">+ Add account</button>`)}
 function togHide(){HIDE=!HIDE;try{localStorage.setItem('fin_hide',HIDE?'1':'0')}catch(e){}hap();render()}
-function loansHTML(){const ps=people(),ow={},oe={};lns().forEach(l=>{if(l.paid)return;const o=l.dir=='lent'?ow:oe;o[l.cur]=(o[l.cur]||0)+l.a});
+function loansHTML(){const ps=people(),ow={},oe={};allLoans().forEach(l=>{if(l.paid)return;const o=l.dir=='lent'?ow:oe;o[l.cur]=(o[l.cur]||0)+l.a});
  const L=ps.filter(o=>LF=='all'||(LF=='owes'&&o.s>0)||(LF=='iowe'&&o.s<0));
  return `<h2>People</h2><div class="sub">Money you lent and borrowed</div><div class="sm"><div style="background:var(--mint)"><span>Owed to you</span><b>${fmm(ow)}</b></div><div style="background:var(--peach)"><span>You owe</span><b>${fmm(oe)}</b></div></div>
  <div class="acts" style="margin:0 20px 14px"><button class="pill" onclick="openLoan('lent')">I lent</button><button class="pill g" onclick="openLoan('borrow')">I borrowed</button></div>
@@ -1482,12 +1491,12 @@ function settleLoan(id){const l=lns().find(x=>x.id==id);if(!l)return;setPaid(l,t
 function settleAll(n){const ls=lns().filter(l=>!l.paid&&l.p.toLowerCase()==DEC(n).toLowerCase());ls.forEach(l=>setPaid(l,true));render();closeSheet();toast('All settled · tap to undo',()=>{ls.forEach(l=>setPaid(l,false));render()})}
 function delLoan(id){const l=lns().find(x=>x.id==id);if(!l)return;const was=l.paid;if(!was)lAdj(l,true);S.loans=S.loans.filter(x=>x.id!=id);render();openPerson(ENC(l.p));toast('Deleted · tap to undo',()=>{if(!was)lAdj(l,false);S.loans.push(l);render()})}
 function openPerson(n){const nm=DEC(n),o=people().find(x=>x.n.toLowerCase()==nm.toLowerCase());if(!o){closeSheet();return}
- const ls=lns().filter(l=>l.p.toLowerCase()==nm.toLowerCase()).sort((a,b)=>b.t-a.t);
+ const ls=allLoans().filter(l=>l.p.toLowerCase()==nm.toLowerCase()).sort((a,b)=>b.t-a.t);
  sheet(`<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">${av(o.n,56)}<div><h3 style="margin:0">${esc(o.n)}</h3><div style="color:var(--mute);font-size:15px">${pnet(o)} · ${plab(o)}</div></div></div>
  <div class="acts"><button class="pill" onclick="openLoan('lent','${ENC(o.n)}')">I lent</button><button class="pill g" onclick="openLoan('borrow','${ENC(o.n)}')">I borrowed</button></div>
- ${o.open>1?`<button class="pill g" style="width:100%;margin-bottom:10px" onclick="settleAll('${ENC(o.n)}')">Settle everything</button>`:''}
- ${ls.map(l=>`<div class="arow"><span><b style="font-weight:600">${l.dir=='lent'?'You lent':'You borrowed'}</b>${l.note?' · '+esc(l.note):''}<br><small style="color:var(--mute)">${dshort(l.t)}${l.paid?' · Settled '+dshort(l.pt||l.t):l.due?' · '+dueTxt(l.due):''}</small></span>
- <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end"><b class="${l.dir=='lent'?'pl':''}">${l.dir=='lent'?'+':'−'}${fm(l.a,l.cur)}</b>${l.paid?'':`<button class="pill g" onclick="settleLoan(${l.id})">Settle</button>`}<button class="pill g" aria-label="Delete entry" onclick="delLoan(${l.id})">Delete</button></span></div>`).join('')}`)}
+ ${lns().filter(l=>!l.paid&&l.p.toLowerCase()==nm.toLowerCase()).length>1?`<button class="pill g" style="width:100%;margin-bottom:10px" onclick="settleAll('${ENC(o.n)}')">Settle everything</button>`:''}
+ ${ls.map(l=>`<div class="arow"><span><b style="font-weight:600">${l.vg?(l.dir=='lent'?'Owes you':'You owe'):l.dir=='lent'?'You lent':'You borrowed'}</b>${l.note?' · '+esc(l.note):''}<br><small style="color:var(--mute)">${dshort(l.t)}${l.paid?' · Settled '+dshort(l.pt||l.t):l.due?' · '+dueTxt(l.due):''}</small></span>
+ <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end"><b class="${l.dir=='lent'?'pl':''}">${l.dir=='lent'?'+':'−'}${fm(l.a,l.cur)}</b>${l.vg?`<button class="pill g" onclick="openGrp(${l.vg})">Open group</button>`:`${l.paid?'':`<button class="pill g" onclick="settleLoan(${l.id})">Settle</button>`}<button class="pill g" aria-label="Delete entry" onclick="delLoan(${l.id})">Delete</button>`}</span></div>`).join('')}`)}
 function openSettle(){const ps=people().filter(o=>o.open);if(!ps.length){toast('Nobody owes anything yet');return}
  sheet(`<h3>Settle up</h3>`+ps.map(o=>`<button class="arow" style="width:100%;text-align:left;align-items:center" onclick="openPerson('${ENC(o.n)}')"><span style="display:flex;align-items:center;gap:12px">${av(o.n,40)}${esc(o.n)}</span><b>${pnet(o)}<br><small style="font-weight:500;color:var(--mute)">${plab(o)}</small></b></button>`).join(''))}
 {const s=document.createElement('section');s.className='view';s.id='v-mloans';$('v-mbills').after(s)}
@@ -1530,7 +1539,7 @@ const _lh19=loansHTML;loansHTML=function(){return _lh19()+groupsHTML()};
 function openGroup(){mi();sheet(`<h3>New group</h3><div class="f"><input id="gn" placeholder="Group name (Trip, Flat, Dinner)"><select id="gc" aria-label="Currency">${CURS.map(c=>`<option ${c==S.base?'selected':''}>${c}</option>`).join('')}</select><input id="gm" placeholder="Friends, separated by commas"><button class="pill" onclick="saveGroup()">Create group</button></div>`)}
 function saveGroup(){const n=$('gn').value.trim(),ms=[...new Set($('gm').value.split(',').map(x=>x.trim()).filter(x=>x&&x.toLowerCase()!='you'))];
  if(!n){toast('Name the group');return}if(!ms.length){toast('Add at least one friend');return}
- const g={id:Date.now(),name:n,cur:$('gc').value,members:[ME,...ms],t:Date.now()};gps().push(g);closeSheet();render();openGrp(g.id)}
+ S.base=$('gc').value;const g={id:Date.now(),name:n,cur:$('gc').value,members:[ME,...ms],t:Date.now()};gps().push(g);closeSheet();render();openGrp(g.id)}
 function openGrp(id){const g=gps().find(x=>x.id==id);if(!g){closeSheet();return}const m=gbal(g),ex=gxs().filter(e=>e.g==id).sort((a,b)=>b.t-a.t);
  sheet(`<h3>${esc(g.name)}</h3><div style="color:var(--mute);margin:-6px 0 12px">${g.members.map(esc).join(', ')}</div>
  <div class="acts"><button class="pill" onclick="openGx(${id})">Add expense</button><button class="pill g" onclick="openGSettle(${id})">Settle up</button></div>
@@ -1629,7 +1638,7 @@ function openGroup(){mi();const kn=knownNames();
  sheet(`<h3>New group</h3><div class="f"><input id="gn" placeholder="Group name (Trip, Flat, Dinner)" maxlength="40"><select id="gc" aria-label="Currency">${CURS.map(c=>`<option ${c==S.base?'selected':''}>${c}</option>`).join('')}</select>${kn.length?`<div class="sl">Add from your friends</div>${chipsOf(kn,'gk')}`:''}<div class="sl">${kn.length?'Someone new?':'Friends'}</div><input id="gm" placeholder="Names, separated by commas"><button class="pill" onclick="saveGroup()">Create group</button></div>`)}
 function saveGroup(){const n=$('gn').value.trim(),ms=pickedNames('gk','gm');
  if(!n){toast('Name the group');return}if(!ms.length){toast('Add at least one friend');return}
- const g={id:Date.now(),name:n,cur:$('gc').value,members:[ME,...ms],t:Date.now()};gps().push(g);PT='groups';try{localStorage.setItem('fin_pt','groups')}catch(e){}render();openGrp(g.id)}
+ S.base=$('gc').value;const g={id:Date.now(),name:n,cur:$('gc').value,members:[ME,...ms],t:Date.now()};gps().push(g);PT='groups';try{localStorage.setItem('fin_pt','groups')}catch(e){}render();openGrp(g.id)}
 function openGAdd(id){const g=gps().find(x=>x.id==id);if(!g)return;const kn=knownNames(g.members);
  sheet(`<h3>Add friends</h3><div class="gsub">${esc(g.name)}</div><div class="f">${kn.length?`<div class="sl">From your friends</div>${chipsOf(kn,'gk')}`:''}<div class="sl">${kn.length?'Someone new?':'Names'}</div><input id="gm" placeholder="Names, separated by commas"><button class="pill" onclick="saveGAdd(${id})">Add to group</button><button class="pill g" onclick="openGrp(${id})">Back</button></div>`)}
 function saveGAdd(id){const g=gps().find(x=>x.id==id);if(!g)return;const ms=pickedNames('gk','gm').filter(n=>!g.members.some(m=>m.toLowerCase()==n.toLowerCase()));
@@ -1727,7 +1736,7 @@ function recAll(id){const g=gps().find(x=>x.id==id);if(!g)return;const L=gsimp(g
 GRAD.splice(0,GRAD.length,'#17171c','#2f4dff','#7a3cff','#dc3f1c','#0e8a6a','#c2185b');
 function dimDec(r){(r||document).querySelectorAll('.wtot,.wc .wb').forEach(el=>{if(el.dataset.d)return;el.dataset.d=1;const m=el.textContent.match(/^(.*?)(\.\d{1,2})$/);if(m)el.innerHTML=esc(m[1])+'<span class="dc">'+m[2]+'</span>'});
  (r||document).querySelectorAll('.wc').forEach(w=>{const s=w.querySelector('.wn span'),t=s?s.textContent.split(' · ')[0]:'';w.classList.toggle('nc',/cash|wallet/i.test(t))})}
-function accHTML(){mi();const A=S.accts,cs=[...new Set(A.map(a=>a.cur))];if(!cs.length)cs.push(S.base);const cur=cs[HC%cs.length],tot=A.filter(a=>a.cur==cur).reduce((s,a)=>s+a.bal,0),
+function accHTML(){mi();const A=S.accts,cs=homeCurs(),cur=cs[HC%cs.length],tot=A.filter(a=>a.cur==cur).reduce((s,a)=>s+a.bal,0),
  dec=['#f1efff','#4f63ff','#ff8f66'],fan=[0,1,2].map(i=>A[i]?GRAD[i%GRAD.length]:dec[i]);
  return `<h2>Accounts</h2><div class="sub">${A.length?A.length+' account'+(A.length>1?'s':'')+' · tap a card to add money':'Add your first account'}</div>
  <div class="wh"><div class="wbody"><em>Wallet</em>${fan.map((c,i)=>`<i class="wk wk${i+1}" style="--g:${c}"></i>`).join('')}<div class="wfront"><small>Total Balance</small><b class="wtot">${HIDE?'••••••':fm(tot,cur)}</b></div></div></div>
@@ -1782,7 +1791,7 @@ function pru(){if(!$('pr_t'))return;const r=prCalc(),f=r.fr;
 function savePair(){const r=prCalc();if(!r.ok){toast(r.msg);return}
  const ex=people().find(x=>x.n.toLowerCase()==PRS.f.toLowerCase()),nm=ex?ex.n:PRS.f,d=($('pr_d').value||'').trim()||'Split bill',
  how=PRS.mode=='eq'?'split equally':PRS.mode=='full'?'full amount':'custom share';
- lns().push({id:Date.now()+Math.floor(Math.random()*999),p:nm,dir:r.me?'lent':'borrow',a:r.owed,cur:r.c,acc:0,note:`${d} · ${r.me?'you':nm} paid ${fm(r.T,r.c)}, ${how}`,t:Date.now(),due:null,paid:false});
+ S.base=r.c;lns().push({id:Date.now()+Math.floor(Math.random()*999),p:nm,dir:r.me?'lent':'borrow',a:r.owed,cur:r.c,acc:0,note:`${d} · ${r.me?'you':nm} paid ${fm(r.T,r.c)}, ${how}`,t:Date.now(),due:null,paid:false});
  PT='friends';try{localStorage.setItem('fin_pt','friends')}catch(e){}
  render();openPerson(ENC(nm));toast(r.me?`${nm} owes you ${fm(r.owed,r.c)}`:`You owe ${nm} ${fm(r.owed,r.c)}`)}
 /* entry points: People tab and a friend's page */
@@ -1837,7 +1846,7 @@ function gRem(id,f,t,a){const g=gps().find(x=>x.id==id);if(!g)return;waOpen(gRem
 
 /* ---- running balance with one friend ---- */
 function pWaText(nm){
- const all=lns().filter(l=>l.p.toLowerCase()==nm.toLowerCase()),ls=all.filter(l=>!l.paid).sort((a,b)=>a.t-b.t),done=all.length-ls.length,o=people().find(x=>x.n.toLowerCase()==nm.toLowerCase());
+ const all=allLoans().filter(l=>l.p.toLowerCase()==nm.toLowerCase()),ls=all.filter(l=>!l.paid).sort((a,b)=>a.t-b.t),done=all.length-ls.length,o=people().find(x=>x.n.toLowerCase()==nm.toLowerCase());
  if(!o||!ls.length)return '';
  const out=[`Hi ${o.n} 👋`,`Here is where we stand, from Fin (${wlong(Date.now())}):`,'','*Open items*'];
  ls.forEach((l,i)=>{const mine=l.dir=='lent';
@@ -1862,6 +1871,22 @@ function waInv(id){const i=S.invs.find(x=>x.id==id);if(!i)return;const T=tot(i),
 const _op23=openPerson;
 openPerson=function(n){_op23(n);const sh=$('sheet'),a=sh.querySelector('.sxsplit')||sh.querySelector('.acts');
  if(a&&!sh.querySelector('.wafull')&&pWaText(DEC(n)))a.insertAdjacentHTML('afterend',`<button class="pill wa wafull" onclick="pWa('${n}')">${sv(WAI,18)}Send balance on WhatsApp</button>`)};
+
+/* ===== v24: group balances count everywhere money owed is shown (Home, People, Settle, WhatsApp) ===== */
+/* what you owe / are owed inside groups, as virtual loan rows. Never stored, always derived from the group expenses. */
+function gLoans(){const o=[];gps().forEach(g=>{const t=gxs().filter(e=>e.g==g.id).reduce((m,e)=>Math.max(m,e.t||0),g.t||0);
+ gsimp(gbal(g)).forEach(x=>{if(x.from!=ME&&x.to!=ME)return;const other=x.from==ME?x.to:x.from;
+  o.push({id:'g'+g.id+':'+other,p:other,dir:x.from==ME?'borrow':'lent',a:x.a,cur:g.cur,acc:0,note:g.name+' · group',t,due:null,paid:false,vg:g.id})})});return o}
+const allLoans=()=>lns().concat(gLoans());
+/* currencies for Home and Wallets: base first, then anything you have an account, loan or group balance in */
+function homeCurs(){mi();const s=[],add=c=>{if(c&&!s.includes(c))s.push(c)};S.accts.forEach(a=>add(a.cur));allLoans().forEach(l=>{if(!l.paid)add(l.cur)});gps().forEach(g=>add(g.cur));
+ if(!s.length)return[S.base];const i=s.indexOf(S.base);if(i>0){s.splice(i,1);s.unshift(S.base)}return s}
+function homeBalHTML(){const ow={},oe={},ns={};allLoans().forEach(l=>{if(l.paid)return;(l.dir=='lent'?ow:oe)[l.cur]=((l.dir=='lent'?ow:oe)[l.cur]||0)+l.a;ns[l.p.toLowerCase()]=1});
+ if(!Object.keys(ow).length&&!Object.keys(oe).length)return '';
+ const cnt=o=>{const n=allLoans().filter(l=>!l.paid&&(l.dir=='lent')==(o===ow)).map(l=>l.p.toLowerCase());return new Set(n).size};
+ return `<div class="sm hbal"><button style="background:var(--peach)" onclick="LF='iowe';PT='friends';go('mloans')" aria-label="You owe ${esc(fmm(oe))}"><span>You owe</span><b>${mk_(fmm(oe))}</b><small>${Object.keys(oe).length?wplural(cnt(oe),'person').replace('persons','people'):'Nobody'}</small></button><button style="background:var(--mint)" onclick="LF='owes';PT='friends';go('mloans')" aria-label="Owed to you ${esc(fmm(ow))}"><span>Owed to you</span><b>${mk_(fmm(ow))}</b><small>${Object.keys(ow).length?wplural(cnt(ow),'person').replace('persons','people'):'Nobody'}</small></button></div>`}
+const _mh24=mhomeHTML;
+mhomeHTML=function(){return _mh24().replace('<button class="sxcta"',homeBalHTML()+'<button class="sxcta"')};
 
 render();
 </script></body></html>
