@@ -946,7 +946,7 @@ body[data-mode] nav .mid::after{display:none}
 @media(prefers-reduced-motion:reduce){.x7wkc,.x7wlp{animation:none!important}body[data-mode] nav .lb{transition:opacity 150ms ease!important}}
 </style>
 <style>/* v28 */
-.sm.hbal{margin:var(--s4) var(--s5) 0}.mact{margin-bottom:0}.sxcta{margin:var(--s3) var(--s5) 0}.tick{margin:var(--s5) -8px var(--s5)}.mup{padding-bottom:var(--s1)}.msec{padding-top:var(--s6)}</style></head><body>
+.sm.hbal{margin:var(--s4) var(--s5) 0}.mact{margin-bottom:0}.sxcta{margin:var(--s3) var(--s5) 0}.tick{margin:var(--s5) -8px var(--s5)}.mup{padding-bottom:var(--s1)}.msec{padding-top:var(--s6)}</style><style>.gto{display:block;font-size:12px;font-weight:500;color:var(--mute);margin-top:2px;text-align:right;margin-left:auto;line-height:1.3}.arow>b:has(.gto){max-width:64%;min-width:0}.hbal .hbn{display:block;font-size:12px;opacity:.8;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hbal small{opacity:1!important}.hbal small .hbn:first-child{margin-top:2px}.arow>b{text-align:right}</style><style>#lock .mark{display:block;flex:none;width:72px;height:72px;border-radius:22px;animation:none;margin:0}#lock .mark svg{display:block;width:100%;height:100%}.lkp button:focus:not(:focus-visible){outline:none}</style></head><body>
 <div class="app" id="app">
  <div class="top"><div id="avs" style="display:flex"></div><button class="plus" onclick="openArea()" aria-label="Add area"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="cur" id="curBtn" onclick="go('home')">Today</button><button class="gear" onclick="go('set')" aria-label="Settings"><span class="sdot off" id="sdot"></span><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></button></div>
  <main id="main">
@@ -1631,7 +1631,7 @@ renderSet=function(){_renderSet11();const v=$('v-set'),pc=v.querySelector('.pcar
  if(nc){const inp=nc.querySelector('input');if(inp){inp.style.marginTop='14px';inp.placeholder='Your name';card.appendChild(inp)}nc.remove()}
  const tp=[...v.querySelectorAll('.pill')].find(b=>b.textContent.trim()=='Take photo');if(tp&&!matchMedia('(pointer:coarse)').matches)tp.remove();
  const csv=v.querySelector('.csv');if(csv){csv.textContent='Export CSV';csv.parentNode.classList.add('wrap')}
- v.querySelectorAll('.note2').forEach(p=>{if(/^App v\d+/.test(p.textContent))p.textContent=p.textContent.replace(/^App v\d+\./,'App v15.')})};
+ v.querySelectorAll('.note2').forEach(p=>{if(/^App v\d+/.test(p.textContent))p.textContent=p.textContent.replace(/^App v\d+\./,'App v17.')})};
 const _go11=go;go=function(t){_go11(t);const f=document.querySelector('.fab');if(f)f.style.display=S.tab=='set'?'none':''};
 /* ===== v4: skeleton loading ===== */
 let LOADING=false;
@@ -1854,7 +1854,7 @@ function openGrp(id){const g=gps().find(x=>x.id==id);if(!g){closeSheet();return}
  <div class="sm gst"><div style="background:var(--mint)"><span>Total spent</span><b>${fm(spent,g.cur)}</b></div><div style="background:${me<0?'var(--peach)':'var(--peri)'}"><span>${me<0?'You owe':me>0?'You’re owed':'You’re'}</span><b>${me==0?'All square':fm(Math.abs(me),g.cur)}</b></div></div>
  <div class="acts"><button class="pill" onclick="openGx(${id})">Add expense</button><button class="pill g" onclick="openGSettle(${id})">Settle up</button></div>
  <div class="sl">Who pays whom</div>${L.length?L.map(x=>`<div class="arow"><span class="sxgd">${av(x.from,32)}<span><b style="font-weight:600">${esc(x.from)}</b> pays <b style="font-weight:600">${esc(x.to)}</b></span></span><span class="gar"><b>${fm(x.a,g.cur)}</b><button class="gxd wab" aria-label="Remind ${esc(x.from)} on WhatsApp" onclick="gRem(${id},'${ENC(x.from)}','${ENC(x.to)}',${x.a})">${sv(WAI,18)}</button></span></div>`).join(''):`<div class="gok">${sv(CHECK,18)}Everyone is settled up</div>`}
- <div class="sl">Balances</div>${g.members.map(k=>{const b=m[k]||0;return `<div class="arow"><span class="sxgd">${av(k,32)}${esc(k)}</span><b class="${b>0?'pl':b<0?'ng':''}">${b==0?'Settled':(b>0?'gets back ':'owes ')+fm(Math.abs(b),g.cur)}</b></div>`}).join('')}
+ <div class="sl">Balances</div>${g.members.map(k=>{const b=m[k]||0;return `<div class="arow"><span class="sxgd">${av(k,32)}${esc(k)}</span><b class="${b>0?'pl':b<0?'ng':''}">${b==0?'Settled':(b>0?'gets back ':'owes ')+fm(Math.abs(b),g.cur)}${gbr(g,m,k,b)}</b></div>`}).join('')}
  <div class="sl">Activity</div>${ex.length?ex.map(e=>{
   if(e.settle)return `<div class="arow"><span class="gal">${sv(CHECK,18)}<span>${esc(e.from)} paid ${esc(e.to)}<br><small>${dshort(e.t)}</small></span></span><span class="gar"><b>${fm(e.a,g.cur)}</b><button class="gxd" aria-label="Delete payment" onclick="delGx(${e.id})">${sv(TRASH,16)}</button></span></div>`;
   const my=(e.sp&&e.sp[ME])||0,net=R2((e.by==ME?e.a:0)-my);
@@ -2028,7 +2028,7 @@ function gWaText(g){
  if(bills.length){o.push('','*Expenses*');if(off>0)o.push(`_(latest ${N} of ${bills.length})_`);
   shown.forEach((e,i)=>{o.push(`${off+i+1}. ${e.d} — *${fm(e.a,c)}*${e.tip?` (incl. ${e.tip}% tip/tax)`:''}`,`    paid by ${wnm(e.by)} · ${wdt(e.t)}`);const h=how(e);if(h)o.push('    '+h)})}
  o.push('','*Balances*');
- g.members.forEach(k=>{const b=m[k]||0;o.push(b>.004?`✅ ${wnm(k)} gets back ${fm(b,c)}`:b<-.004?`🔻 ${wnm(k)} owes ${fm(-b,c)}`:`➖ ${wnm(k)} is settled up`)});
+ g.members.forEach(k=>{const b=m[k]||0;o.push(b>.004?`✅ ${wnm(k)} gets back ${fm(b,c)}`+gbw(g,m,k,1):b<-.004?`🔻 ${wnm(k)} owes ${fm(-b,c)}`+gbw(g,m,k,0):`➖ ${wnm(k)} is settled up`)});
  o.push('');
  if(L.length){o.push('*To settle up*');L.forEach(x=>o.push(`• ${wnm(x.from)} → ${wnm(x.to)}: *${fm(x.a,c)}*`))}else o.push('🎉 Everyone is settled up!');
  if(pays.length){o.push('','*Payments already made*');pays.slice(-8).forEach(p=>o.push(`• ${wnm(p.from)} paid ${wnm(p.to)} ${fm(p.a,c)} · ${wdt(p.t)}`))}
@@ -2090,7 +2090,7 @@ function homeCurs(){mi();const s=[],add=c=>{if(c&&!s.includes(c))s.push(c)};S.ac
 function homeBalHTML(){const ow={},oe={},ns={};allLoans().forEach(l=>{if(l.paid)return;(l.dir=='lent'?ow:oe)[l.cur]=((l.dir=='lent'?ow:oe)[l.cur]||0)+l.a;ns[l.p.toLowerCase()]=1});
  if(!Object.keys(ow).length&&!Object.keys(oe).length)return '';
  const cnt=o=>{const n=allLoans().filter(l=>!l.paid&&(l.dir=='lent')==(o===ow)).map(l=>l.p.toLowerCase());return new Set(n).size};
- return `<div class="sm hbal"><button style="background:var(--peach)" onclick="LF='iowe';PT='friends';go('mloans')" aria-label="You owe ${esc(fmm(oe))}"><span>You owe</span><b>${mk_(fmm(oe))}</b><small>${Object.keys(oe).length?wplural(cnt(oe),'person').replace('persons','people'):'Nobody'}</small></button><button style="background:var(--mint)" onclick="LF='owes';PT='friends';go('mloans')" aria-label="Owed to you ${esc(fmm(ow))}"><span>Owed to you</span><b>${mk_(fmm(ow))}</b><small>${Object.keys(ow).length?wplural(cnt(ow),'person').replace('persons','people'):'Nobody'}</small></button></div>`}
+ return `<div class="sm hbal"><button style="background:var(--peach)" onclick="LF='iowe';PT='friends';go('mloans')" aria-label="You owe ${esc(fmm(oe))}"><span>You owe</span><b>${mk_(fmm(oe))}</b><small>${hbn(oe,0)}</small></button><button style="background:var(--mint)" onclick="LF='owes';PT='friends';go('mloans')" aria-label="Owed to you ${esc(fmm(ow))}"><span>Owed to you</span><b>${mk_(fmm(ow))}</b><small>${hbn(ow,1)}</small></button></div>`}
 const _mh24=mhomeHTML;
 mhomeHTML=function(){return _mh24().replace('<button class="sxcta"',homeBalHTML()+'<button class="sxcta"')};
 
@@ -2391,7 +2391,7 @@ let LK={buf:'',n:4,on:false,busy:false,fails:0,iv:0},HID=0;
  <div class="lkp" id="lk_p">${[1,2,3,4,5,6,7,8,9].map(n=>`<button type="button" onclick="lkKey('${n}')" aria-label="${n}">${n}</button>`).join('')}<span></span><button type="button" onclick="lkKey('0')" aria-label="0">0</button><button type="button" onclick="lkBack()" aria-label="Delete last digit">${sv('<path d="M21 5H9l-6 7 6 7h12z"/><path d="M13 9.5l5 5M18 9.5l-5 5"/>',24)}</button></div><button class="lnk" onclick="lkForgot()">Forgot PIN? Sign out</button>`;document.body.appendChild(d)})();
 function lkDraw(){const d=$('lk_d');if(!d)return;d.innerHTML=Array.from({length:LK.n},(_,k)=>`<i class="${k<LK.buf.length?'on':''}"></i>`).join('');d.setAttribute('aria-label',LK.buf.length+' of '+LK.n+' digits entered')}
 function lkMsg(m,bad){const e=$('lk_m');if(e){e.textContent=m||'Unlock Fin';e.classList.toggle('bad',!!bad)}}
-function lockNow(){const i=pinInfo();if(!i||!USER||LK.on)return;closePop&&closePop();LK.buf='';LK.n=i.n||4;LK.on=true;$('lock').hidden=false;document.body.classList.add('locked');['app','invv'].forEach(k=>{const e=$(k);if(e)e.inert=true});lkDraw();lkMsg('');lkWait();setTimeout(()=>{const b=$('lk_p').querySelector('button');b&&b.focus()},60)}
+function lockNow(){const i=pinInfo();if(!i||!USER||LK.on)return;closePop&&closePop();LK.buf='';LK.n=i.n||4;LK.on=true;$('lock').hidden=false;document.body.classList.add('locked');['app','invv'].forEach(k=>{const e=$(k);if(e)e.inert=true});lkDraw();lkMsg('');lkWait()}
 function unlockUI(){LK.on=false;LK.buf='';LK.fails=0;clearInterval(LK.iv);LK.busy=false;$('lock').hidden=true;document.body.classList.remove('locked');['app','invv'].forEach(k=>{const e=$(k);if(e)e.inert=false});$('lock').classList.remove('busy');try{localStorage.removeItem('fin_lf')}catch(e){}}
 function lkWait(){let u=0;try{u=+localStorage.getItem('fin_lf')||0}catch(e){}clearInterval(LK.iv);if(u>Date.now()){LK.busy=true;$('lock').classList.add('busy');const t=()=>{const s=Math.ceil((u-Date.now())/1000);if(s<=0){clearInterval(LK.iv);LK.busy=false;LK.fails=0;$('lock').classList.remove('busy');lkMsg('');return}lkMsg('Too many tries. Wait '+s+'s',1)};t();LK.iv=setInterval(t,500)}}
 function lkKey(d){if(!LK.on||LK.busy||LK.buf.length>=LK.n)return;LK.buf+=d;hap();lkDraw();if(LK.buf.length==LK.n)lkCheck()}
@@ -2478,4 +2478,10 @@ function renderNav(){const m=S.mode||'tasks',nv=$('nav'),n=m=='money'?(S.mmsgs||
 navMode='';
 
 render();
+
+function gbl(g,m,k,b){return gsimp(m).filter(x=>b>0?x.to==k:x.from==k).map(x=>[b>0?x.from:x.to,x.a])}
+function gbr(g,m,k,b){if(!b)return'';const l=gbl(g,m,k,b);if(!l.length)return'';return `<small class="gto">${b>0?'from':'to'} ${l.map(([n,a])=>esc(n)+' '+fm(a,g.cur)).join(' · ')}</small>`}
+function gbw(g,m,k,b){const l=gbl(g,m,k,b?1:-1);return l.length?` (${b?'from':'to'} ${l.map(([n,a])=>wnm(n)+' '+fm(a,g.cur)).join(', ')})`:''}
+function hbn(o,lent){const ks=Object.keys(o);if(!ks.length)return'Nobody';const m={};allLoans().forEach(l=>{if(l.paid||(l.dir=='lent')!=!!lent)return;const key=l.p.toLowerCase()+'|'+l.cur;(m[key]=m[key]||{n:l.p,c:l.cur,a:0}).a+=l.a});
+ const r=Object.values(m).sort((a,b)=>b.a-a.a);return r.slice(0,2).map(x=>`<span class="hbn">${esc(x.n)} ${fm(R2(x.a),x.c)}</span>`).join('')+(r.length>2?`<span class="hbn">+${r.length-2} more</span>`:'')}
 </script></body></html>
