@@ -868,6 +868,83 @@ body.locked{overflow:hidden}
 #lock.busy .lkp{opacity:.4;pointer-events:none}
 @media(prefers-reduced-motion:reduce){.ring .rp,.gl,.gh2,.mb i,.cr .cbar i,#lock,.lkd.shake{animation:none!important}}
 </style>
+<style>
+/* ===== v27 ===== */
+.f[hidden]{display:none!important}
+/* spacing rhythm */
+h2{margin:var(--s2) var(--s5) var(--s1)}.sub{padding:0 var(--s5) var(--s4)}
+.msec{padding:var(--s6) var(--s5) var(--s3)}
+.set{margin:0 var(--s5) var(--s4)}
+.acts{gap:var(--s3);margin-bottom:var(--s4)}
+.sheet h3{margin:var(--s2) 0 var(--s1)}.gsub{margin:0 0 var(--s4)}
+.sheet .f>.pill+.pill,.sheet .f>.save+.pill{margin-top:0}
+.sheet .seg{margin:0 0 var(--s4)}
+.wcur{margin:0 var(--s5) var(--s2);padding:2px 0}
+.x7wmore{display:block;width:calc(100% - 2*var(--s5));margin:var(--s4) var(--s5) 0}
+main{padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))!important}
+/* group: who pays whom */
+.x7wp{display:grid;gap:var(--s3);padding:var(--s3) 0 var(--s4);border-bottom:1px solid var(--line)}
+.x7wph{display:flex;align-items:center;gap:var(--s3)}
+.x7wpt{flex:1;min-width:0;font-size:15px;line-height:1.3}.x7wpt b{font-weight:600}
+.x7wpa{font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.x7wpb{display:flex;gap:var(--s2);align-items:stretch;padding-left:50px}
+.x7wpb .pill{flex:1;min-height:44px;padding:0 var(--s4);font-size:15px}
+.x7wpb .wab{flex:none;width:44px;height:auto;min-height:44px}
+/* wallet page */
+.x7whd{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);padding:var(--s2) var(--s5) var(--s5)}
+.x7whd h2{margin:0;font-size:32px;font-weight:700;letter-spacing:-.025em}.x7whd .sub{padding:2px 0 0;font-size:14px}
+.x7wadd{flex:none;width:44px;height:44px;border-radius:50%;background:var(--line);color:var(--ink);display:grid;place-items:center;transition:transform 160ms var(--out),background-color 160ms ease}
+.x7wadd:active{transform:scale(.94)}.x7wadd svg{stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
+.x7wlt{position:relative;margin:0 var(--s5) var(--s5);height:248px}
+.x7wlc{position:absolute;inset:0}
+.x7wkc{position:absolute;height:150px;border-radius:20px;background:var(--g);color:#fff;padding:7px 16px;display:flex;justify-content:space-between;align-items:flex-start;font-size:12px;font-weight:600;font-style:normal;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 2px 6px rgba(0,0,0,.18);animation:wrise 560ms var(--out) backwards;animation-delay:var(--d)}
+.x7wkc em{font-style:normal;opacity:.8;letter-spacing:.06em}
+.x7wkc.c1{left:22px;right:22px;top:0}.x7wkc.c2{left:11px;right:11px;top:24px}.x7wkc.c3{left:0;right:0;top:50px;padding-top:9px;font-size:13px}
+.x7wkc.c1::after{content:"";position:absolute;left:0;right:0;top:34px;height:14px;background:rgba(0,0,0,.32)}
+@keyframes wrise{from{opacity:0;transform:translateY(26px)}}
+.x7wlp{position:absolute;left:0;right:0;bottom:0;height:156px;filter:drop-shadow(0 14px 22px rgba(45,22,8,.3));animation:wrise 480ms var(--out) 120ms backwards}
+.x7wlp svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.x7wlf{position:absolute;left:24px;right:84px;bottom:26px;color:#fff}
+.x7wlf small{display:block;font-size:13px;opacity:.72;margin-bottom:var(--s1)}
+.x7wlf b{display:block;font-size:34px;line-height:1.1;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.x7wlf .dc{opacity:.55}
+.x7eye{position:absolute;right:20px;bottom:22px;width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;display:grid;place-items:center;transition:transform 160ms var(--out),background-color 160ms ease}
+.x7eye:active{transform:scale(.94)}.x7eye svg{stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.x7wl,.x7txg{margin:0 var(--s5);border:1px solid var(--line);border-radius:22px;background:var(--surf);overflow:hidden}
+.x7wr,.x7tr{display:flex;align-items:center;gap:var(--s3);width:100%;min-height:64px;padding:var(--s3) var(--s4);text-align:left;transition:background-color 160ms ease}
+.x7wr+.x7wr,.x7tr+.x7tr{border-top:1px solid var(--line)}
+.x7wr:active,.x7tr:not(.ro):active{background:var(--line)}
+.x7tr.ro{cursor:default}
+.x7wi,.x7ti{flex:none;width:40px;height:40px;display:grid;place-items:center}
+.x7wi{border-radius:14px;background:var(--g);color:#fff}.x7ti{border-radius:50%}
+.x7wi .i,.x7ti .i{width:20px;height:20px}
+.x7wt,.x7tt{flex:1;min-width:0}
+.x7wt b,.x7tt b{display:block;font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.x7wt small,.x7tt small,.x7ta small{display:block;margin-top:2px;font-size:12px;color:var(--mute);font-weight:500}
+.x7wv{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.x7ta{text-align:right;flex:none;max-width:44%}.x7ta b{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}.x7ta small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.x7ta .out{color:#c4251f}.x7ta .in{color:#127a3e}
+.x7chv{flex:none;stroke:var(--mute);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.msec+.x7tml{margin-top:0}.x7tml{margin:var(--s5) var(--s5) var(--s2);font-size:13px;font-weight:600;color:var(--mute)}
+/* floating bottom bar */
+@media(max-width:1023px){
+body[data-mode] nav{left:12px!important;right:12px!important;width:auto!important;transform:none!important;bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;padding:8px!important;gap:2px!important;border-radius:999px!important;background:#0b0b0d!important;border:0!important;box-shadow:0 12px 32px rgba(0,0,0,.3)!important;display:flex!important;flex-direction:row!important;justify-content:space-between!important;align-items:center!important}
+body[data-mode] nav .ind{display:none!important}
+body[data-mode] nav button,body[data-mode] nav button.mid{flex:none!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:0!important;width:auto!important;min-width:clamp(38px,11.2vw,48px)!important;height:44px!important;margin:0!important;padding:0 11px!important;border-radius:999px!important;background:transparent!important;color:#a7a5b0!important;font-size:14px!important;font-weight:600!important;box-shadow:none!important;transform:none!important;position:relative;transition:background-color 220ms var(--out),color 200ms ease,transform 140ms var(--out)!important}
+body[data-mode] nav button .ic{width:22px!important;height:22px!important;min-width:22px;display:grid!important;place-items:center;background:none!important;border-radius:0!important;transform:none!important;box-shadow:none!important}
+body[data-mode] nav button svg{width:22px!important;height:22px!important;fill:none!important;stroke:currentColor;stroke-width:1.9;animation:none!important}
+body[data-mode] nav .lb{display:block;max-width:0;opacity:0;overflow:hidden;white-space:nowrap;margin-left:0;transition:max-width 280ms var(--out),opacity 180ms ease,margin-left 280ms var(--out)}
+body[data-mode] nav button.on .lb{max-width:88px;opacity:1;margin-left:8px}
+body[data-mode] nav button.on,body[data-mode] nav button.mid.on{background:#2d2d32!important;color:#fff!important;transform:none!important}
+body[data-mode] nav button:active{transform:scale(.95)!important}
+body[data-mode] nav .badge{position:absolute!important;top:3px!important;right:3px!important;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:#ff3d00;color:#fff;font-size:10px!important;font-weight:700;line-height:16px;display:block}
+body[data-mode] nav .badge[hidden]{display:none}
+body[data-mode] nav .mid::after{display:none}
+}
+@media(max-width:1023px) and (min-width:500px){body[data-mode] nav{left:50%!important;right:auto!important;width:min(480px,calc(100% - 24px))!important;transform:translateX(-50%)!important}}
+@media(hover:hover) and (pointer:fine){body[data-mode] nav button:hover:not(.on){color:#fff!important}}
+@media(prefers-reduced-motion:reduce){.x7wkc,.x7wlp{animation:none!important}body[data-mode] nav .lb{transition:opacity 150ms ease!important}}
+</style>
 </head><body>
 <div class="app" id="app">
  <div class="top"><div id="avs" style="display:flex"></div><button class="plus" onclick="openArea()" aria-label="Add area"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="cur" id="curBtn" onclick="go('home')">Today</button><button class="gear" onclick="go('set')" aria-label="Settings"><span class="sdot off" id="sdot"></span><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></button></div>
@@ -1553,7 +1630,7 @@ renderSet=function(){_renderSet11();const v=$('v-set'),pc=v.querySelector('.pcar
  if(nc){const inp=nc.querySelector('input');if(inp){inp.style.marginTop='14px';inp.placeholder='Your name';card.appendChild(inp)}nc.remove()}
  const tp=[...v.querySelectorAll('.pill')].find(b=>b.textContent.trim()=='Take photo');if(tp&&!matchMedia('(pointer:coarse)').matches)tp.remove();
  const csv=v.querySelector('.csv');if(csv){csv.textContent='Export CSV';csv.parentNode.classList.add('wrap')}
- v.querySelectorAll('.note2').forEach(p=>{if(/^App v\d+/.test(p.textContent))p.textContent=p.textContent.replace(/^App v\d+\./,'App v13.')})};
+ v.querySelectorAll('.note2').forEach(p=>{if(/^App v\d+/.test(p.textContent))p.textContent=p.textContent.replace(/^App v\d+\./,'App v14.')})};
 const _go11=go;go=function(t){_go11(t);const f=document.querySelector('.fab');if(f)f.style.display=S.tab=='set'?'none':''};
 /* ===== v4: skeleton loading ===== */
 let LOADING=false;
@@ -2104,7 +2181,7 @@ function doPay(){if(!PAY||!$('py_a'))return;const v=R2(parseFloat($('py_a').valu
  else{const g=gps().find(x=>x.id==PAY.id);if(!g)return;if(v>PAY.max+.004){toast('That is more than '+fm(PAY.max,g.cur));return}
   const e={id:uid(),g:g.id,settle:true,from:PAY.f,to:PAY.to,a:v,by:PAY.f,t:Date.now()};
   if(ac&&ac.cur==g.cur){if(PAY.mp)e.tx=addTx(ac,'Paid '+PAY.to+' · '+g.name,'Other',v,{st:1}).id;else if(PAY.mr)e.tx=addIn(ac,'From '+PAY.f+' · '+g.name,v,{st:1}).id}
-  gxs().push(e);render();openGSettle(g.id);toast((v>=PAY.max-.004?'Settled':'Recorded '+fm(v,g.cur)+' · '+fm(R2(PAY.max-v),g.cur)+' left')+' · tap to undo',()=>{restF(s);render()})}}
+  gxs().push(e);render();(PAY.from=='grp'?openGrp:openGSettle)(g.id);toast((v>=PAY.max-.004?'Settled':'Recorded '+fm(v,g.cur)+' · '+fm(R2(PAY.max-v),g.cur)+' left')+' · tap to undo',()=>{restF(s);render()})}}
 
 /* -- group expenses: when I pay, the total leaves the chosen account -- */
 function gxAcc(){const k=$('gx_k');if(!k)return;const g=gps().find(x=>x.id==GX.g);if(!g)return;const show=GX.by==ME&&S.accts.some(a=>a.cur==g.cur);
@@ -2341,6 +2418,63 @@ const _rs26=renderSet;renderSet=function(){_rs26();const v=$('v-set');if(!v||!US
  v.lastElementChild.insertAdjacentHTML('beforebegin',`<div class="set"><div class="sl si">${ico('Lock')}Security</div>${on?`<div class="row2"><button class="pill g" onclick="openPinSet()">Change PIN</button><button class="pill g" onclick="lockNow()">Lock now</button></div><div class="sl" style="margin-top:var(--s4)">Auto-lock</div><select aria-label="Auto-lock" onchange="setPTmo(this.value)">${PTO.map(([k,l])=>`<option value="${k}" ${k==ptmo()?'selected':''}>${l}</option>`).join('')}</select><button class="pill g" style="width:100%;margin-top:var(--s3);color:#c4251f" onclick="openPinOff()">Turn off PIN</button>`:`<p class="note2" style="margin:0 0 var(--s3)">Protect your money and tasks with a PIN. It is asked when you open Fin and when you come back to it.</p><button class="pill" onclick="openPinSet()">Set a PIN</button>`}</div>
  <div class="set"><div class="sl si">${ico('Db')}Backup</div><p class="note2" style="margin:0 0 var(--s3)">${lb?'Last backup: '+new Date(lb).toLocaleDateString('en',{day:'numeric',month:'short',year:'numeric'}):'No backup yet.'} Backups hold everything: tasks, money, goals and invoices.</p><div class="row2"><button class="pill g" onclick="exportData()">Export backup</button><button class="pill g" onclick="openImport()">Import backup</button></div></div>`)};
 function openImport(){$('im_f').click()}
+
+/* ===== v27: pay/receive on every group balance, add-amount on loans, wallet page, floating nav ===== */
+let GPF=0;
+const _ogp27=openGPay;openGPay=function(id,f,t,a){const fr=GPF;GPF=0;_ogp27(id,f,t,a);if(PAY)PAY.from=fr?'grp':'sheet';
+ if(fr){const b=$('sheet').querySelector('.f .pill.g');b&&b.setAttribute('onclick','openGrp('+id+')')}};
+function gRows(id){const g=gps().find(x=>x.id==id);if(!g)return'';
+ return gsimp(gbal(g)).map(x=>{const mp=x.from==ME,mr=x.to==ME,who=mp?x.to:x.from;
+  return `<div class="x7wp"><div class="x7wph">${av(who,38)}<span class="x7wpt"><b>${esc(x.from)}</b> pays <b>${esc(x.to)}</b></span><b class="x7wpa">${fm(x.a,g.cur)}</b></div><div class="x7wpb"><button class="pill x7wpp" onclick="GPF=1;openGPay(${id},'${ENC(x.from)}','${ENC(x.to)}',${x.a})">${mr?'Receive payment':mp?'Pay now':'Record payment'}</button><button class="gxd wab" aria-label="Remind ${esc(x.from)} on WhatsApp" onclick="gRem(${id},'${ENC(x.from)}','${ENC(x.to)}',${x.a})">${sv(WAI,18)}</button></div></div>`}).join('')}
+const _og27=openGrp;openGrp=function(id){_og27(id);const sh=$('sheet'),h=[...sh.querySelectorAll('.sl')].find(e=>e.textContent.trim()=='Who pays whom'),g=gps().find(x=>x.id==id);
+ if(!h||!g||!gsimp(gbal(g)).length)return;let n=h.nextElementSibling;while(n&&!n.classList.contains('sl')){const nx=n.nextElementSibling;n.remove();n=nx}h.insertAdjacentHTML('afterend',gRows(id))};
+
+/* loans: part payment OR add more to the same balance */
+const _op27=openPay;openPay=function(id){_op27(id);const l=lns().find(x=>x.id==id);if(!l||l.paid||!PAY)return;const f=$('sheet').querySelector('.f');if(!f)return;PAY.mode='pay';
+ const lent=l.dir=='lent',has=S.accts.some(a=>a.cur==l.cur);
+ f.insertAdjacentHTML('beforebegin',`<div class="seg" id="py_seg" role="tablist"><button class="on" role="tab" aria-selected="true" onclick="pyMode('pay')">${lent?'Receive part':'Pay part'}</button><button role="tab" aria-selected="false" onclick="pyMode('add')">Add amount</button></div>`);
+ f.insertAdjacentHTML('afterend',`<div class="f" id="ad_f" hidden><div class="sl">${lent?'Extra amount you lent':'Extra amount you borrowed'}</div><div class="sxa"><span class="sxc">${esc(sym(l.cur))}</span><input class="sxai" id="ad_a" type="number" inputmode="decimal" placeholder="0" oninput="adu()" aria-label="Amount to add"></div>${has?`<div class="sl">${lent?'Take from account':'Deposit to account'}</div><select id="ad_k" aria-label="Account">${accOpts(l.cur,'Don’t change any account',firstAcc(l.cur))}</select>`:''}<div class="sxres n" id="ad_t" aria-live="polite">Enter an amount</div><button class="pill" id="ad_go" onclick="doAdd()" disabled>Add to balance</button><button class="pill g" onclick="openPerson('${ENC(l.p)}')">Back</button></div>`);ddScan($('sheet'))};
+function pyMode(m){if(!PAY||PAY.k!='loan')return;const f=$('sheet').querySelector('.f:not(#ad_f)'),a=$('ad_f');if(!f||!a)return;
+ document.querySelectorAll('#py_seg button').forEach((b,i)=>{const on=(i==0)==(m=='pay');b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
+ f.hidden=m=='add';a.hidden=m!='add';PAY.mode=m;if(m=='add'){adu();setTimeout(()=>$('ad_a')&&$('ad_a').focus(),60)}else pyu()}
+function adu(){const l=PAY&&lns().find(x=>x.id==PAY.id),a=$('ad_a');if(!l||!a)return;const v=R2(parseFloat(a.value)||0),k=$('ad_k'),ac=k?acctOf(k.value):null,el=$('ad_t'),lent=l.dir=='lent',ok=v>0;
+ let h='Enter an amount';if(ok){h=esc((lent?'They will owe you ':'You will owe ')+fm(R2(l.a+v),l.cur)+' in total');if(ac)h+=`<small>${esc(ac.name)}: ${fm(ac.bal,ac.cur)} → ${fm(R2(ac.bal+(lent?-v:v)),ac.cur)}</small>`}
+ el.className='sxres'+(ok?'':' n');el.innerHTML=ok?h:esc(h);$('ad_go').disabled=!ok;if(k&&!k._w){k._w=1;k.addEventListener('change',adu)}}
+function doAdd(){const l=PAY&&lns().find(x=>x.id==PAY.id),a=$('ad_a');if(!l||!a)return;const v=R2(parseFloat(a.value)||0);if(!(v>0)){toast('Enter an amount');return}
+ const k=$('ad_k'),ac=k&&acctOf(k.value),use=ac&&ac.cur==l.cur?ac:null,s=snapF(),lent=l.dir=='lent';
+ if(!l.o)l.o=l.a;l.o=R2(l.o+v);l.a=R2(l.a+v);(l.adds=l.adds||[]).push({a:v,t:Date.now(),acc:use?use.id:0});
+ if(use){if(lent)addTx(use,'Lent more to '+l.p,'Other',v,{lp:l.id});else addIn(use,'Borrowed more from '+l.p,v,{lp:l.id})}
+ render();openPay(l.id);toast('Added '+fm(v,l.cur)+' · now '+fm(l.a,l.cur)+' · tap to undo',()=>{restF(s);render()})}
+const _dl27=delLoan;delLoan=function(id){const l=lns().find(x=>x.id==id);if(l&&l.adds&&l.adds.length&&!(l.paid&&!(l.pays&&l.pays.length))){const lent=l.dir=='lent',base=acctOf(l.acc);
+ l.adds.forEach(d=>{if(base)base.bal=R2(base.bal-(lent?d.a:-d.a));const x=acctOf(d.acc);if(x)x.bal=R2(x.bal+(lent?d.a:-d.a))})}_dl27(id)};
+
+/* ---------- wallet page ---------- */
+const CHV='<svg class="x7chv" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+let WTX=25;
+const EYE=h=>sv('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'+(h?'<path d="M4 4l16 16"/>':''),22);
+function walletHero(A,cur,tv){const pool=A.filter(a=>a.cur==cur),src=(pool.length?pool:A).slice(0,3),dec=['#7a3cff','#2f4dff','#dc3f1c'];
+ const cards=[0,1,2].map(i=>{const a=src[i];return{c:a?GRAD[A.indexOf(a)%GRAD.length]:dec[i],n:a?a.name:'',u:a?a.cur:''}});
+ return `<div class="x7wlt"><div class="x7wlc">${cards.map((k,i)=>`<i class="x7wkc c${i+1}" style="--g:${k.c};--d:${i*70}ms"><span>${esc(k.n)}</span><em>${esc(k.u)}</em></i>`).join('')}</div>
+ <div class="x7wlp"><svg viewBox="0 0 360 156" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b4228"/><stop offset="1" stop-color="#37200f"/></linearGradient><linearGradient id="lg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><path d="M0 24C0 13 8 7 21 7 82 9 122 36 180 36S278 9 339 7c13 0 21 6 21 17v96c0 20-15 36-34 36H34C15 156 0 140 0 120Z" fill="url(#lg1)"/><path d="M0 24C0 13 8 7 21 7 82 9 122 36 180 36S278 9 339 7c13 0 21 6 21 17v96c0 20-15 36-34 36H34C15 156 0 140 0 120Z" fill="url(#lg2)"/><path d="M11 26c0-6 4-10 11-10 58 2 98 29 158 29s100-27 158-29c7 0 11 4 11 10v92c0 14-10 24-24 24H35c-14 0-24-10-24-24Z" fill="none" stroke="#e9c9a0" stroke-opacity=".5" stroke-width="1.4" stroke-dasharray="5 5" vector-effect="non-scaling-stroke"/></svg>
+ <div class="x7wlf"><small>Total balance</small><b class="x7wtot2">${tv}</b></div><button class="x7eye" aria-label="${HIDE?'Show':'Hide'} balance" aria-pressed="${HIDE}" onclick="togHide()">${EYE(HIDE)}</button></div></div>`}
+function acList(A){return `<div class="x7wl">${A.map((a,i)=>`<button class="x7wr" style="--g:${GRAD[i%GRAD.length]}" onclick="openAcc(${a.id})"><span class="x7wi">${ico(a.type||'Card')}</span><span class="x7wt"><b>${esc(a.name)}</b><small>${esc(a.type||'Account')} · ${a.cur}</small></span><span class="x7wv">${HIDE?'••••':fm(a.bal,a.cur)}</span>${CHV}</button>`).join('')}</div>`}
+function txList(A,cur){const ids=new Set(A.filter(a=>a.cur==cur).map(a=>a.id)),all=S.txs.filter(t=>ids.has(t.acc)).sort((a,b)=>b.t-a.t);if(!all.length)return'';
+ const shown=all.slice(0,WTX),now=new Date(),td=now.toDateString(),yd=new Date(now-DAY).toDateString(),G=[];
+ shown.forEach(t=>{const d=new Date(t.t),k=d.toLocaleDateString('en',{month:'long'})+(d.getFullYear()!=now.getFullYear()?' '+d.getFullYear():'');let g=G[G.length-1];if(!g||g.k!=k){g={k,r:[]};G.push(g)}
+  const ed=!t.lp&&!t.st&&!t.sv,ci=Math.max(0,MCAT.indexOf(t.c)),ds=d.toDateString(),rel=ds==td?'Today':ds==yd?'Yesterday':d.toLocaleDateString('en',{day:'numeric',month:'short'}),tm=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  g.r.push(`<button class="x7tr${ed?'':' ro'}" ${ed?`onclick="openEditTx(${t.id})"`:'tabindex="-1"'}><span class="x7ti" style="background:${t.inc?'var(--mint)':pal(ci)};color:#15121c">${ico(t.c||'Other')}</span><span class="x7tt"><b>${esc(t.m)}</b><small>${tm} · ${rel}</small></span><span class="x7ta"><b class="${t.inc?'in':'out'}">${t.inc?'+':'−'} ${HIDE?'••••':fm(t.a,cur)}</b><small>${esc(t.c||(t.inc?'Income':''))}</small></span>${ed?CHV:''}</button>`)});
+ return `<div class="msec"><span>Transactions</span></div>`+G.map(g=>`<div class="x7tml">${g.k}</div><div class="x7txg">${g.r.join('')}</div>`).join('')+(all.length>shown.length?`<button class="pill g x7wmore" onclick="WTX+=25;render()">Show more</button>`:'')}
+accHTML=function(){mi();const A=S.accts,cs=homeCurs(),cur=selCur(cs),tot=A.filter(a=>a.cur==cur).reduce((s,a)=>s+a.bal,0),ts=HIDE?'••••••':fm(tot,cur),m=ts.match(/^(.*?)(\.\d{1,2})$/),tv=m?esc(m[1])+'<span class="dc">'+m[2]+'</span>':esc(ts);
+ return `<div class="x7whd"><div><h2>Wallet</h2><div class="sub">My cards &amp; transactions</div></div><button class="x7wadd" aria-label="Add account" onclick="openAccM()">${sv('<path d="M12 5v14M5 12h14"/>',22)}</button></div>`+walletHero(A,cur,tv)
+ +(cs.length>1?`<div class="wcur" role="group" aria-label="Currency">${cs.map(c=>`<button class="${c==cur?'on':''}" aria-pressed="${c==cur}" onclick="setCur('${c}')">${c}</button>`).join('')}</div>`:'')
+ +goalsHTML()+`<div class="msec"><span>Accounts</span><button onclick="openAccM()">+ Add</button></div>`+(A.length?acList(A)+txList(A,cur):empty('Savings','Your wallet is empty.<br>Add an account to begin.'))};
+
+/* ---------- floating bottom bar: icons, active one grows a label ---------- */
+function renderNav(){const m=S.mode||'tasks',nv=$('nav'),n=m=='money'?(S.mmsgs||[]).filter(x=>!x.done).length:S.tasks.filter(t=>t.fired&&!t.done).length;
+ if(navMode!=m){navMode=m;nv.innerHTML='<i class="ind"></i>'+NAVS[m].map(([k,l])=>`<button data-k="${k}" aria-label="${l}" onclick="go('${k}')"><span class="ic"><svg viewBox="0 0 24 24">${IC[k]}</svg></span><span class="lb">${l}</span><span class="badge" hidden></span></button>`).join('');
+  TABS.splice(0,TABS.length,...NAVS[m].map(x=>x[0]).filter(k=>k!='inew'))}
+ [...nv.querySelectorAll('button')].forEach(b=>{const on=b.dataset.k==S.tab;b.classList.toggle('on',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');if(b.dataset.k=='inbox'||b.dataset.k=='minbox'){const g=b.querySelector('.badge');g.hidden=!n;g.textContent=n}});moveInd()}
+navMode='';
 
 render();
 </script></body></html>
