@@ -1631,7 +1631,7 @@ renderSet=function(){_renderSet11();const v=$('v-set'),pc=v.querySelector('.pcar
  if(nc){const inp=nc.querySelector('input');if(inp){inp.style.marginTop='14px';inp.placeholder='Your name';card.appendChild(inp)}nc.remove()}
  const tp=[...v.querySelectorAll('.pill')].find(b=>b.textContent.trim()=='Take photo');if(tp&&!matchMedia('(pointer:coarse)').matches)tp.remove();
  const csv=v.querySelector('.csv');if(csv){csv.textContent='Export CSV';csv.parentNode.classList.add('wrap')}
- v.querySelectorAll('.note2').forEach(p=>{if(/^App v\d+/.test(p.textContent))p.textContent=p.textContent.replace(/^App v\d+\./,'App v17.')})};
+ v.querySelectorAll('.note2').forEach(p=>{if(/^App v\d+/.test(p.textContent))p.textContent=p.textContent.replace(/^App v\d+\./,'App v18.')})};
 const _go11=go;go=function(t){_go11(t);const f=document.querySelector('.fab');if(f)f.style.display=S.tab=='set'?'none':''};
 /* ===== v4: skeleton loading ===== */
 let LOADING=false;
@@ -1676,7 +1676,7 @@ function loansHTML(){const ps=people(),ow={},oe={};allLoans().forEach(l=>{if(l.p
  return `<h2>People</h2><div class="sub">Money you lent and borrowed</div><div class="sm"><div style="background:var(--mint)"><span>Owed to you</span><b>${fmm(ow)}</b></div><div style="background:var(--peach)"><span>You owe</span><b>${fmm(oe)}</b></div></div>
  <div class="acts" style="margin:0 20px 14px"><button class="pill" onclick="openLoan('lent')">I lent</button><button class="pill g" onclick="openLoan('borrow')">I borrowed</button></div>
  <div class="seg" style="margin:0 20px 14px">${[['all','All'],['owes','Owes me'],['iowe','I owe']].map(([k,l])=>`<button class="${LF==k?'on':''}" onclick="LF='${k}';render()">${l}</button>`).join('')}</div>`+
- (L.length?L.map((o,i)=>`<button class="pr" style="background:${pal(i+1)}" onclick="openPerson('${ENC(o.n)}')">${av(o.n,50)}<div class="nm"><b>${esc(o.n)}</b><span>${o.open?o.open+' open'+(o.due?' · '+dueTxt(o.due):''):'Nothing open'}</span></div><div class="am">${pnet(o)}<span>${plab(o)}</span></div></button>`).join(''):empty('Savings',ps.length?'No one in this list.':'No one yet.<br>Tap “I lent” or “I borrowed” to start.'))}
+ (L.length?L.map((o,i)=>`<button class="pr" style="background:${pal(i+1)}" onclick="openPerson('${ENC(o.n)}')">${av(o.n,50)}<div class="nm"><b>${esc(o.n)}</b><span>${plsen(o)}${o.due?' · '+dueTxt(o.due):''}</span></div><div class="am">${pnet(o)}<span>${plab(o)}</span></div></button>`).join(''):empty('Savings',ps.length?'No one in this list.':'No one yet.<br>Tap “I lent” or “I borrowed” to start.'))}
 function openLoan(dir,name){mi();LDIR=dir||'lent';const ps=people(),c0=(S.accts[0]&&S.accts[0].cur)||S.base;
  sheet(`<h3>Lend or borrow</h3><div class="f"><div class="seg"><button class="${LDIR=='lent'?'on':''}" onclick="setLD('lent',this)">I lent</button><button class="${LDIR=='borrow'?'on':''}" onclick="setLD('borrow',this)">I borrowed</button></div>
  <input id="ld_p" list="ld_l" placeholder="Person’s name" value="${esc(DEC(name))}"><datalist id="ld_l">${ps.map(p=>`<option value="${esc(p.n)}">`).join('')}</datalist>
@@ -1695,13 +1695,13 @@ function settleAll(n){const ls=lns().filter(l=>!l.paid&&l.p.toLowerCase()==DEC(n
 function delLoan(id){const l=lns().find(x=>x.id==id);if(!l)return;const was=l.paid;if(!was)lAdj(l,true);S.loans=S.loans.filter(x=>x.id!=id);render();openPerson(ENC(l.p));toast('Deleted · tap to undo',()=>{if(!was)lAdj(l,false);S.loans.push(l);render()})}
 function openPerson(n){const nm=DEC(n),o=people().find(x=>x.n.toLowerCase()==nm.toLowerCase());if(!o){closeSheet();return}
  const ls=allLoans().filter(l=>l.p.toLowerCase()==nm.toLowerCase()).sort((a,b)=>b.t-a.t);
- sheet(`<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">${av(o.n,56)}<div><h3 style="margin:0">${esc(o.n)}</h3><div style="color:var(--mute);font-size:15px">${pnet(o)} · ${plab(o)}</div></div></div>
+ sheet(`<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">${av(o.n,56)}<div><h3 style="margin:0">${esc(o.n)}</h3><div style="color:var(--mute);font-size:15px">${plfull(o)}</div></div></div>
  <div class="acts"><button class="pill" onclick="openLoan('lent','${ENC(o.n)}')">I lent</button><button class="pill g" onclick="openLoan('borrow','${ENC(o.n)}')">I borrowed</button></div>
  ${lns().filter(l=>!l.paid&&l.p.toLowerCase()==nm.toLowerCase()).length>1?`<button class="pill g" style="width:100%;margin-bottom:10px" onclick="settleAll('${ENC(o.n)}')">Settle everything</button>`:''}
  ${ls.map(l=>`<div class="arow"><span><b style="font-weight:600">${l.vg?(l.dir=='lent'?'Owes you':'You owe'):l.dir=='lent'?'You lent':'You borrowed'}</b>${l.note?' · '+esc(l.note):''}<br><small style="color:var(--mute)">${dshort(l.t)}${l.paid?' · Settled '+dshort(l.pt||l.t):l.due?' · '+dueTxt(l.due):''}</small></span>
  <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end"><b class="${l.dir=='lent'?'pl':''}">${l.dir=='lent'?'+':'−'}${fm(l.paid?(l.o||l.a):l.a,l.cur)}</b>${(l.pays&&l.pays.length&&!l.paid)?`<small class="rem">of ${fm(l.o,l.cur)}</small>`:''}${l.vg?`<button class="pill g" onclick="openGrp(${l.vg})">Open group</button>`:`${l.paid?'':`<button class="pill g" onclick="openPay(${l.id})">Pay</button>`}<button class="pill g" aria-label="Delete entry" onclick="delLoan(${l.id})">Delete</button>`}</span></div>`).join('')}`)}
 function openSettle(){const ps=people().filter(o=>o.open);if(!ps.length){toast('Nobody owes anything yet');return}
- sheet(`<h3>Settle up</h3>`+ps.map(o=>`<button class="arow" style="width:100%;text-align:left;align-items:center" onclick="openPerson('${ENC(o.n)}')"><span style="display:flex;align-items:center;gap:12px">${av(o.n,40)}${esc(o.n)}</span><b>${pnet(o)}<br><small style="font-weight:500;color:var(--mute)">${plab(o)}</small></b></button>`).join(''))}
+ sheet(`<h3>Settle up</h3>`+ps.map(o=>`<button class="arow" style="width:100%;text-align:left;align-items:center" onclick="openPerson('${ENC(o.n)}')"><span style="display:flex;align-items:center;gap:12px">${av(o.n,40)}<span>${esc(o.n)}<small style="display:block;font-weight:500;color:var(--mute)">${plsen(o)}</small></span></span><b>${pnet(o)}</b></button>`).join(''))}
 {const s=document.createElement('section');s.className='view';s.id='v-mloans';$('v-mbills').after(s)}
 {const s=document.createElement('section');s.className='view';s.id='v-mspend';$('v-mhome').before(s)}
 const _RM12=renderMoney;renderMoney=function(){_RM12();const ex=$('v-mhome').innerHTML,bl=$('v-mbills').innerHTML.replace(/^<h2>.*?<\/h2><div class="sub">.*?<\/div>/,'');
@@ -2025,12 +2025,12 @@ function gWaText(g){
   if(v.length==1)return `all on ${wnm(ks[0])}`;
   return 'split: '+ks.map(k=>`${wnm(k)} ${fm(e.sp[k],c)}`).join(', ')};
  const o=[`*${g.name}* · expense summary`,`${wlong(Date.now())} · ${wplural(g.members.length,'person').replace('persons','people')} · ${wplural(bills.length,'expense')}`,'',`*Total spent: ${fm(spent,c)}*`];
+ o.push('',L.length?'*Who pays whom*':'🎉 Everyone is settled up!');L.forEach(x=>o.push(`• ${wnm(x.from)} pays ${wnm(x.to)} *${fm(x.a,c)}*`));
  if(bills.length){o.push('','*Expenses*');if(off>0)o.push(`_(latest ${N} of ${bills.length})_`);
   shown.forEach((e,i)=>{o.push(`${off+i+1}. ${e.d} — *${fm(e.a,c)}*${e.tip?` (incl. ${e.tip}% tip/tax)`:''}`,`    paid by ${wnm(e.by)} · ${wdt(e.t)}`);const h=how(e);if(h)o.push('    '+h)})}
  o.push('','*Balances*');
  g.members.forEach(k=>{const b=m[k]||0;o.push(b>.004?`✅ ${wnm(k)} gets back ${fm(b,c)}`+gbw(g,m,k,1):b<-.004?`🔻 ${wnm(k)} owes ${fm(-b,c)}`+gbw(g,m,k,0):`➖ ${wnm(k)} is settled up`)});
  o.push('');
- if(L.length){o.push('*To settle up*');L.forEach(x=>o.push(`• ${wnm(x.from)} → ${wnm(x.to)}: *${fm(x.a,c)}*`))}else o.push('🎉 Everyone is settled up!');
  if(pays.length){o.push('','*Payments already made*');pays.slice(-8).forEach(p=>o.push(`• ${wnm(p.from)} paid ${wnm(p.to)} ${fm(p.a,c)} · ${wdt(p.t)}`))}
  o.push('','_Sent from Fin_');return o.join('\n')}
 function shareG(id){const g=gps().find(x=>x.id==id);if(!g)return;waOpen(gWaText(g))}
@@ -2484,4 +2484,19 @@ function gbr(g,m,k,b){if(!b)return'';const l=gbl(g,m,k,b);if(!l.length)return'';
 function gbw(g,m,k,b){const l=gbl(g,m,k,b?1:-1);return l.length?` (${b?'from':'to'} ${l.map(([n,a])=>wnm(n)+' '+fm(a,g.cur)).join(', ')})`:''}
 function hbn(o,lent){const ks=Object.keys(o);if(!ks.length)return'Nobody';const m={};allLoans().forEach(l=>{if(l.paid||(l.dir=='lent')!=!!lent)return;const key=l.p.toLowerCase()+'|'+l.cur;(m[key]=m[key]||{n:l.p,c:l.cur,a:0}).a+=l.a});
  const r=Object.values(m).sort((a,b)=>b.a-a.a);return r.slice(0,2).map(x=>`<span class="hbn">${esc(x.n)} ${fm(R2(x.a),x.c)}</span>`).join('')+(r.length>2?`<span class="hbn">+${r.length-2} more</span>`:'')}
+
+const plsen=o=>o.s>0?esc(o.n)+' owes you':o.s<0?'You owe '+esc(o.n):'All settled up';
+const plfull=o=>{const k=(o.c||[]).filter(c=>Math.abs(o.net[c])>.004);return k.length?k.map(c=>o.net[c]>0?`${esc(o.n)} owes you ${fm(o.net[c],c)}`:`You owe ${esc(o.n)} ${fm(-o.net[c],c)}`).join(' · '):'All settled up'};
+function pRemText(nm){const ls=allLoans().filter(l=>!l.paid&&l.p.toLowerCase()==nm.toLowerCase()),me=wnm(ME),by={};
+ ls.forEach(l=>{(by[l.cur]=by[l.cur]||[]).push(l)});const o=[];let net={};ls.forEach(l=>{net[l.cur]=R2((net[l.cur]||0)+(l.dir=='lent'?l.a:-l.a))});
+ const owes=Object.keys(net).filter(c=>net[c]>.004),iowe=Object.keys(net).filter(c=>net[c]<-.004);
+ if(owes.length||!iowe.length){o.push(`Hi ${nm} 👋`,`A quick reminder from ${me}: you owe me *${owes.map(c=>fm(net[c],c)).join(' + ')||'nothing right now'}*.`)}
+ else o.push(`Hi ${nm} 👋`,`${me} here. I owe you *${iowe.map(c=>fm(-net[c],c)).join(' + ')}*.`);
+ Object.keys(by).forEach(c=>{const rows=by[c].sort((a,b)=>a.t-b.t);o.push('',`*Details (${c})*`);
+  rows.forEach(l=>{const orig=l.o||l.a,part=R2(orig-l.a),d=l.dir=='lent'?'you owe me':'I owe you',lbl=(l.vg?(l.note||'Group expense'):(l.note||(l.dir=='lent'?'Money lent':'Money borrowed')));
+   o.push(`• ${lbl} · ${wdt(l.t)} — ${fm(orig,c)}${part>0?` (${fm(part,c)} paid, *${fm(l.a,c)} left*)`:''} · ${d}`)})});
+ const t=owes.length||!iowe.length?owes.map(c=>fm(net[c],c)):iowe.map(c=>fm(-net[c],c));
+ if(t.length)o.push('',`*Total ${owes.length||!iowe.length?'to pay me':'I owe you'}: ${t.join(' + ')}*`);
+ o.push('',owes.length||!iowe.length?'Please send it when you can. Thanks! 🙏':'I will send it soon. 🙏','','_Sent from Fin_');return o.join('\n')}
+const _pw29=pWaText;pWaText=function(nm){return _pw29(nm)?pRemText(nm):''};
 </script></body></html>
