@@ -950,7 +950,7 @@ body[data-mode] nav .mid::after{display:none}
 /* ===== v30 bill photos ===== */
 .phl{margin-top:var(--s2)}
 .phf{display:block}
-.phb{display:flex;align-items:center;justify-content:center;gap:var(--s3);width:100%;min-height:56px;padding:0 var(--s4);border:2px dashed var(--mute);border-radius:18px;color:var(--ink);font-size:15px;font-weight:600;transition:background-color 160ms ease,transform 140ms var(--out)}
+.phx0{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none;clip:rect(0 0 0 0)}.phr{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}.phn{font-size:13px;color:var(--mute);margin-bottom:var(--s2)}.phf{margin-bottom:var(--s4)}.phb{display:flex;align-items:center;justify-content:center;gap:var(--s2);width:100%;min-height:56px;padding:0 var(--s4);border:2px dashed var(--mute);border-radius:18px;color:var(--ink);font-size:15px;font-weight:600;transition:background-color 160ms ease,transform 140ms var(--out)}
 .phb:active{transform:scale(.98);background:var(--line)}
 .phb svg,.phi svg,.phd svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .phv{display:grid;gap:var(--s3)}
@@ -1657,7 +1657,7 @@ renderSet=function(){_renderSet11();const v=$('v-set'),pc=v.querySelector('.pcar
  if(nc){const inp=nc.querySelector('input');if(inp){inp.style.marginTop='14px';inp.placeholder='Your name';card.appendChild(inp)}nc.remove()}
  const tp=[...v.querySelectorAll('.pill')].find(b=>b.textContent.trim()=='Take photo');if(tp&&!matchMedia('(pointer:coarse)').matches)tp.remove();
  const csv=v.querySelector('.csv');if(csv){csv.textContent='Export CSV';csv.parentNode.classList.add('wrap')}
- v.querySelectorAll('.note2').forEach(p=>{if(/^App v\d+/.test(p.textContent))p.textContent=p.textContent.replace(/^App v\d+\./,'App v21.')})};
+ v.querySelectorAll('.note2').forEach(p=>{if(/^App v\d+/.test(p.textContent))p.textContent=p.textContent.replace(/^App v\d+\./,'App v22.')})};
 const _go11=go;go=function(t){_go11(t);const f=document.querySelector('.fab');if(f)f.style.display=S.tab=='set'?'none':''};
 /* ===== v4: skeleton loading ===== */
 let LOADING=false;
@@ -2531,20 +2531,20 @@ function pRemText(nm){const ls=allLoans().filter(l=>!l.paid&&l.p.toLowerCase()==
  o.push('',owes.length||!iowe.length?'Please send it when you can. Thanks! 🙏':'I will send it soon. 🙏','','_Sent from Fin_');return o.join('\n')}
 const _pw29=pWaText;pWaText=function(nm){return _pw29(nm)?pRemText(nm):''};
 /* ===== v30: bill photos (kept on this device) ===== */
-Object.assign(I2,{Photo:'<path class="f" d="M4 8.5A1.5 1.5 0 015.5 7H8l1.4-2h5.2L16 7h2.5A1.5 1.5 0 0120 8.5v9a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 17.5z"/><circle cx="12" cy="13" r="3.4"/>'});
+Object.assign(I2,{Gallery:'<rect x="4" y="5" width="16" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M4.5 17l4.5-4.5 3.5 3.5 2.5-2.5 4.5 4.5"/>',Photo:'<path class="f" d="M4 8.5A1.5 1.5 0 015.5 7H8l1.4-2h5.2L16 7h2.5A1.5 1.5 0 0120 8.5v9a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 17.5z"/><circle cx="12" cy="13" r="3.4"/>'});
 const IMDB=(()=>{let p;const open=()=>p||(p=new Promise((res,rej)=>{try{const r=indexedDB.open('fin_img',1);r.onupgradeneeded=()=>r.result.createObjectStore('i');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}}));
  const run=(m,f)=>open().then(db=>new Promise((res,rej)=>{const t=db.transaction('i',m),q=f(t.objectStore('i'));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)}));
  return{put:(k,v)=>run('readwrite',s=>s.put(v,k)),get:k=>run('readonly',s=>s.get(k)),del:k=>run('readwrite',s=>s.delete(k))}})();
 function imgCompress(file){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),i=new Image();i.onload=()=>{const M=1400,r=Math.min(1,M/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(i.width*r));c.height=Math.max(1,Math.round(i.height*r));const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(b=>b?res(b):rej(new Error('blob')),'image/jpeg',.74)};i.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('load'))};i.src=u})}
 let PIM=null;
-function photoField(cur){PIM={blob:null,url:'',cur:cur||'',rm:false,miss:false};return `<div class="sl phl">Bill photo (optional)</div><div id="ph_f" class="phf"></div><input id="ph_i" type="file" accept="image/*" hidden onchange="phPick(this)">`}
+function photoField(cur){PIM={blob:null,url:'',cur:cur||'',rm:false,miss:false};return `<div class="sl phl">Bill photo (optional)</div><div id="ph_f" class="phf"></div><input id="ph_c" class="phx0" type="file" accept="image/*" capture="environment" tabindex="-1" aria-hidden="true" onchange="phPick(this)"><input id="ph_i" class="phx0" type="file" accept="image/*" tabindex="-1" aria-hidden="true" onchange="phPick(this)">`}
 function insPhoto(cur,after){const sh=$('sheet');if(!sh||$('ph_f'))return;const an=after&&sh.querySelector(after);if(an){an.insertAdjacentHTML('afterend',photoField(cur));phDraw();return}const btn=sh.querySelector('.save,.pill:not(.g):not(.wa)'),h=photoField(cur);
  const f=sh.querySelector('.f');if(btn&&btn.parentNode)btn.insertAdjacentHTML('beforebegin',h);else if(f)f.insertAdjacentHTML('beforeend',h);else return;phDraw()}
 async function phDraw(){const f=$('ph_f');if(!f||!PIM)return;
  if(!PIM.url&&PIM.cur&&!PIM.rm&&!PIM.miss){try{const b=await imgFetch(PIM.cur);if(b)PIM.url=URL.createObjectURL(b);else PIM.miss=true}catch(e){PIM.miss=true}}
  const g=$('ph_f');if(!g||!PIM)return;
- g.innerHTML=PIM.url&&!PIM.rm?`<div class="phv"><img src="${PIM.url}" alt="Bill photo preview"><div class="pha"><button type="button" class="pill g" onclick="$('ph_i').click()">Replace</button><button type="button" class="pill g" onclick="phRm()">Remove</button></div></div>`
- :`<button type="button" class="phb" onclick="$('ph_i').click()">${ico('Photo')}<span>${PIM.cur&&PIM.miss&&!PIM.rm?'Photo not available. Add it again':'Take or choose a photo'}</span></button>`}
+ g.innerHTML=PIM.url&&!PIM.rm?`<div class="phv"><img src="${PIM.url}" alt="Bill photo preview"><div class="pha"><button type="button" class="pill g" onclick="$('ph_c').click()">Retake</button><button type="button" class="pill g" onclick="$('ph_i').click()">Gallery</button><button type="button" class="pill g" onclick="phRm()">Remove</button></div></div>`
+ :`${PIM.cur&&PIM.miss&&!PIM.rm?'<div class="phn">Photo not available. Add it again.</div>':''}<div class="phr"><button type="button" class="phb" onclick="$('ph_c').click()">${ico('Photo')}<span>Take photo</span></button><button type="button" class="phb" onclick="$('ph_i').click()">${ico('Gallery')}<span>Gallery</span></button></div>`}
 async function phPick(inp){const f=inp.files&&inp.files[0];inp.value='';if(!f||!PIM)return;if(!/^image\//.test(f.type)&&!/\.(jpe?g|png|webp|heic|heif)$/i.test(f.name)){toast('Choose an image file');return}
  try{const b=await imgCompress(f);if(!PIM)return;PIM.blob=b;PIM.url=URL.createObjectURL(b);PIM.rm=false;phDraw()}catch(e){toast('Could not read that photo')}}
 function phRm(){if(!PIM)return;PIM.blob=null;PIM.url='';PIM.rm=true;phDraw()}
