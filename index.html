@@ -1631,7 +1631,7 @@ renderSet=function(){_renderSet11();const v=$('v-set'),pc=v.querySelector('.pcar
  if(nc){const inp=nc.querySelector('input');if(inp){inp.style.marginTop='14px';inp.placeholder='Your name';card.appendChild(inp)}nc.remove()}
  const tp=[...v.querySelectorAll('.pill')].find(b=>b.textContent.trim()=='Take photo');if(tp&&!matchMedia('(pointer:coarse)').matches)tp.remove();
  const csv=v.querySelector('.csv');if(csv){csv.textContent='Export CSV';csv.parentNode.classList.add('wrap')}
- v.querySelectorAll('.note2').forEach(p=>{if(/^App v\d+/.test(p.textContent))p.textContent=p.textContent.replace(/^App v\d+\./,'App v18.')})};
+ v.querySelectorAll('.note2').forEach(p=>{if(/^App v\d+/.test(p.textContent))p.textContent=p.textContent.replace(/^App v\d+\./,'App v19.')})};
 const _go11=go;go=function(t){_go11(t);const f=document.querySelector('.fab');if(f)f.style.display=S.tab=='set'?'none':''};
 /* ===== v4: skeleton loading ===== */
 let LOADING=false;
@@ -1732,8 +1732,8 @@ const _norm19=norm;norm=function(){_norm19();S.mmsgs=(S.mmsgs||[]).filter(m=>m.i
 S.mmsgs=(S.mmsgs||[]).filter(m=>m.id!=CID);
 /* ===== v19: Splitwise-style groups ===== */
 const gps=()=>S.groups=S.groups||[],gxs=()=>S.gx=S.gx||[],ME='You';let GX={g:0,mode:'eq',sel:[]};
-const gbal=g=>{const m={};g.members.forEach(x=>m[x]=0);gxs().filter(e=>e.g==g.id).forEach(e=>{if(e.settle){m[e.from]=(m[e.from]||0)+e.a;m[e.to]=(m[e.to]||0)-e.a}else{m[e.by]=(m[e.by]||0)+e.a;for(const k in e.sp)m[k]=(m[k]||0)-e.sp[k]}});for(const k in m)m[k]=Math.round(m[k]*100)/100;return m};
-const gsimp=m=>{const c=[],d=[];for(const k in m){if(m[k]>.004)c.push([k,m[k]]);else if(m[k]<-.004)d.push([k,-m[k]])}c.sort((a,b)=>b[1]-a[1]);d.sort((a,b)=>b[1]-a[1]);const r=[];let i=0,j=0;
+const gbal=g=>{const m={};g.members.forEach(x=>m[x]=0);gxs().filter(e=>e.g==g.id).forEach(e=>{if(e.settle){m[e.from]=(m[e.from]||0)+e.a;m[e.to]=(m[e.to]||0)-e.a}else{m[e.by]=(m[e.by]||0)+e.a;for(const k in e.sp)m[k]=(m[k]||0)-e.sp[k]}});for(const k in m)m[k]=Math.round(m[k]*100)/100;try{Object.defineProperty(m,'__g',{value:g,enumerable:false})}catch(e){}return m};
+const gsimp=m=>{if(m&&m.__g)return gpair(m.__g);const c=[],d=[];for(const k in m){if(m[k]>.004)c.push([k,m[k]]);else if(m[k]<-.004)d.push([k,-m[k]])}c.sort((a,b)=>b[1]-a[1]);d.sort((a,b)=>b[1]-a[1]);const r=[];let i=0,j=0;
  while(i<c.length&&j<d.length){const t=Math.min(c[i][1],d[j][1]);r.push({from:d[j][0],to:c[i][0],a:Math.round(t*100)/100});c[i][1]-=t;d[j][1]-=t;if(c[i][1]<.005)i++;if(d[j][1]<.005)j++}return r};
 function groupsHTML(){const G=gps().slice().sort((a,b)=>b.t-a.t);
  return `<div class="msec"><span>Groups</span><button onclick="openGroup()">+ New group</button></div>`+(G.length?G.map((g,i)=>{const b=gbal(g)[ME]||0;
@@ -2479,9 +2479,14 @@ navMode='';
 
 render();
 
-function gbl(g,m,k,b){return gsimp(m).filter(x=>b>0?x.to==k:x.from==k).map(x=>[b>0?x.from:x.to,x.a])}
-function gbr(g,m,k,b){if(!b)return'';const l=gbl(g,m,k,b);if(!l.length)return'';return `<small class="gto">${b>0?'from':'to'} ${l.map(([n,a])=>esc(n)+' '+fm(a,g.cur)).join(' · ')}</small>`}
-function gbw(g,m,k,b){const l=gbl(g,m,k,b?1:-1);return l.length?` (${b?'from':'to'} ${l.map(([n,a])=>wnm(n)+' '+fm(a,g.cur)).join(', ')})`:''}
+function gpair(g){const M={},add=(a,b,v)=>{(M[a]=M[a]||{})[b]=(M[a][b]||0)+v};
+ gxs().filter(e=>e.g==g.id).forEach(e=>{if(e.settle)add(e.from,e.to,-e.a);else for(const k in e.sp)if(k!=e.by&&e.sp[k])add(k,e.by,e.sp[k])});
+ const ks=[...new Set([...g.members,...Object.keys(M),...Object.values(M).flatMap(o=>Object.keys(o))])],r=[];
+ ks.forEach((a,i)=>ks.slice(i+1).forEach(b=>{const d=R2(((M[a]||{})[b]||0)-((M[b]||{})[a]||0));if(d>.004)r.push({from:a,to:b,a:d});else if(d<-.004)r.push({from:b,to:a,a:-d})}));
+ return r.sort((x,y)=>y.a-x.a)}
+function gbl(g,m,k){const L=gsimp(m);return{out:L.filter(x=>x.from==k).map(x=>[x.to,x.a]),inn:L.filter(x=>x.to==k).map(x=>[x.from,x.a])}}
+function gbr(g,m,k,b){const l=gbl(g,m,k),h=[];l.out.forEach(([n,a])=>h.push(`pays ${esc(n)} ${fm(a,g.cur)}`));l.inn.forEach(([n,a])=>h.push(`gets ${fm(a,g.cur)} from ${esc(n)}`));return h.length?`<small class="gto">${h.join('<br>')}</small>`:''}
+function gbw(g,m,k,b){const l=gbl(g,m,k),h=[];l.out.forEach(([n,a])=>h.push(`pays ${wnm(n)} ${fm(a,g.cur)}`));l.inn.forEach(([n,a])=>h.push(`gets ${fm(a,g.cur)} from ${wnm(n)}`));return h.length?` (${h.join(', ')})`:''}
 function hbn(o,lent){const ks=Object.keys(o);if(!ks.length)return'Nobody';const m={};allLoans().forEach(l=>{if(l.paid||(l.dir=='lent')!=!!lent)return;const key=l.p.toLowerCase()+'|'+l.cur;(m[key]=m[key]||{n:l.p,c:l.cur,a:0}).a+=l.a});
  const r=Object.values(m).sort((a,b)=>b.a-a.a);return r.slice(0,2).map(x=>`<span class="hbn">${esc(x.n)} ${fm(R2(x.a),x.c)}</span>`).join('')+(r.length>2?`<span class="hbn">+${r.length-2} more</span>`:'')}
 
