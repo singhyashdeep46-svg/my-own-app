@@ -990,6 +990,12 @@ body.phopen{overflow:hidden}
 .ivnote{font-size:14px;color:#777;margin:4px 0 0}
 .ivt{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}.ivt th{text-align:left;font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.05em;padding:6px 6px 6px 0;border-bottom:1px solid #e6e4ea}.ivt td{padding:10px 6px 10px 0;border-bottom:1px solid #f0eff3;vertical-align:top}.ivt small{display:block;color:#999;font-size:12px}
 .gain{color:#1a9c4b}.loss{color:#d6343b}
+.ivd{background:var(--surf);border-radius:24px;padding:16px;box-shadow:inset 0 0 0 1px var(--rim)}
+.ivchips{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}.ivchip{padding:7px 13px;border-radius:14px;font-size:13px;font-weight:600;background:var(--line);color:var(--ink);border:0}.ivchip.on{background:var(--ink);color:var(--bg)}
+.ivgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}.ivst span{display:block;font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}.ivst b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.ivcur{font-weight:700;margin:10px 0 8px}.ivnote2{font-size:13px;color:var(--mute);margin:12px 0 0}
+.ivtop{margin-top:16px}.ivtr{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--line)}.ivtr small{display:block;font-size:12px;color:var(--mute)}.ivtr .ivtv{text-align:right}.ivtr .ivtv small.gain{color:#1a9c4b}.ivtr .ivtv small.loss{color:#d6343b}
+.ivd .gain{color:#1a9c4b}.ivd .loss{color:#d6343b}
 </style>
 </head><body>
 <div class="app" id="app">
@@ -2636,11 +2642,11 @@ function ivFind(id){return S.invs.find(x=>x.id==id)}
 
 /* ---- form (new + edit) ---- */
 function ivRow(x){const d=document.createElement('div');d.className='irow';
- d.innerHTML=`<input class="d" placeholder="Description" value="${esc(x?x.d:'')}"><input class="q" type="number" inputmode="decimal" placeholder="Qty" value="${x?x.q:1}"><input class="p" type="number" inputmode="decimal" placeholder="Price to client" value="${x&&x.p?x.p:''}"><input class="c" type="number" inputmode="decimal" placeholder="Your real cost" value="${x&&x.c?x.c:''}">`;
+ d.innerHTML=`<input class="d" list="iv_it" oninput="ivPickItem(this)" autocomplete="off" placeholder="Description" value="${esc(x?x.d:'')}"><input class="q" type="number" inputmode="decimal" placeholder="Qty" value="${x?x.q:1}"><input class="p" type="number" inputmode="decimal" placeholder="Price to client" value="${x&&x.p?x.p:''}"><input class="c" type="number" inputmode="decimal" placeholder="Your real cost" value="${x&&x.c?x.c:''}">`;
  $('iv_i').appendChild(d)}
 addRow=function(){ivRow()};
 function ivForm(i,no){const e=!!i;
- return `<h3>${e?'Edit '+no:'New invoice'}</h3><div class="f"><input id="iv_c" placeholder="Client name" value="${e?esc(i.client):''}"><input id="iv_e" type="email" placeholder="Client email (optional)" value="${e?esc(i.email||''):''}"><input id="iv_p" type="tel" inputmode="tel" placeholder="Client WhatsApp with country code, e.g. 9779812345678" value="${e?esc(i.phone||''):''}">
+ return `<h3>${e?'Edit '+no:'New invoice'}</h3>${ivLists()}<div class="f"><input id="iv_c" list="iv_cl" oninput="ivPickClient(this)" autocomplete="off" placeholder="Client name" value="${e?esc(i.client):''}"><input id="iv_e" type="email" placeholder="Client email (optional)" value="${e?esc(i.email||''):''}"><input id="iv_p" type="tel" inputmode="tel" placeholder="Client WhatsApp with country code, e.g. 9779812345678" value="${e?esc(i.phone||''):''}">
  ${e?`<span class="ivl">Due date</span><input id="iv_dd" type="date" value="${ivYmd(i.due)}">`:`<select id="iv_d"><option value="7">Due in 7 days</option><option value="14" selected>Due in 14 days</option><option value="30">Due in 30 days</option></select>`}
  <div class="ivc"><div class="ivcc"><span class="ivl">Currency</span><select id="iv_u">${CURS.map(c=>`<option ${c==(e?i.cur:S.base)?'selected':''}>${c}</option>`).join('')}</select></div><div><span class="ivl">Tax %</span><input id="iv_t" type="number" inputmode="decimal" placeholder="0" value="${e?(i.tax||0):(S.biz.tax||0)}"></div></div></div>
  <div class="sl">Items</div><div id="iv_i" class="f"></div><p class="note2" style="margin:8px 0 12px">“Price to client” goes on the invoice. “Your real cost” is private: it is never printed, sent on WhatsApp or emailed.</p><button class="pill g" style="margin-bottom:14px" onclick="addRow()">+ Add item</button>
@@ -2681,7 +2687,7 @@ viewInv=function(id){const i=ivFind(id);if(!i)return;const T=tot(i),b=S.biz||{},
 <div class="ivprog"><i style="width:${pct}%"></i></div>
 <div class="ivsum"><span>Received<b>${fm(rc,i.cur)}</b></span><span>Balance<b>${fm(bal,i.cur)}</b></span></div>
 ${pays.length?pays.map(p=>`<div class="ivpr"><span>${ivD(p.t)}</span><b>${fm(p.a,i.cur)}</b><button class="ivx" aria-label="Remove payment" onclick="ivPayDel(${i.id},${p.id})">✕</button></div>`).join(''):'<p class="ivnote">No payment received yet.</p>'}
-${bal>0?`<div class="ivbt"><button class="pill" onclick="ivPayOpen(${i.id})">Record payment</button><button class="pill g" onclick="ivMarkPaid(${i.id})">Mark fully paid</button></div>`:''}</div>
+${bal>0?`<div class="ivbt"><button class="pill" onclick="ivPayOpen(${i.id})">Record payment</button><button class="pill g" onclick="ivMarkPaid(${i.id})">Mark fully paid</button><button class="pill wa" onclick="waRemind(${i.id})">Send reminder</button></div>`:''}</div>
 
 <div class="ivp noprint"><div class="ivh"><b>Real cost vs offered</b><span class="ivtag">Only you see this</span></div>
 ${has?`<table class="ivt"><tr><th>Item</th><th>Real</th><th>Offered</th><th>Profit</th></tr>${i.items.map(x=>{const g=x.q*(x.p-(x.c||0));return`<tr><td>${esc(x.d)}<small>${x.q} × ${fm(x.p,i.cur)}</small></td><td>${x.c?fm(x.q*x.c,i.cur):'—'}</td><td>${fm(x.q*x.p,i.cur)}</td><td class="${x.c?(g<0?'loss':'gain'):''}">${x.c?fm(g,i.cur):'—'}</td></tr>`}).join('')}</table>
@@ -2701,9 +2707,36 @@ waInv=function(id){const i=ivFind(id);if(!i)return;const ph=(i.phone||'').replac
 function emailInv(id){const i=ivFind(id);if(!i)return;const b=S.biz||{};
  location.href='mailto:'+encodeURIComponent(i.email||'')+'?subject='+encodeURIComponent('Invoice '+i.no+(b.name?' from '+b.name:''))+'&body='+encodeURIComponent(ivLines(i,false).join('\r\n'))}
 
-/* ---- invoice list: balances + status ---- */
-function ivList(){const el=$('v-ilist');if(!el||!USER)return;const n=Date.now(),open=S.invs.filter(i=>ivBal(i)>0),owed=sumBy(open,i=>i.cur,i=>ivBal(i)),withC=S.invs.filter(ivHasCost),prof=withC.length?sumBy(withC,i=>i.cur,i=>ivProfit(i)):{};
- const sub=S.invs.length?((Object.keys(owed).length?fmm(owed)+' unpaid':'All paid')+(withC.length?' · Profit '+fmm(prof):'')):'Create your first invoice';
- el.innerHTML=`<h2>Invoices</h2><div class="sub">${sub}</div>`+(S.invs.length?S.invs.map((i,k)=>{const rc=ivRcv(i),bal=ivBal(i),st=i.paid?'Paid':rc>0?'Partly paid · '+fm(bal,i.cur)+' left':i.due<n?'Overdue':'Unpaid';return`<div class="acc" style="--c:${pal(k+2)};color:${dark(k+2)};cursor:pointer" onclick="viewInv(${i.id})"><div class="al"><div class="logo">${ico('Receipt')}</div><div class="am"><b>${esc(i.client)}</b><span>${i.no} · ${st}</span></div></div><div class="amt">${fm(tot(i).g,i.cur)}</div></div>`}).join(''):empty('Receipt','No invoices yet.<br><button class="pill" style="margin-top:16px" onclick="openInv()">New invoice</button>'))}
+/* ---- saved clients + items (built from your past invoices) ---- */
+function ivClients(){const m={};S.invs.slice().sort((x,y)=>y.issued-x.issued).forEach(i=>{const k=(i.client||'').trim().toLowerCase();if(!k)return;const o=m[k]=m[k]||{n:i.client,e:'',p:''};if(!o.e&&i.email)o.e=i.email;if(!o.p&&i.phone)o.p=i.phone});return m}
+function ivItems(){const m={};S.invs.slice().sort((x,y)=>y.issued-x.issued).forEach(i=>i.items.forEach(x=>{const k=(x.d||'').trim().toLowerCase();if(k&&!m[k])m[k]={d:x.d,p:x.p,c:x.c||0}}));return m}
+function ivLists(){return `<datalist id="iv_cl">${Object.values(ivClients()).map(c=>`<option value="${esc(c.n)}">`).join('')}</datalist><datalist id="iv_it">${Object.values(ivItems()).map(c=>`<option value="${esc(c.d)}">`).join('')}</datalist>`}
+function ivPickClient(el){const c=ivClients()[el.value.trim().toLowerCase()];if(!c)return;if(!$('iv_e').value&&c.e)$('iv_e').value=c.e;if(!$('iv_p').value&&c.p)$('iv_p').value=c.p}
+function ivPickItem(el){const it=ivItems()[el.value.trim().toLowerCase()],r=el.closest('.irow');if(!it||!r)return;const p=r.querySelector('.p'),c=r.querySelector('.c');if(!p.value&&it.p)p.value=it.p;if(!c.value&&it.c)c.value=it.c}
+
+/* ---- WhatsApp payment reminder ---- */
+function waRemind(id){const i=ivFind(id);if(!i)return;const b=S.biz||{},T=tot(i),rc=ivRcv(i),bal=ivBal(i),ph=(i.phone||'').replace(/\D/g,''),days=Math.round((i.due-Date.now())/DAY),
+ when=i.due<Date.now()?`It was due on ${ivD(i.due)} (${wplural(Math.max(1,-days),'day')} ago).`:days<=0?'It is due today.':`It is due on ${ivD(i.due)}.`;
+ const L=[`Hi ${i.client},`,'',`A friendly reminder about *${i.no}*${b.name?' from '+b.name:''}.`,`Total: ${fm(T.g,i.cur)}`,rc>0?`Paid so far: ${fm(rc,i.cur)}`:null,`*Balance due: ${fm(bal,i.cur)}*`,when,'','Please let me know once it is paid. Thank you! 🙏'].filter(x=>x!==null);
+ window.open('https://wa.me/'+ph+'?text='+encodeURIComponent(L.join('\n')),'_blank','noopener')}
+
+/* ---- profit dashboard ---- */
+let IVP='month';
+function ivSetP(p){IVP=p;ivList()}
+function ivRange(){const n=new Date(),y=n.getFullYear(),m=n.getMonth();return IVP=='month'?[new Date(y,m,1).getTime(),Infinity]:IVP=='last'?[new Date(y,m-1,1).getTime(),new Date(y,m,1).getTime()]:[0,Infinity]}
+function ivDash(){if(!S.invs.length)return'';const[a,b]=ivRange(),L=S.invs.filter(i=>i.issued>=a&&i.issued<b),sum=(X,f)=>X.reduce((s,i)=>s+f(i),0),
+ chips=`<div class="ivchips">${[['month','This month'],['last','Last month'],['all','All time']].map(([k,l])=>`<button class="ivchip${IVP==k?' on':''}" onclick="ivSetP('${k}')">${l}</button>`).join('')}</div>`;
+ if(!L.length)return`<div class="ivd">${chips}<p class="ivnote2">No invoices in this period.</p></div>`;
+ return`<div class="ivd">${chips}`+[...new Set(L.map(i=>i.cur))].map(c=>{const X=L.filter(i=>i.cur==c),wc=X.filter(ivHasCost),pf=sum(wc,ivProfit),base=sum(wc,i=>tot(i).s),od=X.filter(i=>ivBal(i)>0&&i.due<Date.now()).length,
+  cl={};X.forEach(i=>{const k=i.client.trim().toLowerCase(),o=cl[k]=cl[k]||{n:i.client,bill:0,pf:0,hc:0,owe:0,cnt:0};o.bill+=tot(i).g;o.owe+=ivBal(i);o.cnt++;if(ivHasCost(i)){o.pf+=ivProfit(i);o.hc=1}});
+  const top=Object.values(cl).sort((x,y)=>y.bill-x.bill).slice(0,5);
+  return`${[...new Set(L.map(i=>i.cur))].length>1?`<div class="ivcur">${c}</div>`:''}<div class="ivgrid"><div class="ivst"><span>Billed</span><b>${fm(sum(X,i=>tot(i).g),c)}</b></div><div class="ivst"><span>Received</span><b>${fm(sum(X,ivRcv),c)}</b></div><div class="ivst"><span>Pending${od?` · ${od} overdue`:''}</span><b>${fm(sum(X,ivBal),c)}</b></div><div class="ivst"><span>Profit${wc.length&&base>0?` · ${Math.round(pf/base*100)}%`:''}</span><b class="${pf<0?'loss':wc.length?'gain':''}">${wc.length?fm(pf,c):'—'}</b></div></div>
+  ${wc.length<X.length?`<p class="ivnote2">${wc.length?X.length-wc.length+' invoice'+(X.length-wc.length>1?'s have':' has')+' no real cost, so '+(X.length-wc.length>1?'they are':'it is')+' left out of profit.':'Add your real cost to items (Edit) to see profit.'}</p>`:''}
+  <div class="ivtop"><span class="ivl">Top clients</span>${top.map(t=>`<div class="ivtr"><span><b>${esc(t.n)}</b><small>${t.cnt} invoice${t.cnt>1?'s':''}${t.owe>0?' · owes '+fm(t.owe,c):''}</small></span><span class="ivtv"><b>${fm(t.bill,c)}</b>${t.hc?`<small class="${t.pf<0?'loss':'gain'}">Profit ${fm(t.pf,c)}</small>`:''}</span></div>`).join('')}</div>`}).join('')+`</div>`}
+
+/* ---- invoice list: dashboard, balances, status, reminder ---- */
+function ivList(){const el=$('v-ilist');if(!el||!USER)return;const n=Date.now(),open=S.invs.filter(i=>ivBal(i)>0),owed=sumBy(open,i=>i.cur,i=>ivBal(i));
+ const sub=S.invs.length?(Object.keys(owed).length?fmm(owed)+' unpaid':'All paid'):'Create your first invoice';
+ el.innerHTML=`<h2>Invoices</h2><div class="sub">${sub}</div>`+ivDash()+(S.invs.length?S.invs.map((i,k)=>{const rc=ivRcv(i),bal=ivBal(i),st=i.paid?'Paid':rc>0?'Partly paid · '+fm(bal,i.cur)+' left':i.due<n?'Overdue':'Unpaid';return`<div class="acc" style="--c:${pal(k+2)};color:${dark(k+2)};cursor:pointer" onclick="viewInv(${i.id})"><div class="al"><div class="logo">${ico('Receipt')}</div><div class="am"><b>${esc(i.client)}</b><span>${i.no} · ${st}</span></div></div><div class="amt">${fm(tot(i).g,i.cur)}${bal>0?`<span><button class="pill" style="margin-top:6px" onclick="event.stopPropagation();waRemind(${i.id})">Remind</button></span>`:''}</div></div>`}).join(''):empty('Receipt','No invoices yet.<br><button class="pill" style="margin-top:16px" onclick="openInv()">New invoice</button>'))}
 const _R25i=render;render=function(){_R25i();try{ivList()}catch(e){console.error(e)}};
 </script></body></html>
