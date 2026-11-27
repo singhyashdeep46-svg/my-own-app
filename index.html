@@ -972,6 +972,25 @@ body[data-mode] nav .mid::after{display:none}
 body.phopen{overflow:hidden}
 @media(prefers-reduced-motion:reduce){#phv{animation:none}}
 </style>
+<style>
+/* v25 invoices */
+.irow{grid-template-columns:64px 1fr 1fr!important}
+.irow .d{grid-column:1/-1}
+.irow .c{border:1.5px dashed var(--mute)!important}
+.ivl{display:block;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mute);margin:2px 0 6px}
+.ivc{display:flex;gap:10px}.ivc>div{flex:1;min-width:0}.ivc>.ivcc{flex:0 0 118px}
+.ivp{max-width:760px;margin:14px auto 0;background:#fff;color:#15121c;border-radius:18px;padding:18px 20px;box-shadow:0 10px 40px rgba(0,0,0,.08)}
+.ivh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.ivh b{font-size:16px}
+.ivtag{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8a5a00;background:#fff3d6;border-radius:8px;padding:3px 8px}
+.ivprog{height:8px;border-radius:6px;background:#ececf0;overflow:hidden}.ivprog i{display:block;height:100%;background:#1a9c4b;border-radius:6px}
+.ivsum{display:flex;gap:18px;flex-wrap:wrap;margin:12px 0}.ivsum span{font-size:12px;color:#777;text-transform:uppercase;letter-spacing:.05em}.ivsum b{display:block;font-size:17px;color:#15121c;text-transform:none;letter-spacing:0;margin-top:2px}
+.ivpr{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid #ececf0;font-size:14px}.ivpr span{flex:1;color:#555}
+.ivx{background:none;border:0;color:#999;font-size:16px;padding:4px 8px;cursor:pointer}
+.ivbt{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.ivnote{font-size:14px;color:#777;margin:4px 0 0}
+.ivt{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}.ivt th{text-align:left;font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.05em;padding:6px 6px 6px 0;border-bottom:1px solid #e6e4ea}.ivt td{padding:10px 6px 10px 0;border-bottom:1px solid #f0eff3;vertical-align:top}.ivt small{display:block;color:#999;font-size:12px}
+.gain{color:#1a9c4b}.loss{color:#d6343b}
+</style>
 </head><body>
 <div class="app" id="app">
  <div class="top"><div id="avs" style="display:flex"></div><button class="plus" onclick="openArea()" aria-label="Add area"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="cur" id="curBtn" onclick="go('home')">Today</button><button class="gear" onclick="go('set')" aria-label="Settings"><span class="sdot off" id="sdot"></span><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></button></div>
@@ -2600,4 +2619,91 @@ const _pc31=phCommit;phCommit=function(item,P){const old=item&&item.im,ch=_pc31(
  if(ch){if(item.im)iqAdd('put',item.im);else if(old)iqAdd('del',old)}return ch};
 addEventListener('online',()=>flushImgs());setInterval(flushImgs,60000);setTimeout(flushImgs,6000);
 
+
+/* ===== v25: invoices — real cost vs offered price, edit, payments received, email ===== */
+const r2i=v=>Math.round((+v||0)*100)/100,
+ ivD=t=>new Date(t).toLocaleDateString('en',{day:'numeric',month:'short',year:'numeric'}),
+ ivYmd=t=>{const d=new Date(t);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')},
+ ivPays=i=>Array.isArray(i.pays)?i.pays:(i.paid?[{id:1,a:r2i(tot(i).g),t:i.issued||Date.now()}]:[]),
+ ivRcv=i=>r2i(ivPays(i).reduce((s,p)=>s+p.a,0)),
+ ivBal=i=>Math.max(0,r2i(tot(i).g-ivRcv(i))),
+ ivCost=i=>i.items.reduce((s,x)=>s+x.q*(x.c||0),0),
+ ivHasCost=i=>i.items.some(x=>x.c>0),
+ ivProfit=i=>tot(i).s-ivCost(i);
+function ivNorm(i){if(!Array.isArray(i.pays))i.pays=ivPays(i).map(p=>({...p}))}
+function ivSync(i){i.paid=tot(i).g>0&&ivBal(i)<=0.004}
+function ivFind(id){return S.invs.find(x=>x.id==id)}
+
+/* ---- form (new + edit) ---- */
+function ivRow(x){const d=document.createElement('div');d.className='irow';
+ d.innerHTML=`<input class="d" placeholder="Description" value="${esc(x?x.d:'')}"><input class="q" type="number" inputmode="decimal" placeholder="Qty" value="${x?x.q:1}"><input class="p" type="number" inputmode="decimal" placeholder="Price to client" value="${x&&x.p?x.p:''}"><input class="c" type="number" inputmode="decimal" placeholder="Your real cost" value="${x&&x.c?x.c:''}">`;
+ $('iv_i').appendChild(d)}
+addRow=function(){ivRow()};
+function ivForm(i,no){const e=!!i;
+ return `<h3>${e?'Edit '+no:'New invoice'}</h3><div class="f"><input id="iv_c" placeholder="Client name" value="${e?esc(i.client):''}"><input id="iv_e" type="email" placeholder="Client email (optional)" value="${e?esc(i.email||''):''}"><input id="iv_p" type="tel" inputmode="tel" placeholder="Client WhatsApp with country code, e.g. 9779812345678" value="${e?esc(i.phone||''):''}">
+ ${e?`<span class="ivl">Due date</span><input id="iv_dd" type="date" value="${ivYmd(i.due)}">`:`<select id="iv_d"><option value="7">Due in 7 days</option><option value="14" selected>Due in 14 days</option><option value="30">Due in 30 days</option></select>`}
+ <div class="ivc"><div class="ivcc"><span class="ivl">Currency</span><select id="iv_u">${CURS.map(c=>`<option ${c==(e?i.cur:S.base)?'selected':''}>${c}</option>`).join('')}</select></div><div><span class="ivl">Tax %</span><input id="iv_t" type="number" inputmode="decimal" placeholder="0" value="${e?(i.tax||0):(S.biz.tax||0)}"></div></div></div>
+ <div class="sl">Items</div><div id="iv_i" class="f"></div><p class="note2" style="margin:8px 0 12px">“Price to client” goes on the invoice. “Your real cost” is private: it is never printed, sent on WhatsApp or emailed.</p><button class="pill g" style="margin-bottom:14px" onclick="addRow()">+ Add item</button>
+ <div class="f"><input id="iv_n" placeholder="Notes (payment details, thanks…)" value="${e?esc(i.notes||''):''}"></div>
+ <button class="save" onclick="ivSave('${no}',${e?i.id:0})">${e?'Save changes':'Create '+no}</button>${e?`<button class="pill g" style="width:100%;margin-top:10px" onclick="ivBack(${i.id})">Cancel</button>`:''}`}
+openInv=function(){mi();const n='INV-'+String(S.invs.length+1).padStart(3,'0');sheet(ivForm(null,n));ivRow()};
+function ivEdit(id){const i=ivFind(id);if(!i)return;closeInv();sheet(ivForm(i,i.no));i.items.forEach(ivRow)}
+function ivBack(id){closeSheet();viewInv(id)}
+function ivSave(no,id){
+ const items=[...document.querySelectorAll('#iv_i .irow')].map(r=>({d:r.querySelector('.d').value.trim(),q:parseFloat(r.querySelector('.q').value)||0,p:parseFloat(r.querySelector('.p').value)||0,c:parseFloat(r.querySelector('.c').value)||0})).filter(x=>x.d&&x.q&&x.p);
+ if(!$('iv_c').value.trim()||!items.length){toast('Add a client and one item');return}
+ const f={client:$('iv_c').value.trim(),email:$('iv_e').value.trim(),phone:$('iv_p').value.trim(),cur:$('iv_u').value,tax:parseFloat($('iv_t').value)||0,items,notes:$('iv_n').value.trim()};
+ S.base=f.cur;
+ if(id){const i=ivFind(id);if(!i)return;ivNorm(i);Object.assign(i,f);const dd=$('iv_dd').value;if(dd)i.due=new Date(dd+'T23:59:00').getTime();ivSync(i);closeSheet();render();viewInv(id);toast('Invoice updated');return}
+ const inv={id:Date.now(),no,issued:Date.now(),due:Date.now()+$('iv_d').value*DAY,paid:false,pays:[],...f};
+ S.invs.unshift(inv);closeSheet();render();viewInv(inv.id)}
+saveInv=function(no){ivSave(no,0)};
+
+/* ---- payments received ---- */
+function ivPayOpen(id){const i=ivFind(id);if(!i)return;const T=tot(i),bal=ivBal(i);closeInv();
+ sheet(`<h3>Record payment</h3><p class="note2" style="margin:0 0 12px">${esc(i.no)} · ${esc(i.client)}<br>Total ${fm(T.g,i.cur)} · Received ${fm(ivRcv(i),i.cur)} · <b>Balance ${fm(bal,i.cur)}</b></p><div class="f"><input class="amtin" id="ip_a" type="number" inputmode="decimal" value="${bal||''}" placeholder="Amount received"><span class="ivl">Date received</span><input id="ip_d" type="date" value="${ivYmd(Date.now())}"></div><button class="save" onclick="ivPaySave(${id})">Save payment</button><button class="pill g" style="width:100%;margin-top:10px" onclick="ivBack(${id})">Cancel</button>`)}
+function ivPaySave(id){const i=ivFind(id);if(!i)return;const a=r2i($('ip_a').value),bal=ivBal(i);
+ if(!(a>0)){toast('Enter the amount received');return}
+ if(a>bal+0.004){toast('More than the balance ('+fm(bal,i.cur)+')');return}
+ ivNorm(i);const dv=$('ip_d').value;i.pays.push({id:Date.now(),a,t:dv?new Date(dv+'T12:00:00').getTime():Date.now()});ivSync(i);closeSheet();render();viewInv(id);toast(i.paid?'Paid in full':'Payment recorded')}
+function ivPayDel(id,pid){const i=ivFind(id);if(!i)return;ivNorm(i);i.pays=i.pays.filter(p=>p.id!=pid);ivSync(i);render();viewInv(id)}
+function ivMarkPaid(id){const i=ivFind(id);if(!i)return;const b=ivBal(i);if(b<=0)return;ivNorm(i);i.pays.push({id:Date.now(),a:b,t:Date.now()});ivSync(i);render();viewInv(id);toast('Marked paid')}
+
+/* ---- invoice view ---- */
+viewInv=function(id){const i=ivFind(id);if(!i)return;const T=tot(i),b=S.biz||{},rc=ivRcv(i),bal=ivBal(i),pays=ivPays(i),part=rc>0&&bal>0,has=ivHasCost(i),pf=ivProfit(i),pct=T.g>0?Math.min(100,rc/T.g*100):0;
+ $('invv').innerHTML=`<div class="bar2 noprint"><button class="pill g" onclick="closeInv()">Close</button><button class="pill g" onclick="ivEdit(${i.id})">Edit</button><button class="pill wa" onclick="waInv(${i.id})">WhatsApp</button><button class="pill g" onclick="emailInv(${i.id})">Email</button><button class="pill" onclick="window.print()">Print / PDF</button><button class="pill g" onclick="delInv(${i.id})">Delete</button></div>
+<div id="invdoc"><div class="ih"><div><div class="bn">${esc(b.name||'Your business')}</div><div class="ad">${esc(b.addr||'')}<br>${esc(b.email||'')} ${esc(b.phone||'')}</div></div><div class="it"><div class="tt">INVOICE</div><div>${i.no}</div>${i.paid?'<div class="st">PAID</div>':part?'<div class="st" style="border-color:#d98a00;color:#d98a00">PARTLY PAID</div>':''}</div></div>
+<div class="im"><div><span>Bill to</span><b>${esc(i.client)}</b>${esc(i.email||'')}</div><div><span>Issued</span><b>${ivD(i.issued)}</b></div><div><span>Due</span><b>${ivD(i.due)}</b></div></div>
+<table><tr><th>Description</th><th>Qty</th><th>Price</th><th>Amount</th></tr>${i.items.map(x=>`<tr><td>${esc(x.d)}</td><td>${x.q}</td><td>${fm(x.p,i.cur)}</td><td>${fm(x.q*x.p,i.cur)}</td></tr>`).join('')}</table>
+<div class="tl"><div><span>Subtotal</span>${fm(T.s,i.cur)}</div>${i.tax?`<div><span>Tax ${i.tax}%</span>${fm(T.t,i.cur)}</div>`:''}<div class="gt"><span>Total</span>${fm(T.g,i.cur)}</div>${part?`<div><span>Paid</span>${fm(rc,i.cur)}</div><div class="gt" style="font-size:17px"><span>Balance due</span>${fm(bal,i.cur)}</div>`:''}</div>${i.notes?`<p class="nt">${esc(i.notes)}</p>`:''}</div>
+
+<div class="ivp noprint"><div class="ivh"><b>Payments</b><span class="ivtag">Only you see this</span></div>
+<div class="ivprog"><i style="width:${pct}%"></i></div>
+<div class="ivsum"><span>Received<b>${fm(rc,i.cur)}</b></span><span>Balance<b>${fm(bal,i.cur)}</b></span></div>
+${pays.length?pays.map(p=>`<div class="ivpr"><span>${ivD(p.t)}</span><b>${fm(p.a,i.cur)}</b><button class="ivx" aria-label="Remove payment" onclick="ivPayDel(${i.id},${p.id})">✕</button></div>`).join(''):'<p class="ivnote">No payment received yet.</p>'}
+${bal>0?`<div class="ivbt"><button class="pill" onclick="ivPayOpen(${i.id})">Record payment</button><button class="pill g" onclick="ivMarkPaid(${i.id})">Mark fully paid</button></div>`:''}</div>
+
+<div class="ivp noprint"><div class="ivh"><b>Real cost vs offered</b><span class="ivtag">Only you see this</span></div>
+${has?`<table class="ivt"><tr><th>Item</th><th>Real</th><th>Offered</th><th>Profit</th></tr>${i.items.map(x=>{const g=x.q*(x.p-(x.c||0));return`<tr><td>${esc(x.d)}<small>${x.q} × ${fm(x.p,i.cur)}</small></td><td>${x.c?fm(x.q*x.c,i.cur):'—'}</td><td>${fm(x.q*x.p,i.cur)}</td><td class="${x.c?(g<0?'loss':'gain'):''}">${x.c?fm(g,i.cur):'—'}</td></tr>`}).join('')}</table>
+<div class="ivsum" style="margin-top:12px"><span>Real cost<b>${fm(ivCost(i),i.cur)}</b></span><span>Offered<b>${fm(T.s,i.cur)}</b></span><span>Profit<b class="${pf<0?'loss':'gain'}">${fm(pf,i.cur)}${T.s>0?` · ${Math.round(pf/T.s*100)}%`:''}</b></span></div>`:`<p class="ivnote">No real cost added yet. Tap Edit and fill “Your real cost” on each item to track your profit.</p>`}</div>`;
+ $('invv').hidden=false};
+
+/* ---- WhatsApp + email: offered prices only ---- */
+function ivLines(i,bold){const B=s=>bold?`*${s}*`:s,T=tot(i),b=S.biz||{},rc=ivRcv(i),bal=ivBal(i),late=!i.paid&&i.due<Date.now(),days=Math.round((i.due-Date.now())/DAY),
+ status=i.paid?'Paid':rc>0?'Partly paid':late?`Overdue by ${wplural(Math.max(1,-days),'day')}`:days<=0?'Due today':`Due in ${wplural(days,'day')}`;
+ return [B('INVOICE '+i.no),b.name?`From: ${b.name}`:null,`Bill to: ${i.client}`,`Issued: ${ivD(i.issued)}`,`Due: ${ivD(i.due)}`,`Status: ${status}`,'',B('Items'),
+ ...i.items.map((x,n)=>`${n+1}. ${x.d} · ${x.q} × ${fm(x.p,i.cur)} = ${fm(x.q*x.p,i.cur)}`),'',
+ i.tax?`Subtotal: ${fm(T.s,i.cur)}`:null,i.tax?`Tax (${i.tax}%): ${fm(T.t,i.cur)}`:null,B(`Total: ${fm(T.g,i.cur)}`),
+ rc>0&&bal>0?`Paid so far: ${fm(rc,i.cur)}`:null,rc>0&&bal>0?B(`Balance due: ${fm(bal,i.cur)}`):null,
+ i.notes?'':null,i.notes?`Note: ${i.notes}`:null,'',i.paid?'Thank you for your payment!':'Please let me know once paid. Thank you!'].filter(x=>x!==null)}
+waInv=function(id){const i=ivFind(id);if(!i)return;const ph=(i.phone||'').replace(/\D/g,'');
+ window.open('https://wa.me/'+ph+'?text='+encodeURIComponent(ivLines(i,true).concat(['','_Sent from Fin_']).join('\n')),'_blank','noopener')};
+function emailInv(id){const i=ivFind(id);if(!i)return;const b=S.biz||{};
+ location.href='mailto:'+encodeURIComponent(i.email||'')+'?subject='+encodeURIComponent('Invoice '+i.no+(b.name?' from '+b.name:''))+'&body='+encodeURIComponent(ivLines(i,false).join('\r\n'))}
+
+/* ---- invoice list: balances + status ---- */
+function ivList(){const el=$('v-ilist');if(!el||!USER)return;const n=Date.now(),open=S.invs.filter(i=>ivBal(i)>0),owed=sumBy(open,i=>i.cur,i=>ivBal(i)),withC=S.invs.filter(ivHasCost),prof=withC.length?sumBy(withC,i=>i.cur,i=>ivProfit(i)):{};
+ const sub=S.invs.length?((Object.keys(owed).length?fmm(owed)+' unpaid':'All paid')+(withC.length?' · Profit '+fmm(prof):'')):'Create your first invoice';
+ el.innerHTML=`<h2>Invoices</h2><div class="sub">${sub}</div>`+(S.invs.length?S.invs.map((i,k)=>{const rc=ivRcv(i),bal=ivBal(i),st=i.paid?'Paid':rc>0?'Partly paid · '+fm(bal,i.cur)+' left':i.due<n?'Overdue':'Unpaid';return`<div class="acc" style="--c:${pal(k+2)};color:${dark(k+2)};cursor:pointer" onclick="viewInv(${i.id})"><div class="al"><div class="logo">${ico('Receipt')}</div><div class="am"><b>${esc(i.client)}</b><span>${i.no} · ${st}</span></div></div><div class="amt">${fm(tot(i).g,i.cur)}</div></div>`}).join(''):empty('Receipt','No invoices yet.<br><button class="pill" style="margin-top:16px" onclick="openInv()">New invoice</button>'))}
+const _R25i=render;render=function(){_R25i();try{ivList()}catch(e){console.error(e)}};
 </script></body></html>
